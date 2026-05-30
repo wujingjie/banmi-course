@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>课程精读 · How to AI Almost Anything · Lecture 2.1 Practical AI Tools · 无忌</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --bg-elevated: #ffffff;
+    --bg-stripe: #f5f7fa;
+    --text: #1a1d23;
+    --text-soft: #4a5160;
+    --text-mute: #7c8493;
+    --border: #e3e6ec;
+    --border-strong: #cdd2da;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --accent-text: #1d4ed8;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --info: #0891b2;
+    --info-soft: #cffafe;
+    --code-bg: #f1f3f7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.04);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg-soft: #161922;
+    --bg-elevated: #1c2030;
+    --bg-stripe: #1a1e2a;
+    --text: #e6e9f0;
+    --text-soft: #b6bcc9;
+    --text-mute: #8a92a3;
+    --border: #2a2f3d;
+    --border-strong: #3a4154;
+    --accent: #60a5fa;
+    --accent-soft: #1e3a8a55;
+    --accent-text: #93c5fd;
+    --good: #4ade80;
+    --good-soft: #14532d55;
+    --warn: #fbbf24;
+    --warn-soft: #78350f55;
+    --bad: #f87171;
+    --bad-soft: #7f1d1d55;
+    --info: #22d3ee;
+    --info-soft: #155e7555;
+    --code-bg: #0a0d14;
+    --purple: #a78bfa;
+    --purple-soft: #4c1d9555;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: 60px;
+    transition: background-color .25s, color .25s;
+  }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple)); z-index: 1000; transition: width .1s linear; }
+  header.topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 980px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; color: var(--text); white-space: nowrap; }
+  .brand .tag { margin-left: 6px; font-weight: 500; font-size: 11px; color: var(--text-mute); padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; }
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); cursor: pointer; font-size: 18px; transition: transform .15s, background-color .15s; }
+  .icon-btn:active { transform: scale(.94); }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .hero { padding: 28px 4px 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.5px; background: linear-gradient(135deg, var(--text) 0%, var(--accent-text) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-mute); }
+  .hero-meta span { background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .hero-meta a { color: var(--accent-text); text-decoration: none; }
+  .hero-deck { margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; color: var(--text); font-size: 15px; }
+  section.chapter { margin: 24px 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  section.chapter > h2 { font-size: 20px; margin: 0; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); user-select: none; background: var(--bg-elevated); transition: background-color .15s; min-height: 56px; }
+  section.chapter > h2:active { background: var(--bg-soft); }
+  section.chapter > h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 14px; font-weight: 700; }
+  section.chapter > h2 .title-text { flex: 1; }
+  section.chapter > h2 .caret { transition: transform .25s; color: var(--text-mute); font-size: 14px; }
+  section.chapter.collapsed > h2 .caret { transform: rotate(-90deg); }
+  section.chapter.collapsed > h2 { border-bottom-color: transparent; }
+  .chapter-body { padding: 18px 20px 22px; max-height: 100000px; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+  section.chapter.collapsed .chapter-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  h3 { font-size: 17px; margin: 22px 0 10px; color: var(--text); padding-left: 10px; border-left: 3px solid var(--accent); }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text-soft); }
+  p { margin: 8px 0 12px; color: var(--text-soft); }
+  strong { color: var(--text); }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--text-soft); }
+  li { margin: 4px 0; }
+  .callout { margin: 14px 0; padding: 12px 14px; border-radius: 10px; border-left: 4px solid; font-size: 14.5px; line-height: 1.65; }
+  .callout.info { background: var(--info-soft); border-color: var(--info); }
+  .callout.good { background: var(--good-soft); border-color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .callout.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.purple { background: var(--purple-soft); border-color: var(--purple); }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; }
+  .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: none; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 40; border: none; }
+  .back-to-top.show { display: flex; }
+  .back-to-top:active { transform: scale(.94); }
+  footer { text-align: center; padding: 24px 16px; color: var(--text-mute); font-size: 13px; border-top: 1px solid var(--border); margin-top: 32px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text); }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin: 12px 0; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+  pre code { background: none; padding: 0; }
+  hr.soft { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+  blockquote { margin: 12px 0; padding: 10px 16px; border-left: 4px solid var(--text-mute); background: var(--bg-soft); border-radius: 6px; color: var(--text-soft); font-size: 14.5px; }
+  .pill { display: inline-block; padding: 3px 9px; font-size: 11px; font-weight: 600; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-soft); white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .pill.purple { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .metric { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; }
+  .metric .v { font-size: 22px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; }
+  .metric .l { font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+  /* ---- 课程精读专用 ---- */
+  .ts { display: inline-block; font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+  .transcript { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; background: var(--bg-soft); }
+  .transcript > summary { padding: 10px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-soft); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; min-height: 44px; }
+  .transcript > summary::-webkit-details-marker { display: none; }
+  .transcript > summary::before { content: "▶"; font-size: 11px; color: var(--text-mute); transition: transform .2s; }
+  .transcript[open] > summary::before { transform: rotate(90deg); }
+  .transcript .tx-body { padding: 4px 16px 16px; font-size: 13.5px; line-height: 1.7; color: var(--text-mute); font-style: italic; border-top: 1px solid var(--border); }
+  figure.frame { margin: 16px 0; }
+  figure.frame img { width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+  figure.frame figcaption { margin-top: 6px; font-size: 12.5px; color: var(--text-mute); line-height: 1.5; text-align: center; }
+  figure.frame figcaption .fno { font-family: ui-monospace, monospace; color: var(--accent-text); font-weight: 700; }
+  .concept-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0; }
+  .concept { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+  .concept .cn { font-size: 15px; font-weight: 700; color: var(--text); }
+  .concept .cn code { font-size: 13px; }
+  .concept .cd { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+  .concept .cm { font-size: 13px; color: var(--text-mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .concept .cm b { color: var(--accent-text); }
+  .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 8px 10px 8px 36px; position: relative; border-bottom: 1px dashed var(--border); font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+  .ref-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 4px; top: 8px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .ref-list li a { color: var(--accent-text); text-decoration: none; word-break: break-all; }
+  .ref-list li a:hover { text-decoration: underline; }
+  @media (max-width: 480px) {
+    .hero { padding: 18px 4px 8px; }
+    .hero h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 17px; padding: 14px 14px; }
+    .chapter-body { padding: 14px 14px 18px; }
+    h3 { font-size: 16px; }
+  }
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0 !important; font-size: 11pt; line-height: 1.55; }
+    header.topbar, #progress, .back-to-top, nav.anchor-nav, .nav-toggle, .nav-overlay, #pdfBtn { display: none !important; }
+    main { margin: 0 !important; max-width: 100% !important; padding: 0 !important; }
+    .hero h1 { -webkit-text-fill-color: #1a1d23 !important; color: #1a1d23 !important; background: none !important; }
+    section.chapter { box-shadow: none !important; border: 1px solid #d9dde5 !important; margin: 14px 0 !important; }
+    section.chapter > h2 { cursor: default; position: static; }
+    section.chapter.collapsed .chapter-body, .chapter-body { max-height: none !important; overflow: visible !important; padding: 14px 18px 18px !important; }
+    .caret { display: none !important; }
+    .transcript { break-inside: avoid; }
+    .transcript .tx-body { max-height: none !important; }
+    .callout, .metric-grid, .concept, figure.frame { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    a { color: #1d4ed8 !important; text-decoration: none; }
+  }
+  nav.anchor-nav { position: fixed; top: 100px; left: 0; width: 220px; height: calc(100vh - 100px); overflow-y: auto; overflow-x: hidden; background: var(--bg-soft); border-right: 1px solid var(--border); z-index: 60; padding: 16px 0 40px; transition: transform .28s ease; white-space: normal; }
+  nav.anchor-nav::-webkit-scrollbar { width: 6px; }
+  nav.anchor-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nav-title { padding: 4px 20px 12px; font-size: 13px; font-weight: 700; color: var(--text-mute); }
+  .anchor-list { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .anchor-list a { display: block; min-height: 38px; padding: 9px 12px; border-radius: 8px; font-size: 13px; line-height: 1.35; color: var(--text-soft); text-decoration: none; border-left: 3px solid transparent; }
+  .anchor-list a.active { color: var(--accent-text); background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .nav-toggle { position: fixed; left: 16px; bottom: 24px; width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff; border: none; font-size: 22px; z-index: 70; box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center; display: none; }
+  .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; opacity: 0; pointer-events: none; transition: opacity .28s; }
+  @media (min-width: 1041px) { main { margin-left: 220px; } }
+  @media (max-width: 1040px) {
+    nav.anchor-nav { top: 0; height: 100vh; transform: translateX(-100%); box-shadow: var(--shadow-lg); width: 260px; max-width: 82vw; }
+    nav.anchor-nav.open { transform: translateX(0); }
+    .nav-overlay.show { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">课程精读 · Practical AI Tools <span class="tag">How to AI · L2.1 · 无忌</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
+    <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
+  </div>
+</header>
+
+<button class="nav-toggle" id="navToggle" aria-label="章节目录">☰</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="anchor-nav">
+  <div class="nav-title">📖 目录</div>
+  <div class="anchor-list" id="anchorList">
+    <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+    <a href="#s1" data-target="s1">01 开场 · 这堂 recitation 讲啥</a>
+    <a href="#s2" data-target="s2">02 PyTorch 入门：Tensor 是什么</a>
+    <a href="#s3" data-target="s3">03 三大隐形 bug：dtype/device/×</a>
+    <a href="#s4" data-target="s4">04 先看数据：气味传感器项目</a>
+    <a href="#s5" data-target="s5">05 预处理：归一化最关键</a>
+    <a href="#s6" data-target="s6">06 Dataset / DataLoader / batch</a>
+    <a href="#s7" data-target="s7">07 搭 MLP + 训练循环</a>
+    <a href="#s8" data-target="s8">08 评估 + 迭代改进 + 存模型</a>
+    <a href="#s9" data-target="s9">09 train/test 怎么切才不作弊</a>
+    <a href="#s10" data-target="s10">10 随机森林：简单模型反而更强</a>
+    <a href="#s11" data-target="s11">11 HuggingFace 是一套全家桶</a>
+    <a href="#s12" data-target="s12">12 上手 LoRA 微调 + 选 GPU</a>
+    <a href="#s13" data-target="s13">13 配置参数：模型多大配多少显存</a>
+    <a href="#s14" data-target="s14">14 WandB 盯训练：先看显存和功耗</a>
+    <a href="#s15" data-target="s15">15 看 loss 和 grad_norm</a>
+    <a href="#s16" data-target="s16">16 调模型是门手艺：The Recipe</a>
+    <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+    <a href="#concepts" data-target="concepts">🗂 核心概念卡</a>
+    <a href="#takeaways" data-target="takeaways">✅ 该记住的几条</a>
+    <a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>《How to AI Almost Anything》Lecture 2.1：Practical AI Tools</h1>
+    <div class="hero-meta">
+      <span>🎓 MIT MAS.S60 · Spring 2025 · TA David &amp; Chanaka 主讲</span>
+      <span>⏱ ~54 分钟</span>
+      <span>🎬 <a href="https://youtu.be/NOSuy0NOe9k" target="_blank" rel="noopener">原视频 youtu.be/NOSuy0NOe9k</a></span>
+      <span>📝 无忌课程精读 · 关键帧嵌入</span>
+      <span>🇨🇳 逐字稿英文 · 笔记中文</span>
+    </div>
+    <div class="hero-deck">
+      <strong>学完你能得到什么：</strong>这是一堂极其务实的<strong>动手 recitation</strong>——两位助教带你从零跑通一个真实的 ML 项目（用气味传感器数据做三分类），把<strong>实战工程套路</strong>讲透：① <strong>PyTorch</strong> 的 Tensor 怎么用、哪三个隐形 bug（dtype / device / 元素乘 vs 矩阵乘）最常坑人；② 一个完整管线长什么样——<strong>看数据 → 归一化 → DataLoader → 搭 MLP → 训练循环 → 评估 → 迭代</strong>；③ <strong>HuggingFace</strong> 全家桶（transformers / datasets / LoRA / bitsandbytes）怎么用更少代码和显存微调大模型；④ 用 <strong>WandB</strong> 盯训练该看哪些指标；⑤ 最后是 Karpathy 风格的<strong>调模型方法论（The Recipe）</strong>——调神经网络是门手艺，先跟数据"合体"、搭笨基线、故意过拟合诊断、再正则化和调参。看完你能照着自己跑一个端到端的小项目，并知道出问题时往哪查。
+    </div>
+  </div>
+
+  <!-- ===== 速览 ===== -->
+  <section class="chapter" id="overview">
+    <h2><span class="num">⚡</span><span class="title-text">一分钟速览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p><strong>这集讲啥：</strong>MIT《How to AI Almost Anything》课程第二讲的<strong>实操环节</strong>。助教 David 和 Chanaka 不讲理论，直接打开两个 Colab 笔记本，带全班一行一行跑：先 PyTorch 基础，再用实验室自己采的"气味数据"训练一个分类器，最后切到 HuggingFace 微调大模型 + WandB 监控 + 调模型的通用方法论。</p>
+      <p><strong>为什么重要：</strong>课程主线（多模态、生成模型那些大概念）需要落地能力托底。这堂课就是把"做 AI 项目"这件事从模糊变清晰——<strong>哪些命令必须会、哪些坑必踩、出了问题按什么顺序排查</strong>。对刚要动手做 project 的人，是性价比最高的一堂。</p>
+      <p><strong>学完会跑通什么：</strong></p>
+      <div class="metric-grid">
+        <div class="metric"><div class="v">3 类</div><div class="l">气味分类：ambient / 酒精 / 咖啡豆</div></div>
+        <div class="metric"><div class="v">75%</div><div class="l">MLP 深度模型测试准确率</div></div>
+        <div class="metric"><div class="v">95.8%</div><div class="l">随机森林准确率（简单模型反超）</div></div>
+        <div class="metric"><div class="v">LoRA</div><div class="l">在 4GB T4 上微调 1B 大模型</div></div>
+      </div>
+      <div class="callout accent">
+        <p><strong>一句话主线：</strong>做 AI 项目 = <strong>先彻底看懂数据 → 把数据收拾干净（归一化是命门）→ 用 DataLoader 喂 → 搭个最笨的模型先跑通 → 看 loss/指标迭代 → 大模型就用 HuggingFace+LoRA 省显存</strong>。调不出来时别急着换花哨架构，回去看数据、搭笨基线、故意过拟合。<strong>整堂课就是把这套工程肌肉记忆建起来。</strong></p>
+      </div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_002.jpg" alt="MAS S60 PyTorch & HuggingFace Tutorial 标题页">
+        <figcaption><span class="fno">frame_002 · 约 03:00</span> · 课前准备页：注册 HuggingFace &amp; WandB 账号，打开两个 Colab（PyTorch 教程 + HuggingFace 微调），跟着助教边看边敲。</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== S1 ===== -->
+  <section class="chapter" id="s1">
+    <h2><span class="num">01</span><span class="title-text">开场：这堂 recitation 到底讲啥</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">00:00</span>课务 + 两位助教登场</h3>
+      <p>教授 Paul 先讲课务：助教 David 和 Chanaka 会负责 office hours、带读论文和讨论。学生要<strong>尽快交项目提案表</strong>（填队友和方向偏好），下周四做 5 分钟的项目提案展示（讲想做啥、用什么数据集），再下一周交一份文字版提案报告。如果还没组队，用共享的表格找兴趣相近的人。</p>
+      <h3><span class="ts">01:35</span>今天的菜单</h3>
+      <p>今天 David 和 Chanaka 讲<strong>实战技巧</strong>：怎么用 PyTorch、怎么用 HuggingFace、怎么搭/迭代/调试自己的 ML 模型。David 先上：先过 PyTorch，再讲怎么在 HuggingFace 上找一个简单的预训练模型来微调。<strong>课前准备：注册 HuggingFace 和 WandB 账号，打开发的两个 Colab 链接，跟着敲。</strong></p>
+      <div class="callout info"><p>定位很关键：<strong>这不是理论课，是"师傅带徒弟"式的上手课。</strong>如果你已经熟 PyTorch，前半段可跳；但后半段的 HuggingFace 微调和调模型方法论，几乎每个做 project 的人都用得上。</p></div>
+      <details class="transcript"><summary>英文逐字稿（00:00–01:35）</summary><div class="tx-body">Okay, everyone, welcome back. So today we're going to have a presentation by some of the TAs. This is David, one of the students in my group helping as a TA, and Chanaka is the other TA. Make sure you get familiar with their faces — they'll be having office hours, helping with your projects, moderating readings and discussions. First, make sure you've submitted your project proposal — there's a short form where you fill in your teammates and preferences. I've shared the responses on Piazza, so if you don't have team members yet, use that spreadsheet to reach out to people with similar areas of interest. The first assignment: next Thursday we'll have project proposal presentations — by then you should have formed your team and decided on an idea. It's a five-minute presentation per group: what you want to work on, what data sets you'll use, to get feedback. The following week you submit a short report. So David and the TAs today are going to tell us tutorials on practical tips for PyTorch, Hugging Face, building, iterating and debugging your ML models. Thanks Paul. I'm David, the GA for this course. We're going to first cover how to use PyTorch and then how to find a very simple pretrained model on Hugging Face. Please open these two links — you should see two code pages and follow along.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S2 ===== -->
+  <section class="chapter" id="s2">
+    <h2><span class="num">02</span><span class="title-text">PyTorch 入门：Tensor 就是"会算梯度的多维数组"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">02:24</span>PyTorch 是什么</h3>
+      <p>PyTorch 是个<strong>加速机器学习</strong>的库。它的核心是 <strong>Tensor（张量）</strong>——你可以先把它理解成<strong>线性代数里那一堆矩阵</strong>，只不过能放到 GPU 上飞快地并行计算、还自带自动求梯度。</p>
+      <h3><span class="ts">03:14</span>怎么造一个 Tensor</h3>
+      <p>造 Tensor 有好几种方式：</p>
+      <ul>
+        <li>有现成数据（比如二维数组 <code>[[1,2],[3,4]]</code>）→ <code>torch.tensor(data)</code>。</li>
+        <li>有 numpy 数组 → <code>torch.from_numpy(arr)</code> 直接转过来。</li>
+        <li>要指定形状 → <code>torch.rand(2,3)</code>（随机）、<code>torch.ones(...)</code>（全 1）、<code>torch.zeros(...)</code>（全 0）。</li>
+      </ul>
+      <details class="transcript"><summary>英文逐字稿（02:24–05:47）</summary><div class="tx-body">So if you already know PyTorch this tutorial may not be that useful, but I aim to structure this so everyone knows a little bit more. PyTorch is a library that helps accelerate machine learning processes. The central piece of PyTorch is the tensor — a tensor is just like a bunch of matrices you learn in linear algebra. First we import torch. You can initialize a tensor in several different ways: if you have a 2D array like one two three four, you can call torch.tensor(data). If you've worked with a numpy array before, you can convert it using torch.from_numpy. You can also initialize a tensor of a particular shape — for 2x3 matrices, torch.rand for a random tensor, torch.ones and torch.zeros for ones and zeros of that shape.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S3 ===== -->
+  <section class="chapter" id="s3">
+    <h2><span class="num">03</span><span class="title-text">三大隐形 bug：dtype、device、元素乘 vs 矩阵乘</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">05:47</span>坑一：dtype（类型）不对</h3>
+      <p>Tensor 有不同<strong>类型</strong>（整数、浮点……），用 <code>tensor.dtype</code> 查。<strong>ML 里最常见的一类隐形 bug 就是 tensor 的类型不是你以为的那个</strong>：比如你建了个整数 tensor，想拿它去乘一个浮点 tensor，再把结果塞回整数里——类型不兼容就出错。所以<strong>加载数据后第一件事就是查 dtype</strong>（用 print 或 debugger）。</p>
+      <h3><span class="ts">06:35</span>坑二：device（设备）不一致</h3>
+      <p>因为是 ML 库，Tensor 能放在不同设备上——<strong>CPU 或 GPU</strong>。用 <code>tensor.device</code> 查它在哪。<strong>另一个超常见的错误</strong>：两个 tensor 一个在 CPU、一个在 GPU，你想让它们相乘——不行。要先用 <code>tensor.to(device)</code> 把它挪到你要算的设备上。</p>
+      <h3><span class="ts">07:24</span>坑三：<code>*</code> 是元素乘，不是矩阵乘</h3>
+      <p>基本运算 <code>x + y</code> 是逐元素相加。但<strong>注意 <code>x * y</code> 不是矩阵乘法，是逐元素相乘（element-wise）</strong>。如果你是 MATLAB 背景会习惯把 <code>*</code> 当矩阵乘，PyTorch 里不是。真要矩阵乘（行乘列再相加）用 <code>torch.mm</code>（或 <code>@</code>）。</p>
+      <div class="callout warn"><p><strong>这三条是新手最爱踩的隐形坑：</strong>程序不报错、或报个莫名其妙的错，结果却全错。养成习惯——加载完数据先 <code>print(x.dtype, x.device, x.shape)</code>，乘法前先想清楚要的是元素乘还是矩阵乘。后面 David 反复强调"出问题先 print 出来看"，根子就在这。</p></div>
+      <details class="transcript"><summary>英文逐字稿（05:47–08:14）</summary><div class="tx-body">One important thing about tensors is that they have different types — you can call tensor.dtype to see the type. One common source of a bug in ML models is that the type of tensor is not the type you intended. If you initialize an integer tensor, you can't multiply it with a float type and put the result back into integer — that's not compatible. So make sure when you load data you check the tensor type using tensor.dtype, with print or a debugger. Because PyTorch is an ML library, the tensor can be used on multiple devices, namely CPU and GPU. You can use tensor.device to check the device, and that's also a very common source of error — if you have one tensor on CPU and one on GPU you cannot multiply them together, you need tensor.to(device) to move it. We have simple operations on tensors: x plus y to add them. One thing to note: x times y here is not matrix multiplication — it's actually element-wise. If you come from a MATLAB background you may think it's matrix multiplication, but in PyTorch if you want matrix multiplication you use torch.mm — the row times column added together kind of multiplication.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S4 ===== -->
+  <section class="chapter" id="s4">
+    <h2><span class="num">04</span><span class="title-text">动手项目：先看数据 —— 气味传感器三分类</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">08:14</span>一个真实的小项目</h3>
+      <p>David 拿实验室自己采的<strong>气味数据</strong>做完整 demo：他们有一堆气体传感器，能采某种物质的"气味"。这次做<strong>三分类</strong>——把气味分成 ambient（环境本底）、alcohol（酒精）、coffee beans（咖啡豆）。数据是一堆 CSV 文件，每个类别对应一组文件。代码里先用 <code>os.listdir</code> 把文件路径都收集起来。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_004.jpg" alt="气味数据标签映射与文件加载代码">
+        <figcaption><span class="fno">frame_004 · 约 09:00</span> · 三个气味类别映射成数字标签：ambient→0、alcohol→1、coffee_beans→2。下方代码遍历 smell_data 目录，按文件名挑出这三类的 CSV。</figcaption>
+      </figure>
+      <h3><span class="ts">09:05</span>铁律：建模前一定先看数据</h3>
+      <p>David <strong>强烈建议：动手建模前一定先打开数据看一眼</strong>。原因很实在——<strong>数据经常不是你以为的那个格式</strong>。文档页上写的是一种格式，下载下来可能是另一种，无论是你自己采的还是网上下的都常这样。所以先 <code>os.listdir</code> 列文件、打开一个 CSV 看列名（每列对应一个气体传感器的读数）。</p>
+      <h3><span class="ts">10:45</span>时间序列要可视化</h3>
+      <p>如果是<strong>时间序列数据，可视化尤其重要</strong>——画出来你才能一眼看出哪些通道（传感器）跟类别相关、哪些没关系。他们的采集方法很巧：<strong>先采一段"环境本底"（白色区域），再把物质凑近传感器采真实读数（红色区域）</strong>，这样能扣掉环境影响，对这个项目特别管用。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_006.jpg" alt="各气体传感器随时间的读数曲线，红白区域交替">
+        <figcaption><span class="fno">frame_006 · 约 15:00</span> · 每个传感器通道随采样点画出曲线。红色竖条＝物质靠近时的真实读数，白色＝环境本底。CO/LPG 等通道对物质很敏感（曲线起伏大），而 Alcohol 通道几乎是直线——这次没工作。</figcaption>
+      </figure>
+      <h3><span class="ts">13:19</span>该不该删掉"没用"的通道？</h3>
+      <p>有学生问：有的传感器明显没工作（比如这次的 alcohol 传感器是条直线），要不要删掉这列？David 的建议是：<strong>大多数时候不用删</strong>——如果某通道跟任何类别都无关，神经网络<strong>训练后会自动学会忽略它</strong>。神经网络对单个通道的噪声通常很鲁棒。只有当模型完全不工作时，才考虑去删一些通道。而且要删也得<strong>看全部数据再决定</strong>，不能只看一个文件（这个传感器在别的样本里其实是工作的）。</p>
+      <details class="transcript"><summary>英文逐字稿（08:14–15:43）</summary><div class="tx-body">I'm going to go through a complete small project using the smell data we collected in our lab. We have gas sensors that collect smell data from a substance. We're doing a three-way classification of three smells: ambient, alcohol and coffee beans. Before we dive into the model we first need to look at the data — I strongly suggest this. The data may not be in the format you intended; it's very common that on the documentation page the data has one format but after you download it has another. So it's important to actually look at the data before any modeling. We use os.listdir to list the files, then open a file to see how it looks — a bunch of columns corresponding to each gas sensor. If you're working with time series data, visualization is very important — you'll see which data are relevant to the category and which are not. This is for alcohol detection; the red region is the actual reading. We first collect ambient readings in the white region, then move the substance close to collect the actual reading — this way we eliminate ambient factors. Some sensors are very sensitive; the alcohol sensor I think is not working. Should we eliminate this column or include it in training? My suggestion: most of the time you should not need to eliminate any channels, because if a channel is irrelevant the network will automatically learn to ignore it. Neural networks are usually very robust to noise in one particular channel. If you do want to remove a channel, look at all the data instead of just one file.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S5 ===== -->
+  <section class="chapter" id="s5">
+    <h2><span class="num">05</span><span class="title-text">预处理：归一化是真正的命门</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">15:43</span>这份数据其实挺干净</h3>
+      <p>David 说神经网络对单通道噪声很鲁棒；只有噪声散落在很多通道时才麻烦，那时才需要 PCA 之类去降噪。但这份数据其实<strong>挺干净，不需要额外去噪</strong>。他们只做了一步：取每段的平均、再减去环境本底读数——因为每个传感器的<strong>初始读数本身就很随机、每次不一样</strong>，减掉本底得到"相对变化"，数据更稳。</p>
+      <h3><span class="ts">17:18</span>最重要的预处理：把量纲拉到同一范围</h3>
+      <p>关键来了：<strong>不同通道读数的范围差太多</strong>——比如 LPG 是 0~2000，O2 只有 50~100。这暴露一个核心问题：<strong>神经网络对"数值范围差异"不鲁棒</strong>。如果某列动辄上千，它会<strong>主导整个训练</strong>，把小范围的通道淹没。</p>
+      <p>所以做<strong>归一化（normalization）</strong>：用 sklearn 的 <code>StandardScaler</code> 把输入 x 变换到统一范围（大致 0~1 那种尺度）。<strong>这是这个项目里最重要的一步预处理。</strong></p>
+      <div class="callout bad"><p><strong>记死这条：忘了归一化 = 大数值通道一家独大，模型基本废。</strong>这不是锦上添花，是必做项。判断方法很简单：把各列的 min/max 打印出来，量级差好几个数量级就必须归一化。</p></div>
+      <details class="transcript"><summary>英文逐字稿（15:43–18:55）</summary><div class="tx-body">Neural networks are usually very robust to noise in one particular channel. If the noise is spread across different channels that may be too difficult and we'd need PCA to remove some noise — but for this one the data is actually pretty clean so you don't need preprocessing to fix that. We did take the average of each period and subtract the ambient reading, because the ambient reading — the initial reading of each sensor — is actually very variable, stochastic from session to session. So we subtract to get a relative change. Another thing: the range of each reading is very different — for LPG we have a range between 0 and 2,000, but for others like O2 it's 50 to 100. This tells us we need to do some normalization. This is actually one of the most important preprocessing steps because neural networks are not that robust to the range change. If you have a channel that's like 2,000, very likely that channel will dominate the entire training. So we use StandardScaler from the scikit-learn package to transform the input data to a range, I think 0 to 1, so it's more robust.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S6 ===== -->
+  <section class="chapter" id="s6">
+    <h2><span class="num">06</span><span class="title-text">Dataset / DataLoader：怎么把数据成批喂进去</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">18:07</span>切分 + 转成 Tensor</h3>
+      <p>归一化后做 <strong>80/20 切分</strong>：80% 训练、20% 测试。把数据转成 PyTorch tensor（注意标签 y 要用 <code>dtype=torch.long</code>，这又是 dtype 那个坑），用 <code>TensorDataset</code> + <code>random_split</code> 拆。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_007.jpg" alt="数据切分代码与模型设计说明">
+        <figcaption><span class="fno">frame_007 · 约 18:00</span> · 数据切分：80% 训练 / 20% 测试，包成 TensorDataset，再用 DataLoader（batch_size=16）成批加载。下方开始定义网络结构。</figcaption>
+      </figure>
+      <h3><span class="ts">18:55</span>Dataset vs DataLoader 的分工</h3>
+      <p>两个概念别混：</p>
+      <ul>
+        <li><strong>Dataset</strong>：负责"给你数据"——你问它要第 i 个样本，它给你。</li>
+        <li><strong>DataLoader</strong>：PyTorch 的加载器，启动多个 worker 进程<strong>并行加载</strong>（加速），而且每次给你的不是一个样本，是<strong>一批（batch）</strong>样本。</li>
+      </ul>
+      <h3><span class="ts">19:45</span>为什么要 batch + 实战 tip</h3>
+      <p>一次处理一批的好处：算出来的<strong>梯度更稳</strong>——它是这一批多个样本的平均，不会被单个样本带偏。<strong>实战 tip：训练时在显存放得下的前提下，batch size 尽量开大</strong>，训练过程更稳。</p>
+      <details class="transcript"><summary>英文逐字稿（18:07–20:36）</summary><div class="tx-body">After we load the data, combine it, split features and labels, we need normalization. We use StandardScaler to transform x to a range so it's more robust. Then we use data splitting of 80% versus 20% — 80% training, 20% testing — and initialize the dataset and the dataloader. If you're not familiar with these terms: the dataset actually gives you the data, and the dataloader is a loader from PyTorch that initializes multiple worker processes which speed up the data loading through parallel processing, and gives you a batch at a time instead of one sample. The benefit: if you work with multiple samples at a time, the gradient the model calculates — how to update the model to make it better — will be more robust because it's the average across different samples. Another practical tip: when you train, use as large a batch size as possible that can fit on one GPU, so the training process is the most robust.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S7 ===== -->
+  <section class="chapter" id="s7">
+    <h2><span class="num">07</span><span class="title-text">搭一个最简 MLP + 训练循环</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">20:36</span>模型就是几层 Linear 叠起来</h3>
+      <p>模型很朴素：一个 <strong>MLP（多层感知机）</strong>，几层 <code>Linear</code> + BatchNorm + ReLU 激活叠起来。<strong>输入维度 13</strong>（13 个传感器通道），<strong>输出维度 3</strong>（三分类）——这两个数固定不能改，中间的隐藏层大小随便调（512、256、128……）。</p>
+      <h3><span class="ts">21:26</span>几层够用 + 怎么定层数</h3>
+      <p>有学生问怎么决定层数和每层大小，是不是只能靠经验？David：<strong>好的起点就是从简单开始</strong>——先两三层看效果。对他们这种简单数据，两三层就够。</p>
+      <h3><span class="ts">21:26</span>训练循环：五步一个 epoch</h3>
+      <p>训练循环虽长，核心就五步，每个 batch 走一遍：</p>
+      <ol>
+        <li>从 DataLoader 拿一批数据和标签；</li>
+        <li>喂进模型得到输出（预测）；</li>
+        <li>拿预测和理想答案比，算出 <strong>loss</strong>；</li>
+        <li><code>loss.backward()</code> 算梯度（告诉你参数该怎么调才更好）；</li>
+        <li><code>optimizer.step()</code> 真正更新参数让模型变好。</li>
+      </ol>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_008.jpg" alt="训练循环代码与 loss 逐 epoch 下降">
+        <figcaption><span class="fno">frame_008 · 约 21:00</span> · 训练循环：<code>optimizer.zero_grad()→model()→loss→loss.backward()→optimizer.step()</code>。右下输出显示 loss 从 0.41 一路降到 0.20，100 个 epoch 训练在 GPU（cuda）上跑。</figcaption>
+      </figure>
+      <div class="callout info"><p>注意循环里第一行是 <code>optimizer.zero_grad()</code>——每个 batch 先把梯度清零再算。这正是 micrograd 那一集里"梯度要累加，所以每轮先 zero_grad"那条铁律在真实代码里的样子。忘了它就是最经典的训练 bug。</p></div>
+      <details class="transcript"><summary>英文逐字稿（20:36–22:13）</summary><div class="tx-body">Finally we can design our model. This is a very simple MLP that stacks multiple linear layers with batch norm and ReLU activation. We have an input size of 13 and output size of three because we're doing three-way classification — those two numbers you cannot change, but anything in the middle you can make larger or smaller. For our simple data we just need maybe two or three layers and that should be enough. How do you decide the number of layers and the size? A good starting point is to start simple — use two or three layers and see how it performs. Then we have a training loop. Essentially you get the data and the label from the dataloader, feed the data into the model, compare the model's output with the ideal output to get a loss; after the loss you calculate the gradient which tells you how to update the parameters to make the model better, and then you call the optimizer step to actually make the model better.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S8 ===== -->
+  <section class="chapter" id="s8">
+    <h2><span class="num">08</span><span class="title-text">评估 + 看哪类差 + 迭代改进 + 存模型</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">22:13</span>评估：跟训练一样，只是不更新</h3>
+      <p>评估和训练几乎一样，唯一区别：<strong>把数据喂进模型、比对答案，但不更新模型</strong>（用 <code>model.eval()</code> + <code>torch.no_grad()</code>）。结果<strong>准确率 ~75%</strong>，还凑合。</p>
+      <h3><span class="ts">23:01</span>看每一类的细分指标</h3>
+      <p>更要看<strong>每个类别的细分</strong>（precision / recall / F1）：模型对 ambient 和 alcohol 识别得不错，但<strong>对 coffee（咖啡豆）很差</strong>。</p>
+      <h3><span class="ts">23:53</span>迭代改进的套路</h3>
+      <p>怎么改进？<strong>先定位哪类表现最差，再问为什么</strong>：是数据不够，还是别的原因。如果是 coffee 数据不够，那就<strong>多采点咖啡豆的样本</strong>。这就是迭代改进模型的基本动作——<strong>看指标 → 找最弱环节 → 对症补</strong>。</p>
+      <h3><span class="ts">23:53</span>别忘了存模型</h3>
+      <p>最后<strong>一定要存模型</strong>（<code>torch.save(model.state_dict(), "model.pth")</code>），以后做进一步分析或部署能直接加载。</p>
+      <details class="transcript"><summary>英文逐字稿（22:13–24:40）</summary><div class="tx-body">After the training we run the evaluation, very similar to training — you feed the data into the model, but this time we compare the output with the ideal output and we don't update the model anymore. We got an accuracy of about 75%, which is kind of okay. We can see a more precise breakdown of each category — the model has pretty high precision, recall and F1 for ambient and alcohol, but doesn't work so well at recognizing coffee. After this you can improve the model iteratively: first identify which grade performs best and which worst, and for the worst ones, see if it's because we don't have enough data or something else. If we don't have enough data, maybe collect more samples from coffee beans. And finally, don't forget to save the models so you can use them for further analysis later.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S9 ===== -->
+  <section class="chapter" id="s9">
+    <h2><span class="num">09</span><span class="title-text">train/test 怎么切才不算"作弊"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">24:40</span>分类的是"片段"不是单点</h3>
+      <p>有学生问分类的对象是整段时间序列还是单个采样点？David：把整段读数<strong>切成片段</strong>（一段约 10 行 / 10 秒），对每个片段做分类。教授补充：<strong>窗口多大、标签怎么对应窗口——这些设计决策在实际应用里超级重要</strong>。</p>
+      <h3><span class="ts">25:30</span>切分不当 = 偷偷作弊</h3>
+      <p>教授点出一个<strong>致命陷阱</strong>：如果你的训练集和测试集来自<strong>同一天、同一小时</strong>采的样本，模型可能只是<strong>记住了这些样本</strong>，而没真正学会泛化——等你换天用就废了。这类超参数（窗口、切分方式）是 ML 里你必须亲自设计、想清楚的。</p>
+      <h3><span class="ts">26:18</span>原则：切分要贴近真实使用场景</h3>
+      <p>David 给原则：<strong>train/test 切分要尽量贴近真实使用场景</strong>。如果你打算"今天训练、改天使用"，那切分就该按天切——<strong>不能拿一段会话的前半训练、后半测试</strong>（那样测出来好看，但不代表真实表现）。</p>
+      <h3><span class="ts">27:06</span>一个真实教训：换个房间就不灵</h3>
+      <p>他们在实验室某个房间采数据训了个模型，<strong>换到别的房间或户外就不工作</strong>了——因为模型没学会区分不同的环境因素（温度、湿度等）。所以<strong>如果你要在 A 训练、B 使用，就得把两种场景的数据都采上、按场景切分</strong>。</p>
+      <div class="callout warn"><p><strong>这是整堂课最值钱的一段。</strong>很多人模型在自己电脑上 90%+，一上线就崩，根子常常就是 train/test 切分泄漏了信息（同一天/同一房间/同一会话）。<strong>切分方式 = 你对"将来怎么用"的诚实模拟。</strong>切得越像真实部署，离线指标才越可信。</p></div>
+      <details class="transcript"><summary>英文逐字稿（24:40–27:06）</summary><div class="tx-body">What is the row we're classifying — a full time series or a sample? We sampled a bunch of periods; one period is about 10 rows, and we segment the entire reading into different segments and do classification on each segment of about 10 seconds. These are design decisions that are super important in your applications: what is the window, bigger or smaller, what's the label with respect to each window. David also skipped how you should split your train and test data — that can be very important. If you partition test data such that they were from the same day or same hour as the sample, it could basically just memorize the sample without actually generalizing. A lot of these hyperparameters in machine learning are things you have to decide and design. When we do train/test, we want them as close to real-life scenarios as possible. If you're going to train on one day and use the model another day, the split should be exactly like that. You shouldn't use the first part of a session for training and the other part for testing — the model will perform well but that won't translate to real-life performance. One example: we collected data in one room and trained a model, but it wouldn't work in another room or outdoors, because it wasn't able to differentiate ambient factors like temperature, humidity. So if you train on something and test somewhere else, collect both sorts of data and split accordingly.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S10 ===== -->
+  <section class="chapter" id="s10">
+    <h2><span class="num">10</span><span class="title-text">随机森林：简单模型反而把深度模型按在地上</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">27:06</span>随机森林是什么</h3>
+      <p>David 又用<strong>随机森林（Random Forest）</strong>跑同一份数据对照。随机森林不是深度学习，它是一堆<strong>决策树</strong>投票：每棵树给个判断，最后<strong>多数表决</strong>。用 sklearn 的 <code>RandomForestClassifier</code>，训练飞快、占资源少。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_009.jpg" alt="随机森林原理示意图：多棵决策树多数投票">
+        <figcaption><span class="fno">frame_009 · 约 24:00</span> · 随机森林示意：一个实例丢给 Tree-1、Tree-2…Tree-n 各自判断（Class-A / Class-B…），再多数投票出最终类别。简单、省资源，对简单数据通常很有效。</figcaption>
+      </figure>
+      <h3><span class="ts">27:54</span>结果：95.8%，吊打 75% 的深度模型</h3>
+      <p>随机森林准确率 <strong>95.8%</strong>，远高于深度 MLP 的 75%。这给了一条重要经验：<strong>对简单、低噪声的数据，浅模型（随机森林、SVM）往往比花哨的深度模型表现更好。</strong></p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_010.jpg" alt="随机森林评估：准确率 95.8% 与混淆矩阵">
+        <figcaption><span class="fno">frame_010 · 约 27:00</span> · 随机森林评估：准确率 0.958，分类报告里三类的 precision/recall/F1 都很高，混淆矩阵几乎全落在对角线上（只错 1 个）。同样的数据，比深度 MLP 强得多。</figcaption>
+      </figure>
+      <h3><span class="ts">28:44</span>实战 tip：低维数据先上浅模型</h3>
+      <p>David 的建议：<strong>当每个数据点只是几百个数字这种"低维数据"时，表现最好的往往是浅模型（随机森林、SVM）。先从简单浅模型起步，再考虑深模型。</strong></p>
+      <h3><span class="ts">29:34</span>泛化的本质区别</h3>
+      <p>关于"换房间就失灵"是否对随机森林也成立：David 说<strong>一般来说简单模型对噪声更鲁棒</strong>，因为复杂模型决策边界很紧、更容易过拟合训练数据的噪声，对环境变化不鲁棒。真正的根因是<strong>数据不够</strong>：视觉任务有强大的预训练编码器兜底，几乎啥数据都能用；但<strong>时间序列数据很难跨域泛化</strong>，常常一个环境能用、换个环境就不行。</p>
+      <div class="callout good"><p><strong>"啊原来如此"：别一上来就深度学习。</strong>数据简单/量小/低维时，随机森林、SVM 这种老牌浅模型经常更快更准更稳。深度模型是为复杂高维数据（图像、文本）准备的重武器，杀鸡别用牛刀。</p></div>
+      <details class="transcript"><summary>英文逐字稿（27:06–30:25）</summary><div class="tx-body">I'm going to go through model classification with a random forest. Random forest is not a deep learning model — it's a simple model where you have a bunch of decision trees and use majority voting to combine the output of each tree. Training is very fast. We do a train/test split, initialize a RandomForestClassifier from scikit-learn, and evaluate — we get an accuracy of 95.8%, a lot higher than the deep learning model. This tells us that for simple and non-noisy data, sometimes a simple shallow random forest classifier performs much better than the fancy deep models. When you deal with low-dimensional data — each data point is a couple hundred numbers — very likely the best models are shallow ones like forest or SVM. I suggest starting with very simple shallow models before moving to deep models. Is random forest robust to testing in a different room? I'm not quite sure, we don't have data from another room. But in general a simpler model is more robust to noise, because a more complex model has a very compact decision boundary and is more likely to overfit the noise of the training data, so it's not as robust to environmental change. This is when you don't have enough data. If you have vision datasets where you have powerful vision encoders, it will likely work on any data; but with time series data, it's not very generalizable to other domains.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S11 ===== -->
+  <section class="chapter" id="s11">
+    <h2><span class="num">11</span><span class="title-text">切到 HuggingFace：它不是一个包，是一套全家桶</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">30:25</span>HuggingFace 是什么</h3>
+      <p>HuggingFace 不是单个包，而是<strong>一套包的集合，让你用更少代码训更大的模型</strong>。两个核心子包：</p>
+      <ul>
+        <li><strong>transformers</strong>：提供 API，一键<strong>用预训练权重初始化大模型</strong>。</li>
+        <li><strong>datasets</strong>：让你<strong>轻松从网上下公开数据集</strong>。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_011.jpg" alt="HuggingFace 教程概览幻灯片">
+        <figcaption><span class="fno">frame_011 · 约 30:00</span> · HuggingFace 全家桶速查：transformers（加载预训练大模型）+ datasets（下数据集）；非官方但常配套的 bitsandbytes（量化省显存）+ flash-attn（更快更省内存）；要记的术语：LoRA（少量参数微调大模型）、Bfloat16（省显存的半精度）。</figcaption>
+      </figure>
+      <h3><span class="ts">31:13</span>怎么选模型/数据集 + 配套包</h3>
+      <p>怎么选？<strong>去 HuggingFace 网站搜</strong>，看你的场景下哪些模型热门，挑一个、把名字填进代码就能用。还有些不是 HuggingFace 官方但常配套的包：</p>
+      <ul>
+        <li><strong>bitsandbytes</strong>：<strong>量化（quantize）</strong>大模型，把它变小、更好塞进 GPU 显存。</li>
+        <li><strong>flash-attn</strong>：让训练<strong>更快、更省内存</strong>。</li>
+      </ul>
+      <h3><span class="ts">32:52</span>本课用 LoRA 微调</h3>
+      <p>这次用 <strong>LoRA</strong>——它本质是个<strong>适配器（adapter）</strong>，让你<strong>只训练极少量参数</strong>就能微调一个大模型，从而省显存。还有 <strong>Bfloat16</strong>：一种鲁棒的半精度表示，常用来省显存。</p>
+      <details class="transcript"><summary>英文逐字稿（30:25–33:00）</summary><div class="tx-body">Let's go through the Hugging Face tutorial. Hugging Face is actually not a single package — it's a set of packages that allows you to train larger models with less code. It has two main sub-packages: transformers and datasets. Transformers provides API to initialize large models with pretrained weights — if you work with large models you use transformers to initialize the pretrained models. Datasets is for you to easily download public datasets from the internet. How do you choose the models or datasets? You can search online on the Hugging Face website and see which models are popular for your use cases, pick one and plug the name into your code. There are also packages not from Hugging Face but very popular because they make training more efficient: bitsandbytes provides functions to quantize the large model to make it smaller and fit better in GPU memory; flash-attn makes the training faster with less memory. For this tutorial we'll build a large model with LoRA — LoRA is basically an adapter to train a large model with less trainable parameters so you can train with less memory. Bfloat16 is a robust half precision representation often used to save memory.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S12 ===== -->
+  <section class="chapter" id="s12">
+    <h2><span class="num">12</span><span class="title-text">上手微调：登录 + gated 模型 + 选 GPU</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">33:00</span>先登录 HuggingFace</h3>
+      <p>用模型前要先 <code>notebook_login()</code> 登录 HuggingFace。原因是他们用的模型 <strong>StarCoderBase-1B</strong>（一个 10 亿参数、在 80+ 种编程语言上训练的代码模型）是<strong>"gated"（受限访问）</strong>——你得先在模型页同意条款、申请访问权限。</p>
+      <h3><span class="ts">33:44</span>关键：把运行时改成 GPU</h3>
+      <p>跑任何 cell 前，<strong>一定先在 Colab 把运行时类型改成 GPU</strong>（Runtime → Change runtime type → 选 T4 GPU）。这次能用的是 Nvidia <strong>T4，4GB 显存</strong>。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_012.jpg" alt="Colab 改运行时类型选 T4 GPU + gated 模型说明">
+        <figcaption><span class="fno">frame_012 · 约 33:00</span> · 微调 bigcode/starcoderbase-1b（gated 受限模型，需先申请访问）。务必把 Colab 运行时改成 T4 GPU 再跑——CPU 跑不动大模型。</figcaption>
+      </figure>
+      <h3><span class="ts">34:34</span>拿 token + 装包</h3>
+      <p>登录时它让你填 HuggingFace token：去 HuggingFace 个人页<strong>新建一个 token</strong>（要发布模型就选对应权限），复制粘贴回 Colab。然后装一堆包（前面讲的 transformers / datasets / peft / bitsandbytes / flash-attn）。</p>
+      <details class="transcript"><summary>英文逐字稿（33:00–36:16）</summary><div class="tx-body">Before we use the model, we actually need to log in to Hugging Face using notebook_login. Before you run any of these cells, make sure you select Change runtime type and select the GPU. After you click this cell, you'll see a web page that asks you to input your Hugging Face token. If you open your Hugging Face page you can create a new token here — select the right one if you want to publish your model — give it a name, click create token, copy and paste it here to log in. The reason we log in: the model we use has gated access. If you open the bigcode StarCoderBase-1B page you'll see a diagram about applying for access. I already have access, but if you haven't, you need to agree to their agreement and apply for access. Then we install a bunch of packages, mostly the ones we talked about from Hugging Face.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S13 ===== -->
+  <section class="chapter" id="s13">
+    <h2><span class="num">13</span><span class="title-text">配置参数：模型多大、要配多少显存</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">36:16</span>显存的拇指法则</h3>
+      <p>怎么估一个模型能不能塞进你的 GPU？<strong>看模型名字里 B 前面的数字</strong>（StarCoderBase-<strong>1B</strong> = 10 亿参数）。<strong>拇指法则：把 B 前面的数字 ×2，就是推理大致需要的最小显存（GB）。</strong>所以 1B 模型推理大约要 2GB。<strong>训练要更多</strong>（取决于怎么训）。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_013.jpg" alt="微调配置参数：模型名、LoRA、bitsandbytes 设置">
+        <figcaption><span class="fno">frame_013 · 约 36:00</span> · 配置区一览：MODEL=starcoderbase-1b、训练参数（max_steps/batch_size/学习率/调度器/warmup）、LoRA 参数（R/Alpha/dropout/target_modules）、bitsandbytes 4-bit 量化配置。改 R 和 Alpha 越大，改动越大、越费显存。</figcaption>
+      </figure>
+      <h3><span class="ts">37:54</span>加载数据 + tokenizer</h3>
+      <p>用 datasets 一行加载数据集（这次只取 4000 条样本，时间不够全跑）。再初始化 <strong>tokenizer（分词器）</strong>——它把英文词翻译成 LLM 能懂的 <strong>token</strong>。用大语言模型基本都得过这一步，但很简单，调一下 tokenizer 就行。</p>
+      <h3><span class="ts">40:26</span>4-bit 加载 + LoRA</h3>
+      <p>加载模型时用 <strong>4-bit</strong>（因为 T4 显存小，只能塞下这个尺寸）。David 提醒：<strong>理想情况应该用 16-bit 让训练更稳，4-bit 不太稳定</strong>，但这次为了塞进 Colab 只能 4-bit。然后挂上 LoRA、开始训练。</p>
+      <details class="transcript"><summary>英文逐字稿（36:16–41:17）</summary><div class="tx-body">On the first line you'll see our model name, dataset name and dataset column. We use a model called StarCoderBase-1B — a one billion parameter model. The GPU is a T4 from Nvidia with 4 gigabytes of memory. The way to determine what kind of model you can run is to look at the final number: if you have a 1B model it's likely to fit on a 4GB GPU. The rule of thumb: multiply the number before the B by two, and that's the rough minimum memory you need to run inference. So 1B needs at least two gigabytes. For training you'll need a bit more. We have LoRA parameters — the larger R and alpha, the more memory and the larger the modification. We load the dataset with one line; for this tutorial we only take 4,000 samples. We initialize a tokenizer — it translates English words into tokens that LLMs understand. We load the models in 4-bit because of the memory requirement. Ideally you should load in 16-bit for a more stable training process, because four-bit is not that stable, but for this tutorial we use four-bit because that's the only size we can fit into Colab. Then we set up LoRA and train the model.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S14 ===== -->
+  <section class="chapter" id="s14">
+    <h2><span class="num">14</span><span class="title-text">WandB 盯训练：先看显存占用和 GPU 功耗</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">41:17</span>WandB 是训练监控仪表盘</h3>
+      <p>HuggingFace 跟 <strong>WandB（Weights &amp; Biases）</strong>集成得很好——这是个<strong>训练监控工具</strong>，实时画出训练过程的各种曲线。运行训练时它给你一个链接，去 <code>wandb.ai/authorize</code> 登录、把 API key 粘回来，就能在网页上看训练直播。</p>
+      <h3><span class="ts">42:57</span>第一眼看两个硬件指标</h3>
+      <p>David 说他每次训练首先看<strong>两块面板</strong>：</p>
+      <ul>
+        <li><strong>GPU Memory Allocated（显存占用 %）</strong>：太高（如 95%）→ 很可能训练中途 <strong>OOM（爆显存）</strong>；太低 → batch size 开太小、训练不理想。</li>
+        <li><strong>GPU Power Usage（功耗 %）</strong>：反映 GPU 有多忙。如果只有 10% → GPU 大部分时间在<strong>空转</strong>，说明你的<strong>数据处理/训练管线效率太低</strong>。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_015.jpg" alt="WandB GPU 显存占用与功耗面板">
+        <figcaption><span class="fno">frame_015 · 约 42:00</span> · WandB 的 GPU 面板：左为显存占用（爬升到约 70% 后稳定），右为 GPU 功耗。这两块是 David 每次训练先看的硬件健康指标。</figcaption>
+      </figure>
+      <h3><span class="ts">43:45</span>两个目标区间</h3>
+      <ul>
+        <li><strong>显存维持在 80~90%</strong>：既不易 OOM，又充分利用了显存。</li>
+        <li><strong>功耗 &gt; 60% 为佳</strong>：低于这个数就去查数据集实现/预处理脚本/训练管线哪一段太慢。</li>
+      </ul>
+      <details class="transcript"><summary>英文逐字稿（41:17–44:35）</summary><div class="tx-body">One nice thing about Hugging Face is it has very nice integration with WandB — a training monitoring tool that tells you how the training goes. When you run training you'll see this from WandB; if you open the wandb.ai/authorize page and sign in with your account, you copy and paste the API key, and you can see the training run live on the web page. Before they log any training or evaluation loss, the two panels I tend to look at for each training run are GPU Memory Allocated and GPU Power Usage. GPU memory allocated is how much GPU memory you're using for this run — if it's too large, like 95%, it's likely your training will have an out-of-memory error later. But if it's too low, it means your batch size is too small and the training is not ideal. My suggestion: keep the memory around 80 to 90% so it's less likely you'll have OOM and you're utilizing most of the memory. GPU power tells you how busy your GPU is during the run — if power usage is like 10%, your training pipeline or data processing pipeline is not efficient and the GPU is idle most of the time. I'd say power usage larger than 60% is kind of ideal; if it's less, check your dataset implementation, preprocessing script and training pipeline to see which part is slow.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S15 ===== -->
+  <section class="chapter" id="s15">
+    <h2><span class="num">15</span><span class="title-text">再看 loss 和 grad_norm：训练有没有在收敛</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">45:24</span>loss 该怎么走</h3>
+      <p>硬件指标之外，<strong>loss</strong> 当然最重要——<strong>loss 不下降就是出问题了</strong>。但要注意：前几步甚至前几百步 loss 不降很正常（学习率没热好、模型还很烂）；<strong>但之后一定要往下走，否则训练不会收敛</strong>。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_016.jpg" alt="WandB 训练曲线面板：learning_rate / loss / grad_norm">
+        <figcaption><span class="fno">frame_016 · 约 45:00</span> · WandB 训练面板：train/learning_rate、train/loss、train/grad_norm、train/global_step、train/epoch。看 loss 是否持续下降、grad_norm 是否随收敛而减小，是判断训练健康的核心。</figcaption>
+      </figure>
+      <h3><span class="ts">46:15</span>grad_norm（梯度范数）</h3>
+      <p>另一个要看的是 <strong>grad_norm</strong>——每个训练步里梯度的<strong>平均幅度</strong>。它大说明模型每步在做很大的更新。<strong>随着模型收敛，grad_norm 应该逐渐变小</strong>（越接近最优点，更新应越小）。<strong>如果 grad_norm 反而越来越大，说明训练出了问题。</strong></p>
+      <div class="callout info"><p><strong>监控的优先级总结：</strong>先看硬件（显存别爆、GPU 别空转），再看 loss（必须趋势下降）、grad_norm（应随收敛减小）。这套"先硬件、后曲线"的查看顺序，就是有经验的人盯训练的标准动作。</p></div>
+      <details class="transcript"><summary>英文逐字稿（45:24–47:53）</summary><div class="tx-body">Can you cover Weights &amp; Biases — other things to look at beyond GPU usage? The loss is also very important — you want the loss to decrease. If the loss doesn't decrease, you have a problem. It's very normal that the loss doesn't decrease for the first few steps because you may be using a learning rate that's warming up or the model is just not ideal yet. It's possible the loss doesn't decrease for a couple hundred steps, but after that it should decrease, otherwise the training is not going to converge. The other thing is they log the grad norm — this is the average magnitude of the gradient of each training step. If this is pretty large it means your model is getting a very large update each step. This should kind of decrease as your model converges to an optimal point, because if the model is getting better you don't want it to make larger and larger updates. So if the grad norm is increasing then something is wrong with your training process.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S16 ===== -->
+  <section class="chapter" id="s16">
+    <h2><span class="num">16</span><span class="title-text">调模型是门手艺：The Recipe（Karpathy 风格方法论）</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">47:53</span>调 AI 模型更像艺术而非科学</h3>
+      <p>Chanaka 接手讲<strong>调模型的方法论</strong>。核心哲学：<strong>调 AI 模型更像一门手艺（art），不是一门精确科学</strong>。写普通程序你有明确信号知道对不对；但 ML 模型<strong>什么时候算"工作"很模糊</strong>。所以需要一张<strong>调试清单</strong>，让你心里有数：能改哪、该查哪。有时梯度爆高、有时极低、有时 loss 直接 ∞——这张 recipe 就是教你遇到这些怎么办。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_017.jpg" alt="The Recipe 调模型六步清单幻灯片">
+        <figcaption><span class="fno">frame_017 · 约 48:00</span> · The Recipe 六步（脱胎自 Karpathy 的训练神经网络配方）：① 跟数据合体 → ② 搭端到端骨架、跑出笨基线 → ③ 故意过拟合来诊断错误 → ④ 正则化提升泛化 → ⑤ 调超参 → ⑥ 榨取最后的提升。</figcaption>
+      </figure>
+      <h3><span class="ts">49:30</span>第一步：跟数据"合体"（Become one with the Data）</h3>
+      <p>工程师都爱用最花哨的模型，<strong>但这跟做出好结果是反着来的</strong>。一开始要<strong>花大量时间盯着数据看</strong>，理解数据分布，自己找出里面的规律。尤其当你数据不多时（不像那些大语言模型有海量数据），你得设计能<strong>建模这些规律</strong>的模型。</p>
+      <h3><span class="ts">50:17</span>第二步：搭端到端骨架 + 笨基线</h3>
+      <p>看完数据、有了直觉，先<strong>搭一个最简单的模型拿到信号</strong>——线性回归、简单 CNN 都行。如果是别人整理过的公开数据集，GitHub 上很可能已有人解过，直接拿来跑。还有两个工程细节：<strong>固定随机种子</strong>（让过程确定、少一个变量）；<strong>永远检查初始化时的 loss</strong>——很多时候初始 loss 是 ∞，这是个很好的健康检查。</p>
+      <h3><span class="ts">51:03</span>第三步：故意过拟合一个样本来诊断</h3>
+      <p>如果模型怎么都不工作，<strong>试着让它过拟合（overfit）一个样本</strong>——确保模型能把<strong>单个样本</strong>背下来。<strong>如果连一个样本都学不会，说明模型本身有毛病</strong>，回去重新设计。能过拟合小数据集后，看能不能把误差降下去；降不下去就回到"看数据"或重新设计建模策略。这一步要<strong>可视化 loss 动态和梯度</strong>——梯度飙到 ∞ 可能是没写好、初始化不对、或数据没归一化好。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-1-tools/frame_018.jpg" alt="Overfit 调试步骤幻灯片">
+        <figcaption><span class="fno">frame_018 · 约 51:00</span> · "Overfit"诊断法：用简单模型在极小训练集上故意过拟合，确认模型有学习能力。Tips：可视化预测和 loss 动态、确认梯度只影响该影响的输入、别过早优化架构。</figcaption>
+      </figure>
+      <h3><span class="ts">52:39</span>最大的忠告：别先纠结架构</h3>
+      <p><strong>最大的 takeaway：一开始别太纠结架构。</strong>很多人读了篇论文就想搞个酷炫架构——这是反直觉的错误。ML 在乎的不是<strong>记忆</strong>而是<strong>泛化</strong>：等模型确实能在训练集上过拟合了，再上 <strong>dropout、weight decay 等正则化</strong>手段；在那之前别碰正则化。</p>
+      <h3><span class="ts">53:26</span>第四~六步 + 总流程</h3>
+      <p>剩下的步骤：</p>
+      <ul>
+        <li><strong>调超参</strong>：很多时候模型其实没问题，只是<strong>超参没找对</strong>。小模型尤其值得多搜几组超参——很多人 default 一跑、准确率烂、就放弃了，其实好好训能出很好的结果。</li>
+        <li><strong>榨取最后提升</strong>：用模型集成（ensemble）、训练到超过收敛点（有时有帮助）。</li>
+        <li><strong>做完上面这些，最后才去看更复杂的架构。</strong></li>
+      </ul>
+      <p>总流程一句话：<strong>先看数据 → 搭简单模型 → 在数据上过拟合 → 能过拟合后正则化 → 再 finetune 到你要的性能</strong>。Chanaka 推荐课后读两篇博客（其中一篇是 Ali Rahimi 的）把这套思路吃透。</p>
+      <div class="callout accent"><p><strong>这就是整堂课的灵魂。</strong>新手最爱的两个错误：① 一上来用最花哨的模型/架构；② 模型不灵就乱调架构。正确顺序恰恰相反——<strong>数据 → 笨基线 → 过拟合诊断 → 正则化 → 调超参 → 最后才碰架构</strong>。这套 recipe 不只对深度学习，对任何 ML 项目都适用。</p></div>
+      <details class="transcript"><summary>英文逐字稿（47:53–54:13）</summary><div class="tx-body">The philosophy here is that debugging AI models is more of an art than a science. When you code up a program you have some signal that it's correct or not, but in machine learning it's not very clear when your model works. This debugging checklist gives you checks to understand what you can improve. Training neural networks is more of an art — sometimes your models train, sometimes they don't; sometimes gradients are very high, very low, losses are infinity. Can we demystify this process? This is the recipe — one slide that covers everything to do whenever you train. First, become one with the data — we love using the fanciest model, but that's counterintuitive to getting good results. Spend a lot of time looking at your data, understand the distribution, come up with your own patterns. In most cases you won't have a lot of data, so you need models that model some patterns. Once you've looked at the data, come up with a very simple model to get some signal — linear regression or a simple conv net; if it's a curated dataset, someone on GitHub has likely tried to solve it, pick up those models. Fix the seed first so it's deterministic. Always look at the loss at initialization — sometimes losses at initialization are infinite, a good cross-check. If models don't work, try to overfit them on a single data sample — make sure your model memorizes one single sample to identify if it's capable of learning. If not capable, go back and come up with a better model. Visualize your loss dynamics and gradients — sometimes gradients go to infinity because you didn't code it well, initializations are wrong, or you haven't normalized data well. The biggest takeaway: don't worry so much about your architecture initially. In ML we don't care about memorization, we care about generalization — once your model overfits the training set, do regularization like dropouts and weight decays; until then don't. In most cases your model could be working fine, you just haven't found the right hyperparameters — search for multiple hyperparameters, especially if the model is small. Finally, use ensembles and train past convergence; only then look at more complicated architectures. So: focus on data first, come up with simple models, overfit your data, regularize, then finetune for whatever performance you want. There are two blogs we'll share, including one by Ali Rahimi — go over them.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== Feynman ===== -->
+  <section class="chapter" id="feynman">
+    <h2><span class="num">🧠</span><span class="title-text">费曼重讲：用大白话把这堂课讲到能复述</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3>1. 这堂课其实在教"开车"，不是"造发动机"</h3>
+      <p>上一集（micrograd）讲的是发动机内部——反向传播怎么算梯度。这堂课完全换了视角：<strong>不拆发动机了，教你怎么开车上路</strong>。PyTorch 和 HuggingFace 就是车，这堂课就是驾校教练带你实地开一圈：怎么挂挡（Tensor）、哪三个动作最容易出事故（dtype/device/乘法）、怎么看仪表盘（WandB）、车开不动了按什么顺序检修（The Recipe）。</p>
+
+      <h3>2. Tensor = 会算梯度、能上 GPU 的多维数组；三个隐形坑要背下来</h3>
+      <p>Tensor 你就当成 Excel 表格 / 矩阵，只不过能塞进显卡里飞快算、还自带"求梯度"功能。新手最常摔的三跤，记成口诀：</p>
+      <ul>
+        <li><strong>类型对不对（dtype）</strong>：整数和小数混着算会出错，加载完先 <code>print(x.dtype)</code>。</li>
+        <li><strong>在不在一块儿（device）</strong>：一个在 CPU、一个在 GPU 的两个数没法一起算，要 <code>.to(device)</code> 先搬到一起。</li>
+        <li><strong>乘法是哪种乘</strong>：<code>*</code> 是"对位相乘"（逐元素），不是数学课的矩阵乘；要矩阵乘用 <code>torch.mm</code>。</li>
+      </ul>
+      <div class="callout good"><p><strong>啊原来如此 ①：</strong>很多"我的代码不报错但结果全错"的诡异 bug，根子就是这三个之一。养成"加载完先 print 出来看一眼"的习惯，能省下你 80% 的抓狂时间。</p></div>
+
+      <h3>3. 做一个 AI 项目的完整流水线，长这样</h3>
+      <p>用气味分类那个例子，把流水线串一遍，像做菜：</p>
+      <ul>
+        <li><strong>买菜前先看菜（看数据）</strong>：打开数据画出来看，哪些传感器有用、哪些是哑的。数据格式经常跟你想的不一样，不先看一眼后面全白干。</li>
+        <li><strong>洗菜切菜（预处理）</strong>：最关键一步是<strong>归一化</strong>——把所有传感器的读数拉到同一个尺度。不然某个动辄上千的通道会像桌上一大盆盐，把别的味道全盖住，模型只尝得到它。</li>
+        <li><strong>分餐（DataLoader + batch）</strong>：把数据一批一批端上桌，而不是一粒米一粒米喂。一批一起算，方向更稳，还能并行加速。</li>
+        <li><strong>先炒个最简单的菜（笨模型）</strong>：搭两三层的小网络先跑通，别一上来就满汉全席。</li>
+        <li><strong>尝味道、找最难吃的那道（评估 + 看每类指标）</strong>：哪类识别得最差就重点补它的数据。</li>
+        <li><strong>装盘留样（存模型）</strong>：训好一定存下来。</li>
+      </ul>
+
+      <h3>4. 反常识的一课：花哨模型经常输给老实模型</h3>
+      <p>同一份数据，深度神经网络只有 75%，老老实实的<strong>随机森林（一堆决策树投票）反而 95.8%</strong>。为什么？数据简单、量小、维度低的时候，复杂模型容易"想太多"——把训练数据里的噪声也当规律背下来，换个场景就废。<strong>简单数据配简单模型，杀鸡别用牛刀。</strong></p>
+      <div class="callout warn"><p><strong>最贵的一个坑：train/test 切分别作弊。</strong>如果训练和测试的数据来自同一天/同一个房间，模型可能只是"背"住了，没真学会。它换天换房间就崩。切分方式要<strong>诚实模拟你将来怎么用</strong>——你打算改天用，就按天切；你打算换地方用，就把别的地方的数据也采来。离线 95% 上线却崩，十有八九栽在这。</p></div>
+
+      <h3>5. 大模型怎么玩：HuggingFace 全家桶 + LoRA 省钱大法</h3>
+      <p>自己从零训大模型太贵。HuggingFace 是个"<strong>预制菜超市</strong>"：<code>transformers</code> 一行代码把别人训好的大模型搬回家，<code>datasets</code> 一行下数据集。但大模型塞不进小显卡怎么办？两招省显存：</p>
+      <ul>
+        <li><strong>量化（bitsandbytes）</strong>：把模型参数从高精度压成低精度（4-bit），模型瞬间瘦一圈，塞得进 4GB 的小显卡了（代价是稍微不稳）。</li>
+        <li><strong>LoRA</strong>：不去动那几十亿个原始参数，只在旁边挂一小撮"可训练的旋钮"，<strong>只训这一小撮</strong>就能让大模型学会新任务。显存和算力都省一大截。</li>
+      </ul>
+      <p>估显存有个拇指法则：<strong>模型名里 B 前面的数字 ×2 ≈ 推理要的 GB</strong>。1B 模型 ≈ 2GB，训练还要再多点。</p>
+
+      <h3>6. 盯训练像看病人监护仪：先看生命体征，再看化验单</h3>
+      <p>WandB 是训练的"监护仪"。看的顺序很有讲究：</p>
+      <ul>
+        <li><strong>先看生命体征（硬件）</strong>：显存占用别冲到 95%（会爆/OOM），也别太低（说明 batch 太小没吃饱），80~90% 刚好；GPU 功耗别只有 10%（说明卡在空转、喂数据太慢），最好 60% 以上。</li>
+        <li><strong>再看化验单（loss / grad_norm）</strong>：loss 要持续往下走（前几百步不降是正常的热身）；grad_norm（每步更新的力度）应该随着收敛越来越小，<strong>如果反而越来越大，说明训练出事了</strong>。</li>
+      </ul>
+      <div class="callout good"><p><strong>啊原来如此 ②：</strong>"GPU 功耗只有 10%"不是 GPU 坏了，而是你<strong>喂数据太慢、卡饿着了</strong>。这时该去优化数据管线，而不是换更大的显卡。</p></div>
+
+      <h3>7. 模型调不出来时，按这个顺序排查（The Recipe）</h3>
+      <p>这是全课最该裱起来的一张图。新手的本能是"模型不灵就换个更酷的架构"——<strong>恰恰是大错</strong>。正确顺序反过来：</p>
+      <ol>
+        <li><strong>跟数据合体</strong>：盯着数据看到能自己说出规律。</li>
+        <li><strong>搭最笨的骨架先跑通</strong>：固定随机种子、检查初始 loss 是不是 ∞。</li>
+        <li><strong>故意让它过拟合一个样本</strong>：连一个样本都背不下来 = 模型本身有病，回去改。</li>
+        <li><strong>能过拟合了再上正则化</strong>（dropout / weight decay）去提升泛化。</li>
+        <li><strong>调超参</strong>：很多"烂模型"其实只是超参没调对。</li>
+        <li><strong>最后才碰花哨架构。</strong></li>
+      </ol>
+      <div class="callout accent"><p><strong>一句话复述（你现在应该能讲出来）：</strong>做 AI 项目不是比谁的模型酷，是比谁更懂自己的数据。先把数据看透、收拾干净（归一化是命门），搭个最笨的模型跑通，用 loss 和指标找最弱环节迭代；调不出来时别动架构，回去看数据、搭笨基线、故意过拟合诊断，再正则化和调超参。大模型就用 HuggingFace + LoRA + 量化省着玩，训练时盯着 WandB 先看显存功耗再看 loss。整套流程就是"<strong>数据 → 笨基线 → 过拟合 → 正则化 → 调参 → 架构</strong>"这个顺序，反过来做必踩坑。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== Concepts ===== -->
+  <section class="chapter" id="concepts">
+    <h2><span class="num">🗂</span><span class="title-text">核心概念卡</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="concept-grid">
+        <div class="concept"><div class="cn">Tensor（张量）</div><div class="cd">PyTorch 的核心数据结构，本质是能放 GPU 上加速、自带求梯度的多维数组（一堆矩阵）。</div><div class="cm"><b>在本课里：</b>用 <code>torch.tensor / from_numpy / rand / ones / zeros</code> 创建；三个隐形坑是 dtype、device、<code>*</code>（元素乘）vs <code>torch.mm</code>（矩阵乘）。</div></div>
+        <div class="concept"><div class="cn">归一化（normalization）</div><div class="cd">把不同特征拉到同一数值尺度，防止大范围的特征主导训练。</div><div class="cm"><b>在本课里：</b>用 sklearn <code>StandardScaler</code>；被点名为"这个项目最重要的预处理"，因为传感器通道范围从 50 到 2000 差太大。</div></div>
+        <div class="concept"><div class="cn">Dataset / DataLoader</div><div class="cd">Dataset 负责"给一个样本"；DataLoader 用多进程并行加载、每次给一批（batch）。</div><div class="cm"><b>在本课里：</b><code>TensorDataset</code> + <code>DataLoader(batch_size=16)</code>；batch 让梯度更稳，显存够就把 batch 开大。</div></div>
+        <div class="concept"><div class="cn">MLP（多层感知机）</div><div class="cd">几层 Linear + 激活叠起来的最基础神经网络。</div><div class="cm"><b>在本课里：</b>Linear+BatchNorm+ReLU，输入 13（传感器数）输出 3（类别数）固定，中间随便调；简单数据两三层够。</div></div>
+        <div class="concept"><div class="cn">训练循环五步</div><div class="cd">取数据 → 前向得预测 → 算 loss → backward 求梯度 → optimizer.step 更新。</div><div class="cm"><b>在本课里：</b>每个 batch 开头先 <code>optimizer.zero_grad()</code> 清梯度（呼应 micrograd 那集的 zero_grad 铁律）。</div></div>
+        <div class="concept"><div class="cn">train/test 切分</div><div class="cd">把数据分成训练集和测试集，切分方式必须诚实模拟真实使用场景。</div><div class="cm"><b>在本课里：</b>80/20 切分；警告：同一天/同一房间的数据混着切会导致"记忆而非泛化"，上线即崩。</div></div>
+        <div class="concept"><div class="cn">随机森林（Random Forest）</div><div class="cd">一堆决策树各自判断再多数投票的浅模型，快、省、抗噪。</div><div class="cm"><b>在本课里：</b>sklearn <code>RandomForestClassifier</code>，95.8% 准确率反超 75% 的深度 MLP；低维简单数据首选浅模型。</div></div>
+        <div class="concept"><div class="cn">HuggingFace 全家桶</div><div class="cd">一套包，用更少代码训更大模型。</div><div class="cm"><b>在本课里：</b>transformers（加载预训练大模型）+ datasets（下数据集）；配套 bitsandbytes（量化）、flash-attn（提速省内存）。</div></div>
+        <div class="concept"><div class="cn">LoRA</div><div class="cd">一种适配器，只训练极少量新增参数就能微调大模型，大幅省显存。</div><div class="cm"><b>在本课里：</b>用 peft 的 LoRA 微调 StarCoderBase-1B；R 和 Alpha 越大改动越大、越费显存。</div></div>
+        <div class="concept"><div class="cn">量化（quantization）</div><div class="cd">把模型参数压成低精度（如 4-bit），换更小的体积塞进小显卡。</div><div class="cm"><b>在本课里：</b>bitsandbytes 4-bit 加载（T4 只有 4GB）；理想用 16-bit 更稳，4-bit 是显存所迫的妥协。</div></div>
+        <div class="concept"><div class="cn">显存拇指法则</div><div class="cd">模型名里 B 前的数字 ×2 ≈ 推理所需最小显存（GB），训练更多。</div><div class="cm"><b>在本课里：</b>1B 模型 ≈ 2GB 推理；判断一个模型能不能塞进你的 GPU 的快速估算法。</div></div>
+        <div class="concept"><div class="cn">WandB（Weights &amp; Biases）</div><div class="cd">训练监控仪表盘，实时画显存、功耗、loss、grad_norm 等曲线。</div><div class="cm"><b>在本课里：</b>看的顺序——先硬件（显存 80~90%、功耗 &gt;60%），再 loss（持续降）、grad_norm（随收敛减小）。</div></div>
+        <div class="concept"><div class="cn">The Recipe（调模型方法论）</div><div class="cd">Karpathy 风格的训练调试流程：数据→笨基线→过拟合诊断→正则化→调参→架构。</div><div class="cm"><b>在本课里：</b>核心忠告——别先纠结架构、先在单样本上过拟合验证模型能学、能过拟合后才正则化。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Takeaways ===== -->
+  <section class="chapter" id="takeaways">
+    <h2><span class="num">✅</span><span class="title-text">这集最该记住的几条</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout good"><p><strong>① 建模前先看数据，归一化是命门。</strong>数据格式常跟你想的不一样，建模前务必打开看、画出来。各特征范围差几个数量级时，<strong>必须归一化</strong>，否则大数值通道一家独大、模型基本废。</p></div>
+      <div class="callout accent"><p><strong>② Tensor 三大隐形坑：dtype / device / 元素乘。</strong>类型不对、设备不一致、把 <code>*</code> 当矩阵乘——这三个会让代码不报错却全错。习惯：加载完先 <code>print(x.dtype, x.device, x.shape)</code>。</p></div>
+      <div class="callout warn"><p><strong>③ train/test 切分要诚实模拟真实使用。</strong>同一天/同一房间的数据混着切 = 偷偷作弊，模型只是记住而非泛化，上线即崩。切分方式 = 你对"将来怎么用"的诚实模拟。</p></div>
+      <div class="callout purple"><p><strong>④ 简单数据别上花哨模型。</strong>同一份数据随机森林 95.8% 吊打深度 MLP 的 75%。低维、量小、噪声少的数据，浅模型（随机森林 / SVM）往往更快更准更稳。</p></div>
+      <div class="callout info"><p><strong>⑤ 大模型用 HuggingFace + LoRA + 量化省着玩。</strong>transformers/datasets 几行搞定加载；LoRA 只训一小撮参数、量化把模型压进小显卡。显存估算：B 前的数字 ×2 ≈ 推理 GB 数。</p></div>
+      <div class="callout good"><p><strong>⑥ 调不出来时按 The Recipe 来，别先动架构。</strong>顺序是<strong>数据 → 笨基线 → 故意过拟合诊断 → 正则化 → 调超参 → 最后才碰架构</strong>。盯训练先看显存功耗，再看 loss（必须降）和 grad_norm（应随收敛减小）。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== References ===== -->
+  <section class="chapter" id="refs">
+    <h2><span class="num">🔗</span><span class="title-text">References</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <ol class="ref-list">
+        <li>MIT MAS.S60《How to AI Almost Anything》(Spring 2025) — <em>Lecture 2.1: Practical AI Tools</em>（PyTorch &amp; HuggingFace 实操 recitation，TA David 与 Chanaka 主讲，本精读的原视频）· <a href="https://youtu.be/NOSuy0NOe9k" target="_blank" rel="noopener">youtu.be/NOSuy0NOe9k</a></li>
+        <li>PyTorch 官方文档（Tensor / DataLoader / nn.Module / optimizer 等本课用到的核心 API）· <a href="https://pytorch.org/docs/stable/index.html" target="_blank" rel="noopener">pytorch.org/docs</a></li>
+        <li>Hugging Face — transformers / datasets / PEFT(LoRA) 文档与模型库（含课上微调的 bigcode/starcoderbase-1b）· <a href="https://huggingface.co/docs" target="_blank" rel="noopener">huggingface.co/docs</a></li>
+        <li>Andrej Karpathy — <em>A Recipe for Training Neural Networks</em>（课上"The Recipe"调模型方法论的思想来源）· <a href="https://karpathy.github.io/2019/04/25/recipe/" target="_blank" rel="noopener">karpathy.github.io/2019/04/25/recipe</a></li>
+        <li>Weights &amp; Biases (WandB) — 训练监控工具文档（课上用来看显存/功耗/loss/grad_norm）· <a href="https://docs.wandb.ai/" target="_blank" rel="noopener">docs.wandb.ai</a></li>
+      </ol>
+      <p style="font-size:13px;color:var(--text-mute)">逐字稿基于视频 YouTube 自动字幕清洗去重而成（自动字幕含识别误差，已做断句与可读性修整，技术名词以正文中文笔记为准）。关键帧截图按 frame_NNN = (NNN−1)×180 秒映射到视频时间。讲者口语中的 "Pyword / Portor / patchwork / target" 等多为 PyTorch / HuggingFace 的自动字幕误识别，正文已按上下文还原。</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
+
+<footer>
+  <p>课程精读 · 无忌 · MIT《How to AI Almost Anything》Lecture 2.1 Practical AI Tools · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；技术理解以中文笔记与原视频为准。</p>
+</footer>
+
+<script>
+(function(){
+  // 主题切换
+  var themeBtn=document.getElementById('themeToggle');
+  var saved=localStorage.getItem('course-theme');
+  if(saved){document.body.setAttribute('data-theme',saved);themeBtn.textContent=saved==='dark'?'☀️':'🌙';}
+  themeBtn.addEventListener('click',function(){
+    var cur=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.body.setAttribute('data-theme',cur);
+    localStorage.setItem('course-theme',cur);
+    themeBtn.textContent=cur==='dark'?'☀️':'🌙';
+  });
+
+  // 进度条 + 回到顶部
+  var progressEl=document.getElementById('progress');
+  var backTopEl=document.getElementById('backTop');
+  function updateProgress(){
+    var docHeight=document.documentElement.scrollHeight-window.innerHeight;
+    var scrolled=window.scrollY;
+    var ratio=docHeight>0?scrolled/docHeight:0;
+    progressEl.style.width=(ratio*100)+'%';
+    backTopEl.classList.toggle('show',scrolled>400);
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+  backTopEl.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // 章节折叠
+  document.querySelectorAll('section.chapter > h2').forEach(function(h2){
+    h2.addEventListener('click',function(){h2.parentElement.classList.toggle('collapsed');});
+  });
+
+  // 抽屉导航
+  var nav=document.querySelector('nav.anchor-nav'),tog=document.getElementById('navToggle'),ov=document.getElementById('navOverlay');
+  function closeNav(){nav.classList.remove('open');ov.classList.remove('show');}
+  if(nav&&tog&&ov){
+    tog.addEventListener('click',function(){var o=!nav.classList.contains('open');nav.classList.toggle('open',o);ov.classList.toggle('show',o);});
+    ov.addEventListener('click',closeNav);
+    document.querySelectorAll('.anchor-list a').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=1040)closeNav();});});
+  }
+
+  // anchor 点击展开折叠章节
+  var anchorLinks=document.querySelectorAll('#anchorList a');
+  anchorLinks.forEach(function(a){
+    a.addEventListener('click',function(){
+      var target=document.getElementById(a.dataset.target);
+      if(target&&target.classList.contains('collapsed'))target.classList.remove('collapsed');
+    });
+  });
+
+  // scroll-spy 高亮
+  var sections=Array.prototype.map.call(anchorLinks,function(a){return document.getElementById(a.dataset.target);}).filter(Boolean);
+  function highlightAnchor(){
+    var offset=120,current=null;
+    for(var i=0;i<sections.length;i++){var rect=sections[i].getBoundingClientRect();if(rect.top-offset<=0)current=sections[i].id;}
+    anchorLinks.forEach(function(a){a.classList.toggle('active',a.dataset.target===current);});
+    var activeLink=document.querySelector('#anchorList a.active');
+    if(activeLink)activeLink.scrollIntoView({block:'nearest'});
+  }
+  window.addEventListener('scroll',highlightAnchor,{passive:true});
+  highlightAnchor();
+})();
+</script>
+
+<script>/* PDF-HIDE-REFS */
+(function(){
+  function hide(){document.querySelectorAll('section.chapter').forEach(function(s){var h=s.querySelector('h2');if(h&&/references|参考文献/i.test(h.textContent)){s.setAttribute('data-printhidden','1');s.style.display='none';}});}
+  function show(){document.querySelectorAll('[data-printhidden]').forEach(function(s){s.style.display='';s.removeAttribute('data-printhidden');});}
+  window.addEventListener('beforeprint',hide);
+  window.addEventListener('afterprint',show);
+})();
+</script>
+</body>
+</html>

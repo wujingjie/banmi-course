@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>课程精读 · How to AI Almost Anything · Lecture 1.2 AI 研究入门 · 无忌</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --bg-elevated: #ffffff;
+    --bg-stripe: #f5f7fa;
+    --text: #1a1d23;
+    --text-soft: #4a5160;
+    --text-mute: #7c8493;
+    --border: #e3e6ec;
+    --border-strong: #cdd2da;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --accent-text: #1d4ed8;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --info: #0891b2;
+    --info-soft: #cffafe;
+    --code-bg: #f1f3f7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.04);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg-soft: #161922;
+    --bg-elevated: #1c2030;
+    --bg-stripe: #1a1e2a;
+    --text: #e6e9f0;
+    --text-soft: #b6bcc9;
+    --text-mute: #8a92a3;
+    --border: #2a2f3d;
+    --border-strong: #3a4154;
+    --accent: #60a5fa;
+    --accent-soft: #1e3a8a55;
+    --accent-text: #93c5fd;
+    --good: #4ade80;
+    --good-soft: #14532d55;
+    --warn: #fbbf24;
+    --warn-soft: #78350f55;
+    --bad: #f87171;
+    --bad-soft: #7f1d1d55;
+    --info: #22d3ee;
+    --info-soft: #155e7555;
+    --code-bg: #0a0d14;
+    --purple: #a78bfa;
+    --purple-soft: #4c1d9555;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: 60px;
+    transition: background-color .25s, color .25s;
+  }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple)); z-index: 1000; transition: width .1s linear; }
+  header.topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 980px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; color: var(--text); white-space: nowrap; }
+  .brand .tag { margin-left: 6px; font-weight: 500; font-size: 11px; color: var(--text-mute); padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; }
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); cursor: pointer; font-size: 18px; transition: transform .15s, background-color .15s; }
+  .icon-btn:active { transform: scale(.94); }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .hero { padding: 28px 4px 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.5px; background: linear-gradient(135deg, var(--text) 0%, var(--accent-text) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-mute); }
+  .hero-meta span { background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .hero-meta a { color: var(--accent-text); text-decoration: none; }
+  .hero-deck { margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; color: var(--text); font-size: 15px; }
+  section.chapter { margin: 24px 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  section.chapter > h2 { font-size: 20px; margin: 0; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); user-select: none; background: var(--bg-elevated); transition: background-color .15s; min-height: 56px; }
+  section.chapter > h2:active { background: var(--bg-soft); }
+  section.chapter > h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 14px; font-weight: 700; }
+  section.chapter > h2 .title-text { flex: 1; }
+  section.chapter > h2 .caret { transition: transform .25s; color: var(--text-mute); font-size: 14px; }
+  section.chapter.collapsed > h2 .caret { transform: rotate(-90deg); }
+  section.chapter.collapsed > h2 { border-bottom-color: transparent; }
+  .chapter-body { padding: 18px 20px 22px; max-height: 100000px; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+  section.chapter.collapsed .chapter-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  h3 { font-size: 17px; margin: 22px 0 10px; color: var(--text); padding-left: 10px; border-left: 3px solid var(--accent); }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text-soft); }
+  p { margin: 8px 0 12px; color: var(--text-soft); }
+  strong { color: var(--text); }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--text-soft); }
+  li { margin: 4px 0; }
+  .callout { margin: 14px 0; padding: 12px 14px; border-radius: 10px; border-left: 4px solid; font-size: 14.5px; line-height: 1.65; }
+  .callout.info { background: var(--info-soft); border-color: var(--info); }
+  .callout.good { background: var(--good-soft); border-color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .callout.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.purple { background: var(--purple-soft); border-color: var(--purple); }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; }
+  .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: none; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 40; border: none; }
+  .back-to-top.show { display: flex; }
+  .back-to-top:active { transform: scale(.94); }
+  footer { text-align: center; padding: 24px 16px; color: var(--text-mute); font-size: 13px; border-top: 1px solid var(--border); margin-top: 32px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text); }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin: 12px 0; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+  pre code { background: none; padding: 0; }
+  hr.soft { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+  blockquote { margin: 12px 0; padding: 10px 16px; border-left: 4px solid var(--text-mute); background: var(--bg-soft); border-radius: 6px; color: var(--text-soft); font-size: 14.5px; }
+  .pill { display: inline-block; padding: 3px 9px; font-size: 11px; font-weight: 600; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-soft); white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .pill.purple { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .metric { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; }
+  .metric .v { font-size: 22px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; }
+  .metric .l { font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+  /* ---- 课程精读专用 ---- */
+  .ts { display: inline-block; font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+  .transcript { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; background: var(--bg-soft); }
+  .transcript > summary { padding: 10px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-soft); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; min-height: 44px; }
+  .transcript > summary::-webkit-details-marker { display: none; }
+  .transcript > summary::before { content: "▶"; font-size: 11px; color: var(--text-mute); transition: transform .2s; }
+  .transcript[open] > summary::before { transform: rotate(90deg); }
+  .transcript .tx-body { padding: 4px 16px 16px; font-size: 13.5px; line-height: 1.7; color: var(--text-mute); font-style: italic; border-top: 1px solid var(--border); }
+  figure.frame { margin: 16px 0; }
+  figure.frame img { width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+  figure.frame figcaption { margin-top: 6px; font-size: 12.5px; color: var(--text-mute); line-height: 1.5; text-align: center; }
+  figure.frame figcaption .fno { font-family: ui-monospace, monospace; color: var(--accent-text); font-weight: 700; }
+  .concept-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0; }
+  .concept { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+  .concept .cn { font-size: 15px; font-weight: 700; color: var(--text); }
+  .concept .cn code { font-size: 13px; }
+  .concept .cd { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+  .concept .cm { font-size: 13px; color: var(--text-mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .concept .cm b { color: var(--accent-text); }
+  .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 8px 10px 8px 36px; position: relative; border-bottom: 1px dashed var(--border); font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+  .ref-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 4px; top: 8px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .ref-list li a { color: var(--accent-text); text-decoration: none; word-break: break-all; }
+  .ref-list li a:hover { text-decoration: underline; }
+  @media (max-width: 480px) {
+    .hero { padding: 18px 4px 8px; }
+    .hero h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 17px; padding: 14px 14px; }
+    .chapter-body { padding: 14px 14px 18px; }
+    h3 { font-size: 16px; }
+  }
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0 !important; font-size: 11pt; line-height: 1.55; }
+    header.topbar, #progress, .back-to-top, nav.anchor-nav, .nav-toggle, .nav-overlay, #pdfBtn { display: none !important; }
+    main { margin: 0 !important; max-width: 100% !important; padding: 0 !important; }
+    .hero h1 { -webkit-text-fill-color: #1a1d23 !important; color: #1a1d23 !important; background: none !important; }
+    section.chapter { box-shadow: none !important; border: 1px solid #d9dde5 !important; margin: 14px 0 !important; }
+    section.chapter > h2 { cursor: default; position: static; }
+    section.chapter.collapsed .chapter-body, .chapter-body { max-height: none !important; overflow: visible !important; padding: 14px 18px 18px !important; }
+    .caret { display: none !important; }
+    .transcript { break-inside: avoid; }
+    .transcript .tx-body { max-height: none !important; }
+    .callout, .metric-grid, .concept, figure.frame { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    a { color: #1d4ed8 !important; text-decoration: none; }
+  }
+  nav.anchor-nav { position: fixed; top: 100px; left: 0; width: 220px; height: calc(100vh - 100px); overflow-y: auto; overflow-x: hidden; background: var(--bg-soft); border-right: 1px solid var(--border); z-index: 60; padding: 16px 0 40px; transition: transform .28s ease; white-space: normal; }
+  nav.anchor-nav::-webkit-scrollbar { width: 6px; }
+  nav.anchor-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nav-title { padding: 4px 20px 12px; font-size: 13px; font-weight: 700; color: var(--text-mute); }
+  .anchor-list { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .anchor-list a { display: block; min-height: 38px; padding: 9px 12px; border-radius: 8px; font-size: 13px; line-height: 1.35; color: var(--text-soft); text-decoration: none; border-left: 3px solid transparent; }
+  .anchor-list a.active { color: var(--accent-text); background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .nav-toggle { position: fixed; left: 16px; bottom: 24px; width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff; border: none; font-size: 22px; z-index: 70; box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center; display: none; }
+  .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; opacity: 0; pointer-events: none; transition: opacity .28s; }
+  @media (min-width: 1041px) { main { margin-left: 220px; } }
+  @media (max-width: 1040px) {
+    nav.anchor-nav { top: 0; height: 100vh; transform: translateX(-100%); box-shadow: var(--shadow-lg); width: 260px; max-width: 82vw; }
+    nav.anchor-nav.open { transform: translateX(0); }
+    .nav-overlay.show { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">课程精读 · AI 研究入门 <span class="tag">How to AI Almost Anything · L1.2 · 无忌</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
+    <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
+  </div>
+</header>
+
+<button class="nav-toggle" id="navToggle" aria-label="章节目录">☰</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="anchor-nav">
+  <div class="nav-title">📖 目录</div>
+  <div class="anchor-list" id="anchorList">
+    <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+    <a href="#s1" data-target="s1">01 这节课讲什么 + 研究循环</a>
+    <a href="#s2" data-target="s2">02 自下而上 vs 自上而下</a>
+    <a href="#s3" data-target="s3">03 课程怎么安排（三份报告）</a>
+    <a href="#s4" data-target="s4">04 研究问题 vs 假设</a>
+    <a href="#s5" data-target="s5">05 两个好问题范例</a>
+    <a href="#s6" data-target="s6">06 别问"X 能不能让 Y 更好"</a>
+    <a href="#s7" data-target="s7">07 新模态 + 传感器数据</a>
+    <a href="#s8" data-target="s8">08 推理 + 交互式智能体</a>
+    <a href="#s9" data-target="s9">09 具身 + 社会智能 + 伦理</a>
+    <a href="#s10" data-target="s10">10 文献调研怎么做</a>
+    <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+    <a href="#concepts" data-target="concepts">🗂 核心概念卡</a>
+    <a href="#takeaways" data-target="takeaways">✅ 该记住的几条</a>
+    <a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>《How to AI Almost Anything》Lecture 1.2：AI 研究入门</h1>
+    <div class="hero-meta">
+      <span>🎓 Paul Liang · MIT Media Lab &amp; EECS</span>
+      <span>⏱ 28:00</span>
+      <span>🎬 <a href="https://youtu.be/104FX8MYKAM" target="_blank" rel="noopener">原视频 youtu.be/104FX8MYKAM</a></span>
+      <span>📝 无忌课程精读 · 关键帧嵌入</span>
+      <span>🇨🇳 逐字稿英文 · 笔记中文</span>
+    </div>
+    <div class="hero-deck">
+      <strong>学完你能得到什么：</strong>一套<strong>"怎么做 AI 研究"的完整心智模型</strong>。看完你能讲清楚：① 研究是个<strong>迭代循环</strong>（观察→查文献→提问题/假设→做实验→分析→再循环）；② 想 idea 有两条路——<strong>自下而上</strong>（先跑现成 SOTA、找它崩在哪、去修，稳但碎）和<strong>自上而下</strong>（从大愿景倒推，险但能跨越式）；③ 一个好的<strong>研究问题</strong>最好是 yes/no、可证伪，而<strong>假设</strong>要给出"为什么"；④ 别只问"X 能不能让 Y 更好"，要问"X 的哪个性质让 Y 更好"；⑤ 文献调研有固定打法（Google Scholar → Papers with Code/GitHub/HuggingFace → 会议论文 → 博客/综述/课程）。这节课是这门课<strong>做项目前的"研究方法论地基"</strong>。
+    </div>
+  </div>
+
+  <!-- ===== 速览 ===== -->
+  <section class="chapter" id="overview">
+    <h2><span class="num">⚡</span><span class="title-text">一分钟速览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p><strong>这集讲啥：</strong>这是 MIT《How to AI Almost Anything》（2025 春季）的一节"方法论课"，由 Paul Liang 主讲。它不教某个具体模型，而是手把手教你<strong>怎么做一项 AI 研究</strong>：从哪儿找点子、怎么把模糊的好奇心提炼成能验证的研究问题、怎么快速调研文献、最后怎么写报告。</p>
+      <p><strong>为什么重要：</strong>这门课要求每个人在一学期内做出一个研究项目。很多人卡的不是"不会写代码"，而是<strong>"不知道做什么、怎么判断自己的想法有没有价值、怎么不重复造别人造过的轮子"</strong>。这节课就是把这套"老手脑子里默认的研究流程"显式讲出来，让新手也能照着走。</p>
+      <p><strong>这节课的骨架：</strong></p>
+      <div class="metric-grid">
+        <div class="metric"><div class="v">1 个</div><div class="l">研究迭代循环（贯穿全课）</div></div>
+        <div class="metric"><div class="v">2 条</div><div class="l">出 idea 的路：自下而上 / 自上而下</div></div>
+        <div class="metric"><div class="v">yes/no</div><div class="l">好研究问题的首选形态（可证伪）</div></div>
+        <div class="metric"><div class="v">3 份</div><div class="l">报告：提案 → 期中 → 期末</div></div>
+      </div>
+      <div class="callout accent">
+        <p><strong>一句话主线：</strong>研究 = <strong>观察 → 查文献定位 → 提一个可证伪的问题/假设 → 做实验 → 分析 → 回头再循环</strong>。新手先走"自下而上"最稳：跑现成最强方法、做错误分析、把失败模式归类、再去修。<strong>整节课就是把这条循环每一环讲透 + 给一堆现成的研究方向当弹药。</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S1 ===== -->
+  <section class="chapter" id="s1">
+    <h2><span class="num">01</span><span class="title-text">这节课讲什么 + 研究就是一个迭代循环</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">01:30</span>本节课的提纲</h3>
+      <p>开场先是签到（决定每个人是修学分、还是旁听、参与到哪一档）。然后 Paul Liang 进入正题：这是 <strong>Lecture 1.2，主题"如何做 AI 研究"</strong>。这是个例外——平时周四不上正式 lecture，而是更偏动手的 tutorial / 讨论；但今天他想专门讲清楚做 AI 研究的基本功。本节覆盖四块：</p>
+      <ul>
+        <li><strong>怎么生成研究想法</strong>（好几种产 idea 的路子）；</li>
+        <li><strong>怎么做文献调研、怎么深读一篇论文</strong>（还会现场 demo 他平时怎么找好论文）；</li>
+        <li><strong>怎么高效执行研究想法</strong>，让进展快；</li>
+        <li><strong>怎么写论文 / 写报告</strong>（课程要求的一部分），并现场拆解他组里最近写的几篇论文。</li>
+      </ul>
+      <h3><span class="ts">02:29</span>所有研究都遵循同一个迭代循环</h3>
+      <p>他先给出一张大图：几乎所有做研究的人都在走<strong>同一个迭代闭环</strong>——</p>
+      <ol>
+        <li><strong>初始观察 &amp; 想法</strong>：你有一个真想验证的念头；</li>
+        <li><strong>文献回顾</strong>：看这个想法是不是早被人做过、它和已有工作什么关系；</li>
+        <li><strong>研究问题 / 假设</strong>：基于你的想法和文献，提出"这个想法行不行、为什么行"；</li>
+        <li><strong>实验</strong>：在 AI 语境下通常就是写代码、跑实验、看模型表现；</li>
+        <li><strong>分析结果、汇报结论</strong>；</li>
+        <li>结论不满意？<strong>带着新观察、新定位、新问题、新实现，回到第 1 步再转一圈。</strong></li>
+      </ol>
+      <div class="callout info"><p>注意"循环"这个词：研究<strong>不是一条直线</strong>，第一轮结论往往不够好，价值就在于你把它当反馈、转下一圈。这节课接下来就是把这个圈的每一环（产 idea、查文献、提问题、快速实验、写报告）逐一拆开。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_001.jpg" alt="课程标题页 How to AI Almost Anything Lecture 1.2">
+        <figcaption><span class="fno">frame_001 · 约 00:00</span> · 标题页：《How to AI (Almost) Anything》Lecture 1.2「How to AI research」，主讲 Paul Liang（MIT Media Lab &amp; EECS 助理教授）。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（01:30–03:40）</summary><div class="tx-body">All right. So, this is lecture 1.2, how to do AI research. There's an exception — normally we're not going to have lectures on Thursdays; it's usually going to be some more hands-on tutorial, hands-on discussion. But today I want to spend the time covering the basic fundamentals of doing AI research. So we're going to start by discussing how to generate research ideas, several ways of coming up with good ideas. We're going to cover how to broadly do literature review and read a paper in depth — I'll do a live demo of how I typically find good papers and review literature. We're going to discuss several tips on how to best execute research ideas so you can make fast progress. And we're also going to cover how to write a paper or write a report as required as part of the class, and also give some live dissection of some of the papers our group has written recently. So broadly, everyone who does research probably follows this research process, which is an iterative loop: starting out with some initial observations and ideas you really want to test, followed by some review of the literature to see whether this idea is known before or how well it situates in relation to existing work; followed by — based on your idea and based on what's in literature — some research questions or hypotheses on whether this idea could work and if so why; you then test it with experiments (in AI usually writing code, running experiments, seeing how these models perform); you analyze the results and report your conclusions; and depending on whether those conclusions are satisfactory, you reiterate with more observations, ideas, contextualization of previous work, new research questions, new implementations, and so on.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S2 ===== -->
+  <section class="chapter" id="s2">
+    <h2><span class="num">02</span><span class="title-text">怎么产生 idea：自下而上 vs 自上而下</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">03:40</span>第一条路：自下而上发现（bottom-up）</h3>
+      <p>怎么得到研究想法？他认为大体两条路。第一条是<strong>自下而上的发现</strong>：你去<strong>调研某个领域现在在做什么、把当前最强的模型（SOTA）拿来亲手跑一遍，看它哪里行、哪里不行</strong>，然后<strong>用"它失灵的地方"来启发你下一步该做什么</strong>。一句话概括 PPT 上那句话：把"对现有研究失败之处的具体理解"翻译成"一个更高层的实验问题"。</p>
+      <ul>
+        <li>优点：适合<strong>渐进式、稳步推进</strong>，比较<strong>安全</strong>——你的起点是个"在某些场景能 work、在另一些场景挂掉"的东西，只要你能把它挂掉的场景修好，就拿到了一个更好的新方法。</li>
+        <li>缺点：<strong>很难做出大跳跃</strong>，因为你始终被"现有方法"锚住了。</li>
+      </ul>
+      <h3><span class="ts">04:34</span>第二条路：自上而下（top-down）</h3>
+      <p>它和自下而上正相反：<strong>不从"什么 work、什么不 work"的细节出发，而是从更大的研究主题/愿景出发</strong>——那种你一说出来，别人立刻反应"这从没人做过、要是真能做出来太牛了"的大主题。当然这种大目标一上来不可行，你得<strong>把它拆成几个月、几年内能够到的小块</strong>。这种是更大的 idea、更像顶会论文级别的题目，<strong>但通常风险更高</strong>。</p>
+      <div class="callout accent"><p><strong>记住这对核心权衡：</strong>自下而上 = 起点是"能跑的东西" → 安全、增量、不易做大；自上而下 = 起点是"诱人的大愿景" → 高风险、可能跨越式。两者不是对错，是不同的赌注。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_002.jpg" alt="How Do We Get Research Ideas - Bottom-up discovery">
+        <figcaption><span class="fno">frame_002 · 约 03:00</span> · "怎么产生研究想法"——把对现有研究失败之处的具体理解，翻译成一个更高层的实验问题。自下而上发现：擅长增量进展，但可能挡住大跳跃。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（03:40–05:19）</summary><div class="tx-body">So firstly, how do we get research ideas? There's two general ways in my opinion. The first way is more bottom-up discovery. Bottom-up discovery basically means you are surveying what is happening in some field, you're trying out the state-of-the-art models, and you're seeing what works and what doesn't, and based on what doesn't work, using that to inspire what you should do next. It's usually a great tool for incremental and steady progress, usually safer because you're starting out with something that works in these scenarios but doesn't work in these other scenarios — as long as you can fix the scenarios in which it doesn't work, you've got a new method that works better. So it's great for incremental progress, more safe, but it doesn't allow you to make large leaps. So bottom-up is in opposition to top-down research. Top-down: instead of starting from the lower-level details of what works and what doesn't, you start from larger research themes — themes that if you say to a person, they immediately think "yeah, that's never been done before, that would be great." Of course that's not going to be feasible, so you break it down into individual parts achievable within a couple of months or years. These are bigger ideas, but usually at the risk of being more risky.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S3 ===== -->
+  <section class="chapter" id="s3">
+    <h2><span class="num">03</span><span class="title-text">课程怎么安排：提案 → 期中 → 期末三份报告</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">05:19</span>课程默认让所有人走自下而上</h3>
+      <p>为了"安全"，课程设计成<strong>保证人人至少能做自下而上的研究</strong>，做出可跑的东西；当然你也可以另立一个更"自上而下"的北极星去冲。自下而上分几个阶段：</p>
+      <ul>
+        <li><strong>提案报告（约 2–3 周后）：</strong>圈定你感兴趣的研究领域；圈出该领域的 SOTA 现有方法——如果该领域没有现成方法，就把别的领域的 SOTA <strong>移植（port）</strong>过来。</li>
+        <li><strong>期中报告（春假后交）：</strong>你应当已经<strong>把这些现有方法跑过一遍</strong>、分析它在哪 work 在哪不 work，做<strong>错误分析（error analysis）</strong>，把所有<strong>失败模式归类（taxonomize）</strong>，并据此指出"可以怎么修这些错误"。</li>
+        <li><strong>期末报告（下半学期）：</strong>把你提案里的新想法<strong>实现出来</strong>，并总结它到底有没有修好你在期中发现的问题。</li>
+      </ul>
+      <div class="callout warn"><p><strong>给做"套壳"项目的人一句扎心提醒：</strong>如果你只是套 LLM / ChatGPT——调 API、拿自己的数据做微调——那<strong>你只走到了"期中报告"这一步</strong>（= 体验了某个 SOTA 方法而已）。你还得分析它的成功与失败、提出"接下来怎么提升性能"的假设，才算真正在做研究。</p></div>
+      <h3><span class="ts">07:24</span>想做 moonshot 也欢迎，但要来 office hours</h3>
+      <p>如果你不想只是试各种 SOTA、而是有更"登月级"的想法，他也乐意支持，但<strong>务必来 office hours 和他、和 TA 头脑风暴</strong>（每周二、周四课后），一起把它收敛成"一学期内可做"的东西。即使是 moonshot，<strong>文献调研依然很重要</strong>——你得用现有数据集 / 现有方法把它定位好。对这条路，期中/期末报告结构更松：不强制"先复现现有→错误分析→提新方法"，而是朝你那个高层想法<strong>增量推进</strong>。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_003.jpg" alt="Top-down Design - brainstorming, office hours, literature review timeline">
+        <figcaption><span class="fno">frame_003 · 约 06:00</span> · 课程节奏：和队友/TA/老师头脑风暴（office hours、project hours）→ 第一份作业做文献调研、探索数据集时同步扩展想法 → 期中/期末报告聚焦"增量实现所提出的能力"。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（05:19–08:32）</summary><div class="tx-body">Okay, so to be safe we're going to design the course in a way that everybody can at least do bottom-up research. Of course you're free to do more top-down — think of a new north star and make progress towards it — but we want to be safe and make sure everybody can at least do some bottom-up research and get something working by the end of the semester. There are several stages. In the first proposal report (in about two to three weeks) you should scope out which area of research you're interested in, scope out some state-of-the-art existing methods — or if they don't directly exist for that area, porting state-of-the-art methods from other areas. By a midterm report you should have experimented with some of these existing methods, analyzed cases where they work and don't work, done error analysis, taxonomized all the failure modes, and identified ways you could fix these errors. For context, everyone thinking of doing an LLM or ChatGPT wrapper — you're essentially only at the midterm report. Just applying LLMs, fine-tuning to your data, calling APIs constitutes experimenting with a state-of-the-art method, but you still have to analyze successes and failures and come up with hypotheses on how to subsequently enhance performance. That's due right after spring break. The second half will focus on a solid final report that implements the new ideas you proposed and summarizes whether it actually fixed the issues you discovered. We're also happy if you have more moonshot ideas — for that it's important you come to office hours to brainstorm with myself and the TAs. Literature review is still very important; you still have to contextualize well with current work. The midterm and final reports will be less structured — more incremental progress towards the high-level idea.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S4 ===== -->
+  <section class="chapter" id="s4">
+    <h2><span class="num">04</span><span class="title-text">研究问题 vs 假设：怎么把好奇心提成"能验证的问题"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">08:46</span>什么是研究问题（research question）</h3>
+      <p>所有想法背后通常都有一个<strong>研究问题</strong>。研究问题 = <strong>你对"整个学术社区还不知道的东西"提出的明确问题</strong>。它极其关键，因为<strong>它定义了你的研究"新"在哪、不新在哪</strong>。</p>
+      <p>人们常抱怨审稿人"不公平地说论文不新颖"——其实多半是两种情况之一：① 这个研究问题社区<strong>早已回答过了</strong>；② 你<strong>没把这个研究问题答透</strong>。所以研究问题就是"新颖性"的边界线。</p>
+      <p>他给一个实用经验：<strong>研究问题最好写成 yes/no（是/否）形式，而不是 how（怎么……）形式。</strong></p>
+      <h3><span class="ts">09:41</span>什么是假设（hypothesis）+ 为什么 yes/no 好</h3>
+      <p><strong>假设 = 你对"这个研究问题答案应该是什么"的先验猜测（a priori guess）。</strong>为什么研究问题写成 yes/no 特别有用？因为这样你能<strong>很容易地去检验（verify）、证实或证伪（falsify）</strong>它——你只要找到一个观察，要么支持要么推翻它，你就对这个问题有了一个扎实的答案。</p>
+      <div class="callout info"><p>把这两个词分清：<strong>研究问题</strong>是"社区还不知道答案的明确提问"；<strong>假设</strong>是"你赌它答案是啥 + 为什么"。一个好研究 = 一个新颖且可证伪的问题 + 一个带理由的假设 + 能确认/推翻它的实验。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== S5 ===== -->
+  <section class="chapter" id="s5">
+    <h2><span class="num">05</span><span class="title-text">两个好问题范例：语言建模 &amp; 播客吸引力</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">10:05</span>范例一：所有语言都一样难建模吗？（yes/no 型）</h3>
+      <p>Cotterell 等 2018 的论文问：<strong>"Are all languages equally hard to language-model?"（所有语言对语言模型来说都一样难吗？）</strong> 为什么这是个好问题？</p>
+      <ul>
+        <li><strong>够开放、够新：</strong>2018 年之前没人有答案；</li>
+        <li><strong>是清楚的 yes/no：</strong>要么"是，都一样难"→那也许能训一个统一模型覆盖所有语言；要么"否，不一样难"→那就该给每种语言上专门模型。<strong>不管答案哪边，都直接导出后续行动。</strong></li>
+      </ul>
+      <p>论文里红色高亮的那句就是<strong>假设</strong>："基于跨语言兼容性（cross-linguistic compatibility），不太可能所有语言都同样容易、或我们的方法对所有语言都同样好。" 这条假设好在：既猜了答案（否），又给了一个具体理由（跨语言兼容性这个概念，作者会在论文里定义）。由此能直接推出实验设计——定义什么叫"兼容"、找一批兼容/不兼容的语言、做<strong>对照实验</strong>看是否一样难建模。</p>
+      <h3><span class="ts">11:46</span>范例二：什么让播客普遍吸引人？（how 型 → 拆成 yes/no）</h3>
+      <p>第二个来自社科视角（Reddy 等 2018）：<strong>"What makes a particular podcast broadly engaging?"</strong> 这是个更复杂的问题，因为它<strong>不是 yes/no</strong>。要回答它，你得先有假设猜<strong>哪些具体因素</strong>在起作用——你不能从零开始，得先押几个候选因素。他们的假设是：<strong>减少口头语/语病（filler words / disfluencies）、加入情感表达，可能让播客更吸引人。</strong></p>
+      <p>关键打法：<strong>把一个 how 型大问题，拆成若干 yes/no 小实验</strong>——用不用 filler words、加不加情感……每个都能单独做对照实验来验证，合起来回答那个大问题。</p>
+      <div class="callout good"><p><strong>这就是把好奇心工程化的核心技巧：</strong>遇到 how 型问题别慌，先用假设押出几个具体因子，再把每个因子做成一个可证伪的 yes/no 对照实验。探索型问题（多因子里看哪个真起作用）也照这个思路做。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_004.jpg" alt="Scientific Research Questions and Hypotheses - Cotterell 2018, Reddy 2018">
+        <figcaption><span class="fno">frame_004 · 约 09:00</span> · 两个范例并排：左 Cotterell 2018「所有语言一样难建模吗」（黄=研究问题，红=假设：基于跨语言兼容性，不太可能都一样）；右 Reddy 2018「什么让播客吸引人」（假设：减少口头语、加入情感）。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（08:46–13:07）</summary><div class="tx-body">All of these ideas typically come because there's some research question you're asking. Research questions are explicit questions you're asking about something that a community does not know yet. They're really key because that defines what is novel about the research and what is not novel. When people criticize reviewers for unfairly saying the paper is not novel, it's usually because either the research question has already been answered, or you did not do enough to answer it completely. I find it's usually easier to draft research questions that are yes/no in nature rather than how in nature. Hypotheses are essentially your a priori guess for what should be the answer to these research questions. It's very useful for research questions to be yes/no because then you can very easily verify and falsify them. Here are two examples. This first paper from Cotterell 2018 asks "are all languages equally hard to language-model?" That's a good research question — open (no one had an answer prior to 2018) and clearly yes/no: either yes, in which case you could train a universal model, or no, in which case you'd prefer specialized models for each language. Highlighted in red is the hypothesis: based on cross-linguistic compatibility, it is unlikely that all languages are equally easy or that our methods are equally good at all languages. It hypothesizes "no" and gives a particular reason. You can then think how their experiments would go — define cross-linguistic compatibility, find compatible and incompatible languages, do controlled experiments. Here's another example from a more social-science perspective: "what makes a particular podcast broadly engaging?" This is more complex because it's not yes/no. To answer it you need a hypothesis on what particular factors there might be — their hypothesis is that tips such as reducing filler words and disfluencies, or incorporating emotion, could make a podcast broadly engaging. Good hypothesis: it breaks the research question into individual parts, and for each part you can use a yes/no experiment to check.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S6 ===== -->
+  <section class="chapter" id="s6">
+    <h2><span class="num">06</span><span class="title-text">小心陷阱："X 能不能让 Y 更好？"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">13:40</span>这种问题为什么"间接、危险"</h3>
+      <p>他特别提醒：警惕<strong>"Does X make Y better?（X 能不能让 Y 更好？）"</strong>这类问题。它本身是合法的研究问题，但通常<strong>太间接</strong>：</p>
+      <ul>
+        <li>如果 X 确实让 Y 更好（比如某个模型组件让下游任务变好）——好，皆大欢喜；</li>
+        <li><strong>但如果 X 没让 Y 更好，你就卡住了</strong>——你不知道下一步该干嘛，因为你不知道"为什么没用"。</li>
+      </ul>
+      <h3><span class="ts">14:30</span>升级问法：问"为什么 / 哪个性质"</h3>
+      <p>所以通常应把它改写成 <strong>"Why does X make Y better?"</strong>——不只是问有没有用，而是问 <strong>"X 的某个性质让 Y 更好"</strong>。这样的好处：你可以<strong>专门去测那个性质</strong>；万一那个性质不奏效，你还能<strong>顺势提出 X 的另一个性质或许才是关键</strong>，继续往下推。这就是把问题问得更"有抓手、更细颗粒"的方法。</p>
+      <div class="callout warn"><p><strong>一句话记牢：</strong>"有没有用"是死胡同（失败了没下文）；"为什么/靠哪个性质起作用"是活路（失败了还能换性质继续追）。好问题要自带"失败后还能往下走"的结构。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_005.jpg" alt="Beware Does X Make Y Better Yes slide">
+        <figcaption><span class="fno">frame_005 · 约 12:00</span> · "Does X make Y better? Yes" —— 这种问题自然但间接：万一实验答案是"否"，你不知道哪里出错。改问"为什么/X 的哪个性质让 Y 更好"，才能继续证实/证伪假设。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（13:07–14:00）</summary><div class="tx-body">Usually these questions are exploratory — there's a mix between those that are more yes/no (verifying existing knowledge) and those more exploratory (hypothesizing multiple factors and seeing which one succeeded). Also beware of questions of the form "does X make Y better?" This is a valid research question but usually indirect, because if X does make Y better — for example a particular model component makes some downstream task better — that's good. But if X does not make Y better, you're stuck; you don't really know what to do next. So usually you want to rephrase this as "why X makes Y better" — not just whether it makes it better, but some property of X will make Y better. That allows you to test for example that particular property, and if that property doesn't work, maybe hypothesize some other property about X might make Y better. Different ways of asking more detailed research questions.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S7 ===== -->
+  <section class="chapter" id="s7">
+    <h2><span class="num">07</span><span class="title-text">研究方向弹药库（上）：新模态 &amp; 传感器数据</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p>接下来是一长串<strong>现成的研究方向</strong>——都是 Paul Liang 组里在做、或这门课同学普遍感兴趣的题目，给大家当"点子弹药"。下面是前两个主题。</p>
+      <h3><span class="ts">14:00</span>超越图像和文本的新模态</h3>
+      <p>很多人想做<strong>图像/文本之外的新模态</strong>：传感数据、脑电（brain data）、可触（tangible）数据等。挑战举例：</p>
+      <ul>
+        <li><strong>对"深度学习不占优"的模态怎么做 AI？</strong>表格数据、时间序列的 SOTA 很多还不是神经网络/Transformer，而是传统方法——也许能做<strong>混合方法</strong>，把深度学习的长处和传统方法结合。</li>
+        <li><strong>多模态融合：</strong>比如要融合语言和时间序列，语言最强的是 LLM/深度学习，时间序列最强的可能不是深度学习——<strong>怎么让两个系统兼容、一起训练？</strong></li>
+        <li><strong>专用模型 vs 通用模型哪个更好？</strong>NLP 从专用模型起步，后来通用大模型靠海量数据横扫 benchmark——但<strong>对那些数据没那么多的模态，这个趋势还成立吗？</strong></li>
+        <li><strong>该往模型里塞多少领域知识？</strong>比如医学专家知道 EEG 该怎么处理——把这种知识塞进模型，是能提升性能、还是能用更少数据达到同等性能？</li>
+      </ul>
+      <h3><span class="ts">15:58</span>AI for 传感器数据</h3>
+      <p>传感器数据通常<strong>高频、长程</strong>，超出当前序列模型能处理的范围。几个研究问题：</p>
+      <ul>
+        <li><strong>怎么把传感器数据切成"语义上有意义的 token 边界"？</strong>类比 LLM 把文本切成词、甚至更妙的子词（eat/work/play + -ing 组合出 eating/working/playing）。传感器也想这么切——比如"一直没事→突然一个尖峰"，模型要能识别这种边界。</li>
+        <li><strong>怎么做信号处理 + 深度学习的混合？</strong>传感数据历来靠信号处理；做 AI 系统大概率需要两者结合，各提供互补特征。</li>
+        <li><strong>怎么收集"传感器-语言"配对数据？</strong>（传感器→分类标签、传感器→自然语言描述、传感器问答与推理）——研究项目也可以是<strong>数据集/benchmark 驱动</strong>的。</li>
+        <li><strong>超长程怎么办？</strong>可能是好几年的传感数据——需要<strong>自适应感知</strong>：平时关着、只在重要的事发生时才感知，否则太贵。</li>
+      </ul>
+      <p>起步资源：最近发布了大量<strong>时间序列基础模型</strong>，可作为初始 SOTA；时间序列分析里的<strong>变点检测（change point detection）</strong>思路可借来做 tokenize。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_006.jpg" alt="AI for Sensor Data slide - challenges">
+        <figcaption><span class="fno">frame_006 · 约 15:00</span> · AI for Sensor Data：动机是高频、长程的传感数据。挑战——语义化 tokenize、信号处理+深度学习混合、收集传感器-语言配对数据、超长程的自适应感知。起步：时间序列基础模型 + 变点检测。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（14:00–18:37）</summary><div class="tx-body">Let me go through some examples, curated to be broadly relevant to the interests of the group. A lot of you are interested in research on new modalities beyond image and text — sensing data, brain data, tangible data. For example: how do you do AI with non-deep-learning-effective modalities? If you look at tabular data or time-series data, many state-of-the-art methods are not based on neural networks and transformers — they're still based on more traditional methods. So perhaps a hybrid method combining deep learning with traditional methods. Same for multimodal fusion: if you want to fuse language and time-series, the best model for language is deep learning and LLMs, the best for time series might not be deep learning — how do you make them compatible to train both together? One research question is: do specialized or general-purpose models work better in some setting? NLP started with specialized models, then general-purpose models used lots of data and crushed benchmarks — does that trend hold for other data modalities, especially those without much data? Another: what type of domain knowledge to include? If you hypothesize something about how EEG data should be processed by medical experts — does putting that knowledge into your model improve performance, or get the same performance with less data? AI for sensor data is another theme: sensor data is very high frequency, very long range, beyond what current sequence models can handle. How to tokenize sensor data into semantically meaningful boundaries — like LLMs tokenize into words and subwords. Most sensor data has previously been processed by signal processing; you'll likely need a hybrid of signal processing and deep learning. To build sensor-based LLMs, a key component is collecting sensor-language data. A project can be dataset and benchmark driven. And sensor data can be super long — years' worth — so you need an adaptive method that doesn't sense all the time but only when something important is happening. Tons of time-series foundation models have been released recently, worth a look as initial state-of-the-art, and ideas like change-point detection to identify changes in sensor data.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S8 ===== -->
+  <section class="chapter" id="s8">
+    <h2><span class="num">08</span><span class="title-text">研究方向弹药库（中）：AI 推理 &amp; 交互式智能体</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">18:40</span>AI 推理（reasoning）</h3>
+      <p>推理的目标是造出<strong>不只是"感知+给个预测"、而是能走多步复杂步骤去解决难题</strong>的系统。最近大量工作显示基础模型能<strong>涌现出推理能力</strong>——比如只给数学题答案、不给中间步骤，LLM 也能学会一步步的解法，这叫<strong>涌现推理（emergent reasoning）</strong>（课程后面有专门一讲）。在涌现推理之前，还有<strong>显式推理</strong>：对每一步都给监督信号。怎么给监督？有<strong>神经符号（neuro-symbolic）方法</strong>、收集中间步骤、对模型可能的动作做<strong>树搜索</strong>等。</p>
+      <p>他特别点名：已有人<strong>只用约 1000~8000 个样本就复现了 DeepSeek R1 式的推理</strong>，很值得去研究或迁移到你的场景（PPT 上列了一串 arXiv / X 链接资源）。</p>
+      <h3><span class="ts">20:00</span>交互式智能体（interactive agents）</h3>
+      <p>推理之后是<strong>交互式智能体</strong>：让模型<strong>连续采取多步动作</strong>帮你完成任务（帮你购物、订行程、做 PPT）。现在很火，但问题一堆：</p>
+      <ul>
+        <li><strong>视觉理解：</strong>AI 很会理解自然图像，但<strong>网页截图 / PowerPoint 这类图像很不一样</strong>，怎么造更好的视觉模型去理解它们？</li>
+        <li><strong>请求人类澄清（human clarification）：</strong>我们永远不会完全信任全自动跑在电脑上的系统。怎么设计模型，让它<strong>在不确定时停下来、把信息交还给人</strong>接管？这就是 human-in-the-loop（人在回路）学习。</li>
+      </ul>
+      <p>（PPT 列了若干评测交互式智能体的常用 benchmark。）</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_007.jpg" alt="AI Reasoning slide - emergent reasoning, deepseek r1">
+        <figcaption><span class="fno">frame_007 · 约 18:00</span> · AI Reasoning：动机是多模态 LLM 里稳健、可解释的推理。挑战——细粒度/组合推理、神经符号(显式)推理、基础模型里的涌现(隐式)推理。起步资源：一批 DeepSeek R1 / 涌现推理的复现（含 arXiv 与 X 链接）。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（18:40–21:15）</summary><div class="tx-body">AI reasoning — the goal is to build systems that don't just perceive and identify a prediction but can take multiple complex steps to solve some difficult task. Nowadays you've seen tons of work showing foundation models actually enable reasoning to emerge — if you give it the answer to a math question without the intermediate steps, these LLMs are still able to learn the step-by-step workings. That's emergent reasoning; we'll have a dedicated lecture on it. Before emergent reasoning, there were methods based on explicit reasoning where you gave supervision on each step. How to give supervision — neuro-symbolic methods, collecting intermediate steps, tree search over possible things a model can do. People have successfully reproduced DeepSeek R1 reasoning using just 1,000 to 8,000 examples — something you want to investigate or adapt. Interactive agents follow on from reasoning, where you want models to take multiple steps of actions to help solve a task — extremely popular now, embedding an LLM onto your computer so if you type "help me do this shopping" or "book this travel" or "make this PowerPoint slide" it can go some way toward helping. Lots of questions: AI systems are good at understanding natural images, but web images, screenshots, PowerPoint images are very different — how do you build better vision models? Asking for human clarification — we're never going to trust these systems running fully autonomously, so how do we design models that, if uncertain, stop and relay information to a human to take over — human-in-the-loop learning. And some common benchmarks for interactive agents.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S9 ===== -->
+  <section class="chapter" id="s9">
+    <h2><span class="num">09</span><span class="title-text">研究方向弹药库（下）：具身 · 社会智能 · 人机交互 · 伦理安全</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">21:17</span>具身与可触 AI（embodied &amp; tangible）</h3>
+      <p>怎么把 AI 从纯数字形态搬到<strong>物理世界的实体系统</strong>？这要同时解决硬件、系统搭建，还要造一个<strong>理想情况能在设备本地跑</strong>的 AI 原型。课程会教<strong>把模型压小、减少内存占用</strong>。挑战：能在硬件上跑的高效模型；怎么连接<strong>感知与执行（sensing &amp; actuation）</strong>——AI 发出动作→设备移动/行动→再感知→再行动，通常表述成<strong>强化学习</strong>问题（课程会讲 RL），但在真实具身系统上做仍很难。</p>
+      <h3><span class="ts">22:22</span>社会智能 AI（socially intelligent）</h3>
+      <p>AI 已经很会感知物理世界和图像，但离<strong>真正理解人、与人互动</strong>还很远。挑战：</p>
+      <ul>
+        <li>互动本质是<strong>多模态</strong>的——不只听懂语音，还要读懂非语言表达；</li>
+        <li>要有<strong>常识</strong>——社交里大量没说出口的东西，人靠常识就懂，怎么给 AI 灌进这种常识？</li>
+        <li>人际关系常需<strong>数月数年</strong>才建立，AI 只聊几分钟——怎么让系统能跨年地与人互动？</li>
+        <li><strong>心智理论（theory of mind）：</strong>系统要理解"你以为它在想什么"，还要在多人、多轮里反复做这件事。</li>
+      </ul>
+      <p>他点名一个特别想有人做的题目：<strong>能玩狼人杀 / 阿瓦隆这类游戏的 AI</strong>——因为有隐藏身份，你要骗别人别识破你的角色。怎么造一个能有效游玩、会骗、还能识破别人在骗的 AI？（资源：Multimodal Werewolf、Ego4D、MMToM-QA、CMU 11866 人工社会智能课。）</p>
+      <h3><span class="ts">24:05</span>人机交互（human-AI interaction）</h3>
+      <p>很多系统还很"自主"，但有核心问题：怎么让模型<strong>表达自己对某事有多确定/不确定</strong>，好把不确定的地方交给人反馈澄清？怎么设计<strong>对人更直观的反馈媒介</strong>——不只是点赞/点踩，甚至用<strong>面部表情、手势、整体氛围</strong>来给 AI 反馈？</p>
+      <h3><span class="ts">24:46</span>伦理与安全（ethics &amp; safety）</h3>
+      <p>这些系统好用时很好用，但<strong>遇到分布外输入、或越狱（jailbreak）提示时会很灾难性</strong>，说出危险内容。研究问题：怎么<strong>更好地把各类偏见/安全违规归类（taxonomize）</strong>？怎么把偏见<strong>追溯到预训练数据</strong>、看它在训练/微调中如何被放大？怎么提出<strong>新的微调方式去缓解</strong>（更好的 RLHF、对人类反馈对齐、不同反馈界面；公平性从 LLM 扩展到多模态；缓解文本生成、图像描述、图像生成里的偏见）。</p>
+      <p>他强调这是一份<strong>非穷尽清单</strong>，只是他和组里学生感兴趣、且这门课大家普遍感兴趣的方向——你完全欢迎提自己的想法。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_008.jpg" alt="Socially Intelligent AI slide - Werewolf, Ego4D, MMToM-QA">
+        <figcaption><span class="fno">frame_008 · 约 21:00</span> · Socially Intelligent AI：让 AI 理解并在社交情境中与人互动。挑战——社交推理与常识、跨数月数年的关系、心智理论与多方互动。起步：Multimodal Werewolf、Ego4D、MMToM-QA、CMU 11866 课程。</figcaption>
+      </figure>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-2-research/frame_009.jpg" alt="Ethics and Safety slide - biases, RLHF">
+        <figcaption><span class="fno">frame_009 · 约 24:00</span> · Ethics and Safety：大模型可能输出不安全文本、生成/检索有偏图像。挑战——给偏见分类、把偏见追溯到预训练数据并观察其放大、提出新的缓解与对齐方式（含改进 RLHF、多模态公平性）。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（21:17–25:30）</summary><div class="tx-body">Embodied and tangible AI — how do we bring AI from digital form to physical systems in the world? This requires solving the hardware and building the system itself, and an AI prototype that can run ideally on-device. We'll cover ways of downsizing models to make them efficient by reducing memory. Challenges: efficient models that run on hardware; how to connect sensing and actuation — the AI model sends something in the world, the device moves and takes an action, which lets the AI send something and act again — usually phrased as a reinforcement learning problem. Doing that for real-world tangible embodied systems is still challenging. Socially intelligent AI — we have AI that perceives the physical world well, but they're far off from truly understanding and interacting with humans. This interaction is very multimodal — understanding speech but also non-verbal expressions. They have to have common sense — so many things we don't say in social interactions but know are there. How do you imbue AI with common sense? Social relationships take months and years to develop; AI talks to you over a couple of minutes — how do you scale to interact over years? And theory of mind — systems understanding what you think they might be thinking, across multiple people. One thing I'd be excited about: AI that can play games like Werewolf or Avalon — you have hidden roles, you're lying so people don't uncover your role. How do you build an AI that can play, lie, and tell if others are lying? Human-AI interaction — how do you get models to reveal how certain or uncertain they are so they can relay to humans for feedback? Different mediums more intuitive for humans, not just up/down votes — facial expressions, gestures, overall mood. And finally ethics and safety — these systems work really well when they do, but can be disastrous with out-of-distribution or jailbreak prompts. How do you taxonomize biases and safety violations, and come up with new ways of fine-tuning to mitigate? This is a non-exhaustive list — things I'm interested in, some my students work on; you're all welcome to come up with your own ideas.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S10 ===== -->
+  <section class="chapter" id="s10">
+    <h2><span class="num">10</span><span class="title-text">文献调研怎么做：一套固定的检索顺序</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">25:42</span>资源清单</h3>
+      <p>第二大块：怎么做文献调研、怎么读论文。他列了一串资源：<strong>Google Scholar、Papers with Code、GitHub、Hugging Face、会议论文集（conference proceedings）、博客、综述论文（survey）、教程和课程。</strong></p>
+      <h3><span class="ts">26:42</span>他本人的检索顺序（很实用）</h3>
+      <ol>
+        <li><strong>Google Scholar 起步：</strong>给定一个主题，先在 Scholar 里搜，翻前几页看冒出来什么。</li>
+        <li><strong>转向实现（implementations）：</strong>Papers with Code / GitHub / Hugging Face 是大家上传代码的地方。GitHub 比较散——各人各仓库；而 <strong>Papers with Code 和 Hugging Face 按研究领域或数据集把代码集中起来</strong>，更容易看出某个任务上的进展。</li>
+        <li><strong>翻会议论文集：</strong>看你心仪会议历年（尤其近年）的论文。</li>
+        <li><strong>加 "blog post" 搜（他的偏好）：</strong>把要查的主题后面加上 "blog posts" 一起搜。博客是领域专家<strong>写给入门者</strong>的，门槛低很多——当你想了解一个领域、又没时间啃所有数学和最新论文时，博客帮你快速抓到关键亮点和趋势。</li>
+        <li><strong>综述 + 教程 + 课程：</strong>和博客一样对新手友好，还能看专家<strong>怎么把一个领域结构化成一套连贯的教学体系（pedagogy）</strong>。</li>
+      </ol>
+      <div class="callout info"><p><strong>给新手的可操作打法：</strong>"先 Scholar 摸全貌 → 再 Papers with Code/HF 看谁的代码能跑、任务进展到哪 → 翻近年顶会 → 用博客/综述/课程把领域结构和直觉补齐"。新手尤其别跳过博客和综述——它们是最快建立"这个领域大概长啥样"的捷径。</p></div>
+      <div class="callout warn"><p><strong>说明：</strong>本集 YouTube 自动字幕到此（约 27:58）结束，恰好在他要开始"现场 demo 文献调研"那一刻。屏幕演示部分自动字幕未覆盖，故本精读到"检索顺序"为止——这已经是整节课<strong>方法论的全部要点</strong>。</p></div>
+      <details class="transcript"><summary>英文逐字稿（25:42–结尾 ≈27:58）</summary><div class="tx-body">In this next part we're going to cover how to do the literature review and how to read a paper. I'm putting several resources here — some of you might have used all or a subset of them: Google Scholar, Papers with Code, GitHub, Hugging Face, conference proceedings, blog posts, survey papers, tutorials and courses. I usually go through them in this order. I first start, given a particular topic, by typing it into Google Scholar, browsing the first couple of pages, seeing what comes up. I'll then focus on implementations — Papers with Code, GitHub, and Hugging Face are platforms where people upload their code after completing a project; some are more structured than others. GitHub is scattered all over the place — different people, different repositories — but Papers with Code and Hugging Face centralize code by a particular research area or dataset, so it's easier to find the progress made on a particular task. I then look at different conference proceedings of your favorite conferences over the years, especially recent ones. And then — I don't know if a lot of you do four and five, but something I like to do — I like to type whatever I'm trying to find out about with "blog posts" added afterwards. Blog posts are written by domain experts for introductory people into the field, pitched at a much more introductory level. That's useful because maybe I want to find out about an area but don't have time to dig through all the math and recent papers — I just want the key highlights and trends. Blog posts are very friendly for beginners. Like blog posts, I'll also add survey papers plus tutorials plus courses, so it's more friendly to a beginner and you can see how they structure the field into a consistent pedagogy. So, I'm going to just do [a live demo]…</div></details>
+    </div>
+  </section>
+
+  <!-- ===== Feynman ===== -->
+  <section class="chapter" id="feynman">
+    <h2><span class="num">🧠</span><span class="title-text">费曼重讲：用最白的话讲透"怎么做研究"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout purple"><p>下面这一段，假设你从没做过研究、也搞不清"研究问题"和"假设"差在哪。读完你应该能把"怎么开始一个 AI 项目"讲给同学听。</p></div>
+
+      <h3>1. 研究不是直线，是个"打怪升级"的圈</h3>
+      <p>先扔掉一个误解：研究<strong>不是</strong>"想个绝妙点子 → 一口气做出来 → 发表"这种直线。它更像打游戏刷副本——你转<strong>一个圈</strong>，每转一圈就更接近通关：</p>
+      <p>① 你<strong>观察</strong>到点什么（"咦这个模型在这种情况老出错"）→ ② <strong>查文献</strong>（"别人是不是早发现了？我这想法站在哪个位置？"）→ ③ 提一个<strong>明确的问题 + 一个猜测</strong> → ④ <strong>跑实验</strong>验证 → ⑤ <strong>看结果</strong> → ⑥ 不够好？带着新发现<strong>回到①再刷一圈</strong>。第一圈结论烂很正常，圈的意义就是让你越转越准。</p>
+
+      <h3>2. 点子从哪来：两种打法</h3>
+      <p><strong>打法 A（自下而上，新手首选）：</strong>别空想。直接把现在最强的现成方法（SOTA）<strong>抓来自己跑一遍</strong>，盯着它<strong>在哪儿崩</strong>。它崩的地方，就是你的机会——你去把那个崩的地方修好，就有了一个更好的新方法。稳、踏实，但难有大突破（因为你一直被现有方法牵着走）。</p>
+      <p><strong>打法 B（自上而下，赌大的）：</strong>从一个"说出来别人就两眼放光、从没人做成过"的大愿景出发，再把它<strong>切成几个月能够到的小块</strong>。可能做出惊艳的东西，也可能摔得很惨——高风险高回报。</p>
+      <div class="callout info"><p><strong>啊原来如此 ①：</strong>"我没 idea"往往不是脑子不够，而是<strong>没动手跑现成的东西</strong>。点子不是憋出来的，是你把 SOTA 跑崩、看见它的破绽后<strong>自己冒出来的</strong>。</p></div>
+
+      <h3>3. 把"好奇"翻译成"能验证的问题"</h3>
+      <p>光有好奇没用，得把它锻造成一把能砍的刀——<strong>研究问题</strong>。好的研究问题有两个特征：</p>
+      <ul>
+        <li><strong>问的是社区还不知道的事</strong>（这决定你"新"在哪）；</li>
+        <li><strong>最好能用"是/否"回答</strong>。为什么？因为是/否的问题你能干脆地<strong>证实或推翻</strong>——做完实验有个清清楚楚的答案，而不是一摊糊。</li>
+      </ul>
+      <p>而<strong>假设</strong>就是你<strong>提前押的答案 + 押的理由</strong>。例：问题"所有语言一样难让 AI 学吗？"（标准是/否）；假设"我赌不一样，因为语言之间有'兼容性'差异"。看，问题划定了战场，假设给了你一个带理由的赌注，理由还顺手告诉你该设计什么实验。</p>
+      <div class="callout good"><p><strong>啊原来如此 ②：</strong>研究问题 = "社区不知道、且能被是/否回答"的提问；假设 = "我赌答案是啥 + 凭啥这么赌"。把模糊好奇拆成这两样，研究就有抓手了。</p></div>
+
+      <h3>4. 遇到"怎么样"的大问题，就剁成"是/否"的小块</h3>
+      <p>有些问题天生不是是/否，比如"什么让一档播客好听？"。别硬刚——先用假设<strong>押几个具体因素</strong>（少点废话？多点情感？），再把每个因素做成一个独立的是/否实验（去掉废话好不好听？加情感好不好听？）。<strong>大问题 = 一堆小是/否问题的总和。</strong></p>
+
+      <h3>5. 一个常见的坑：别问"X 能不能让 Y 更好"</h3>
+      <p>这问题听着挺自然，但藏雷：万一实验答案是"不能"，你直接<strong>卡死</strong>——你压根不知道为啥不能、下一步干嘛。换成问<strong>"X 靠哪个性质让 Y 更好"</strong>就活了：失败了你还能换个性质继续追。<strong>好问题要自带"失败后还能往前走"的逃生门。</strong></p>
+
+      <h3>6. 不知道做啥方向？这节课给了一整箱弹药</h3>
+      <p>Paul Liang 顺手甩出一大堆现成方向当弹药：新模态（脑电、传感器、可触数据）、AI 推理（含 DeepSeek R1 那种涌现推理）、能帮你订票做 PPT 的交互式智能体、能跑在硬件上的具身 AI、会玩狼人杀的社会智能 AI、人机交互、伦理安全……每个方向他都按<strong>同一个模板</strong>给：一句动机 + 几条挑战（=研究问题）+ 几个可起步的模型/数据集。<strong>这个模板本身就是范本：选方向时，先写清"动机、挑战、起步资源"三栏。</strong></p>
+
+      <h3>7. 别从零硬啃：文献调研有固定套路</h3>
+      <p>选好方向，怎么快速搞懂这块领域、又不重复造轮子？按顺序刷：<strong>Google Scholar 摸个全貌 → Papers with Code / Hugging Face 看谁的代码能跑、任务进展到哪（比散乱的 GitHub 更集中）→ 翻近年顶会论文 → 最后用"主题 + blog post"搜博客、再加综述和课程</strong>，让专家用大白话帮你把领域结构和直觉补齐。新手尤其别跳过博客和综述——那是最快入门的捷径。</p>
+      <div class="callout accent"><p><strong>一句话复述（你现在应该能讲出来）：</strong>做 AI 研究就是转一个圈——观察→查文献→提一个能用是/否验证的问题和带理由的假设→跑实验→分析→再转。新手先走"自下而上"：跑现成最强方法、找它崩在哪、去修。问题要问"为什么/靠哪个性质"而不是"能不能"。方向没思路就照"动机+挑战+起步资源"挑一个，再按"Scholar→代码平台→顶会→博客/综述"的顺序把文献补齐。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== Concepts ===== -->
+  <section class="chapter" id="concepts">
+    <h2><span class="num">🗂</span><span class="title-text">核心概念卡</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="concept-grid">
+        <div class="concept"><div class="cn">研究迭代循环（research loop）</div><div class="cd">研究不是直线：观察/想法 → 文献回顾 → 研究问题/假设 → 实验 → 分析结论 → 不满意就带着新发现再循环。</div><div class="cm"><b>在这节课里：</b>贯穿全课的总框架，后面每个环节都是在拆这个圈的某一环。</div></div>
+        <div class="concept"><div class="cn">自下而上发现（bottom-up）</div><div class="cd">先调研并亲手跑现成 SOTA，看它哪儿行哪儿崩，用"崩的地方"启发下一步该做什么。</div><div class="cm"><b>在这节课里：</b>课程默认路线，安全、利于增量进展；对应"复现→错误分析→修"的期中流程。</div></div>
+        <div class="concept"><div class="cn">自上而下（top-down）/ moonshot</div><div class="cd">从一个诱人的大愿景出发，再拆成几个月能做到的小块。</div><div class="cm"><b>在这节课里：</b>高风险高回报路线，可做大跳跃；走这条必须来 office hours 收敛到"一学期可做"。</div></div>
+        <div class="concept"><div class="cn">研究问题（research question）</div><div class="cd">对"社区还不知道的事"提出的明确问题，定义了研究"新"在哪；最好写成是/否形式。</div><div class="cm"><b>在这节课里：</b>新颖性的边界线；审稿人说"不新"通常=问题已被答过或没答透。</div></div>
+        <div class="concept"><div class="cn">假设（hypothesis）</div><div class="cd">对研究问题答案的"先验猜测 + 理由"。</div><div class="cm"><b>在这节课里：</b>好假设既押答案又给原因（如"基于跨语言兼容性，不太可能都一样"），原因还能直接导出实验设计。</div></div>
+        <div class="concept"><div class="cn">可证伪 / yes-no 形式</div><div class="cd">把问题写成是/否，就能干脆地证实或推翻，得到清楚的结论。</div><div class="cm"><b>在这节课里：</b>新手起手式；how 型大问题要拆成多个 yes/no 小对照实验来回答。</div></div>
+        <div class="concept"><div class="cn">"Does X make Y better?" 陷阱</div><div class="cd">只问"有没有用"的问题：失败时无路可走，因为不知道为什么。</div><div class="cm"><b>在这节课里：</b>应改写成"Why / 靠 X 的哪个性质让 Y 更好"，失败后还能换性质继续追。</div></div>
+        <div class="concept"><div class="cn">错误分析 + 失败模式归类</div><div class="cd">跑完现有方法后，系统分析它在哪 work/不 work，把失败情形分门别类。</div><div class="cm"><b>在这节课里：</b>期中报告的核心动作，是从"用别人方法"过渡到"提自己想法"的桥。</div></div>
+        <div class="concept"><div class="cn">三份报告节奏</div><div class="cd">提案（圈领域+SOTA/移植）→ 期中（复现+错误分析+归类）→ 期末（实现新想法+验证是否修好）。</div><div class="cm"><b>在这节课里：</b>套壳 LLM 只到"期中"那一步；真正的研究还要分析成败、提升性能假设。</div></div>
+        <div class="concept"><div class="cn">方向选型模板</div><div class="cd">每个研究主题按"动机 + 挑战(=研究问题) + 可起步的模型/数据集"三栏来组织。</div><div class="cm"><b>在这节课里：</b>新模态/推理/智能体/具身/社会智能/伦理等方向全用这个模板讲，可直接拿来给自己选题。</div></div>
+        <div class="concept"><div class="cn">文献调研顺序</div><div class="cd">Google Scholar 摸全貌 → Papers with Code/GitHub/Hugging Face 看代码与进展 → 近年顶会 → 博客 → 综述/教程/课程。</div><div class="cm"><b>在这节课里：</b>Papers with Code/HF 按领域或数据集集中代码，比散乱 GitHub 易找进展；博客/综述对新手最友好。</div></div>
+        <div class="concept"><div class="cn">人在回路 / 请求澄清</div><div class="cd">让模型在不确定时停下、把信息交给人接管，而非全自动硬跑。</div><div class="cm"><b>在这节课里：</b>交互式智能体与人机交互方向的关键研究问题（含表达确定度、更直观的反馈媒介）。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Takeaways ===== -->
+  <section class="chapter" id="takeaways">
+    <h2><span class="num">✅</span><span class="title-text">这集最该记住的几条</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout good"><p><strong>① 研究是个迭代循环，不是直线。</strong>观察→查文献→提问题/假设→实验→分析→再循环。第一圈结论不好很正常，价值在于你把它当反馈转下一圈。</p></div>
+      <div class="callout accent"><p><strong>② 点子有两条路，新手先走"自下而上"。</strong>跑现成最强方法、看它崩在哪、去修——稳、增量。想做"自上而下"的 moonshot 也行，但务必去 office hours 收敛到一学期能做完。</p></div>
+      <div class="callout purple"><p><strong>③ 好研究问题最好是 yes/no、可证伪；好假设要带"为什么"。</strong>是/否问题能干脆证实/推翻；how 型大问题就拆成一堆 yes/no 小对照实验。</p></div>
+      <div class="callout warn"><p><strong>④ 别问"X 能不能让 Y 更好"，要问"X 靠哪个性质让 Y 更好"。</strong>前者失败就卡死，后者失败还能换性质继续追——好问题自带逃生门。</p></div>
+      <div class="callout info"><p><strong>⑤ 文献调研有固定套路，别从零硬啃。</strong>Google Scholar → Papers with Code/Hugging Face（看代码与任务进展）→ 近年顶会 → 博客 → 综述/课程。新手尤其靠博客和综述快速入门、看领域怎么被结构化。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== References ===== -->
+  <section class="chapter" id="refs">
+    <h2><span class="num">🔗</span><span class="title-text">References</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <ol class="ref-list">
+        <li>Paul Liang — <em>How to AI (Almost) Anything, Lecture 1.2: How to AI Research</em>（MIT Media Lab &amp; EECS，2025 春季课程，本精读的原视频，约 28 分钟）· <a href="https://youtu.be/104FX8MYKAM" target="_blank" rel="noopener">youtu.be/104FX8MYKAM</a></li>
+        <li>Paul Liang 个人主页（课程主页与资源入口）· <a href="https://pliang279.github.io" target="_blank" rel="noopener">pliang279.github.io</a></li>
+        <li>Cotterell et al. (2018) — <em>Are All Languages Equally Hard to Language-Model?</em>（课中"是/否型好研究问题"的范例）· 搜索 Google Scholar 即可</li>
+        <li>Reddy et al. (2018) — 关于"什么让播客普遍吸引人"的研究（课中"how 型问题拆成 yes/no"的范例）</li>
+        <li>文献调研常用平台：Google Scholar · <a href="https://paperswithcode.com" target="_blank" rel="noopener">Papers with Code</a> · <a href="https://huggingface.co" target="_blank" rel="noopener">Hugging Face</a> · GitHub</li>
+        <li>课中提到的相关数据集/资源：Ego4D（arXiv:2110.07058）· MMToM-QA（OpenReview）· Multimodal Werewolf（persuasion-deductiongame.socialai-data.org）· CMU 11866 Artificial Social Intelligence（cmu-multicomp-lab.github.io/asi-course/spring2023）· DeepSeek R1 复现相关 arXiv:2501.19393 / arXiv:2501.17161</li>
+      </ol>
+      <p style="font-size:13px;color:var(--text-mute)">逐字稿基于视频 YouTube 自动字幕清洗去重而成（自动字幕含识别误差，已做断句与可读性修整，技术名词以正文中文笔记为准）。本集自动字幕覆盖到约 27:58（讲到"开始现场 demo 文献调研"那一刻），其后的屏幕演示部分自动字幕未捕获。关键帧截图按 frame_NNN =（NNN−1）×180 秒映射到视频时间。</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
+
+<footer>
+  <p>课程精读 · 无忌 · 《How to AI Almost Anything》Lecture 1.2 AI 研究入门 · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；技术理解以中文笔记与原视频为准。</p>
+</footer>
+
+<script>
+(function(){
+  // 主题切换
+  var themeBtn=document.getElementById('themeToggle');
+  var saved=localStorage.getItem('course-theme');
+  if(saved){document.body.setAttribute('data-theme',saved);themeBtn.textContent=saved==='dark'?'☀️':'🌙';}
+  themeBtn.addEventListener('click',function(){
+    var cur=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.body.setAttribute('data-theme',cur);
+    localStorage.setItem('course-theme',cur);
+    themeBtn.textContent=cur==='dark'?'☀️':'🌙';
+  });
+
+  // 进度条 + 回到顶部
+  var progressEl=document.getElementById('progress');
+  var backTopEl=document.getElementById('backTop');
+  function updateProgress(){
+    var docHeight=document.documentElement.scrollHeight-window.innerHeight;
+    var scrolled=window.scrollY;
+    var ratio=docHeight>0?scrolled/docHeight:0;
+    progressEl.style.width=(ratio*100)+'%';
+    backTopEl.classList.toggle('show',scrolled>400);
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+  backTopEl.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // 章节折叠
+  document.querySelectorAll('section.chapter > h2').forEach(function(h2){
+    h2.addEventListener('click',function(){h2.parentElement.classList.toggle('collapsed');});
+  });
+
+  // 抽屉导航
+  var nav=document.querySelector('nav.anchor-nav'),tog=document.getElementById('navToggle'),ov=document.getElementById('navOverlay');
+  function closeNav(){nav.classList.remove('open');ov.classList.remove('show');}
+  if(nav&&tog&&ov){
+    tog.addEventListener('click',function(){var o=!nav.classList.contains('open');nav.classList.toggle('open',o);ov.classList.toggle('show',o);});
+    ov.addEventListener('click',closeNav);
+    document.querySelectorAll('.anchor-list a').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=1040)closeNav();});});
+  }
+
+  // anchor 点击展开折叠章节
+  var anchorLinks=document.querySelectorAll('#anchorList a');
+  anchorLinks.forEach(function(a){
+    a.addEventListener('click',function(){
+      var target=document.getElementById(a.dataset.target);
+      if(target&&target.classList.contains('collapsed'))target.classList.remove('collapsed');
+    });
+  });
+
+  // scroll-spy 高亮
+  var sections=Array.prototype.map.call(anchorLinks,function(a){return document.getElementById(a.dataset.target);}).filter(Boolean);
+  function highlightAnchor(){
+    var offset=120,current=null;
+    for(var i=0;i<sections.length;i++){var rect=sections[i].getBoundingClientRect();if(rect.top-offset<=0)current=sections[i].id;}
+    anchorLinks.forEach(function(a){a.classList.toggle('active',a.dataset.target===current);});
+    var activeLink=document.querySelector('#anchorList a.active');
+    if(activeLink)activeLink.scrollIntoView({block:'nearest'});
+  }
+  window.addEventListener('scroll',highlightAnchor,{passive:true});
+  highlightAnchor();
+})();
+</script>
+
+<script>/* PDF-HIDE-REFS */
+(function(){
+  function hide(){document.querySelectorAll('section.chapter').forEach(function(s){var h=s.querySelector('h2');if(h&&/references|参考文献/i.test(h.textContent)){s.setAttribute('data-printhidden','1');s.style.display='none';}});}
+  function show(){document.querySelectorAll('[data-printhidden]').forEach(function(s){s.style.display='';s.removeAttribute('data-printhidden');});}
+  window.addEventListener('beforeprint',hide);
+  window.addEventListener('afterprint',show);
+})();
+</script>
+</body>
+</html>

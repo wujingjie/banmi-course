@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>课程精读 · How to AI Almost Anything · Lecture 1 课程导论 · 无忌</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --bg-elevated: #ffffff;
+    --bg-stripe: #f5f7fa;
+    --text: #1a1d23;
+    --text-soft: #4a5160;
+    --text-mute: #7c8493;
+    --border: #e3e6ec;
+    --border-strong: #cdd2da;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --accent-text: #1d4ed8;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --info: #0891b2;
+    --info-soft: #cffafe;
+    --code-bg: #f1f3f7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.04);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg-soft: #161922;
+    --bg-elevated: #1c2030;
+    --bg-stripe: #1a1e2a;
+    --text: #e6e9f0;
+    --text-soft: #b6bcc9;
+    --text-mute: #8a92a3;
+    --border: #2a2f3d;
+    --border-strong: #3a4154;
+    --accent: #60a5fa;
+    --accent-soft: #1e3a8a55;
+    --accent-text: #93c5fd;
+    --good: #4ade80;
+    --good-soft: #14532d55;
+    --warn: #fbbf24;
+    --warn-soft: #78350f55;
+    --bad: #f87171;
+    --bad-soft: #7f1d1d55;
+    --info: #22d3ee;
+    --info-soft: #155e7555;
+    --code-bg: #0a0d14;
+    --purple: #a78bfa;
+    --purple-soft: #4c1d9555;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: 60px;
+    transition: background-color .25s, color .25s;
+  }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple)); z-index: 1000; transition: width .1s linear; }
+  header.topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 980px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; color: var(--text); white-space: nowrap; }
+  .brand .tag { margin-left: 6px; font-weight: 500; font-size: 11px; color: var(--text-mute); padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; }
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); cursor: pointer; font-size: 18px; transition: transform .15s, background-color .15s; }
+  .icon-btn:active { transform: scale(.94); }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .hero { padding: 28px 4px 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.5px; background: linear-gradient(135deg, var(--text) 0%, var(--accent-text) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-mute); }
+  .hero-meta span { background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .hero-meta a { color: var(--accent-text); text-decoration: none; }
+  .hero-deck { margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; color: var(--text); font-size: 15px; }
+  section.chapter { margin: 24px 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  section.chapter > h2 { font-size: 20px; margin: 0; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); user-select: none; background: var(--bg-elevated); transition: background-color .15s; min-height: 56px; }
+  section.chapter > h2:active { background: var(--bg-soft); }
+  section.chapter > h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 14px; font-weight: 700; }
+  section.chapter > h2 .title-text { flex: 1; }
+  section.chapter > h2 .caret { transition: transform .25s; color: var(--text-mute); font-size: 14px; }
+  section.chapter.collapsed > h2 .caret { transform: rotate(-90deg); }
+  section.chapter.collapsed > h2 { border-bottom-color: transparent; }
+  .chapter-body { padding: 18px 20px 22px; max-height: 100000px; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+  section.chapter.collapsed .chapter-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  h3 { font-size: 17px; margin: 22px 0 10px; color: var(--text); padding-left: 10px; border-left: 3px solid var(--accent); }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text-soft); }
+  p { margin: 8px 0 12px; color: var(--text-soft); }
+  strong { color: var(--text); }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--text-soft); }
+  li { margin: 4px 0; }
+  .callout { margin: 14px 0; padding: 12px 14px; border-radius: 10px; border-left: 4px solid; font-size: 14.5px; line-height: 1.65; }
+  .callout.info { background: var(--info-soft); border-color: var(--info); }
+  .callout.good { background: var(--good-soft); border-color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .callout.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.purple { background: var(--purple-soft); border-color: var(--purple); }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; }
+  .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: none; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 40; border: none; }
+  .back-to-top.show { display: flex; }
+  .back-to-top:active { transform: scale(.94); }
+  footer { text-align: center; padding: 24px 16px; color: var(--text-mute); font-size: 13px; border-top: 1px solid var(--border); margin-top: 32px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text); }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin: 12px 0; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+  pre code { background: none; padding: 0; }
+  hr.soft { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+  blockquote { margin: 12px 0; padding: 10px 16px; border-left: 4px solid var(--text-mute); background: var(--bg-soft); border-radius: 6px; color: var(--text-soft); font-size: 14.5px; }
+  .pill { display: inline-block; padding: 3px 9px; font-size: 11px; font-weight: 600; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-soft); white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .pill.purple { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .metric { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; }
+  .metric .v { font-size: 22px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; }
+  .metric .l { font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+  /* ---- 课程精读专用 ---- */
+  .ts { display: inline-block; font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+  .transcript { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; background: var(--bg-soft); }
+  .transcript > summary { padding: 10px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-soft); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; min-height: 44px; }
+  .transcript > summary::-webkit-details-marker { display: none; }
+  .transcript > summary::before { content: "▶"; font-size: 11px; color: var(--text-mute); transition: transform .2s; }
+  .transcript[open] > summary::before { transform: rotate(90deg); }
+  .transcript .tx-body { padding: 4px 16px 16px; font-size: 13.5px; line-height: 1.7; color: var(--text-mute); font-style: italic; border-top: 1px solid var(--border); }
+  figure.frame { margin: 16px 0; }
+  figure.frame img { width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+  figure.frame figcaption { margin-top: 6px; font-size: 12.5px; color: var(--text-mute); line-height: 1.5; text-align: center; }
+  figure.frame figcaption .fno { font-family: ui-monospace, monospace; color: var(--accent-text); font-weight: 700; }
+  .concept-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0; }
+  .concept { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+  .concept .cn { font-size: 15px; font-weight: 700; color: var(--text); }
+  .concept .cn code { font-size: 13px; }
+  .concept .cd { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+  .concept .cm { font-size: 13px; color: var(--text-mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .concept .cm b { color: var(--accent-text); }
+  .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 8px 10px 8px 36px; position: relative; border-bottom: 1px dashed var(--border); font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+  .ref-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 4px; top: 8px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .ref-list li a { color: var(--accent-text); text-decoration: none; word-break: break-all; }
+  .ref-list li a:hover { text-decoration: underline; }
+  @media (max-width: 480px) {
+    .hero { padding: 18px 4px 8px; }
+    .hero h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 17px; padding: 14px 14px; }
+    .chapter-body { padding: 14px 14px 18px; }
+    h3 { font-size: 16px; }
+  }
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0 !important; font-size: 11pt; line-height: 1.55; }
+    header.topbar, #progress, .back-to-top, nav.anchor-nav, .nav-toggle, .nav-overlay, #pdfBtn { display: none !important; }
+    main { margin: 0 !important; max-width: 100% !important; padding: 0 !important; }
+    .hero h1 { -webkit-text-fill-color: #1a1d23 !important; color: #1a1d23 !important; background: none !important; }
+    section.chapter { box-shadow: none !important; border: 1px solid #d9dde5 !important; margin: 14px 0 !important; }
+    section.chapter > h2 { cursor: default; position: static; }
+    section.chapter.collapsed .chapter-body, .chapter-body { max-height: none !important; overflow: visible !important; padding: 14px 18px 18px !important; }
+    .caret { display: none !important; }
+    .transcript { break-inside: avoid; }
+    .transcript .tx-body { max-height: none !important; }
+    .callout, .metric-grid, .concept, figure.frame { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    a { color: #1d4ed8 !important; text-decoration: none; }
+  }
+  nav.anchor-nav { position: fixed; top: 100px; left: 0; width: 220px; height: calc(100vh - 100px); overflow-y: auto; overflow-x: hidden; background: var(--bg-soft); border-right: 1px solid var(--border); z-index: 60; padding: 16px 0 40px; transition: transform .28s ease; white-space: normal; }
+  nav.anchor-nav::-webkit-scrollbar { width: 6px; }
+  nav.anchor-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nav-title { padding: 4px 20px 12px; font-size: 13px; font-weight: 700; color: var(--text-mute); }
+  .anchor-list { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .anchor-list a { display: block; min-height: 38px; padding: 9px 12px; border-radius: 8px; font-size: 13px; line-height: 1.35; color: var(--text-soft); text-decoration: none; border-left: 3px solid transparent; }
+  .anchor-list a.active { color: var(--accent-text); background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .nav-toggle { position: fixed; left: 16px; bottom: 24px; width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff; border: none; font-size: 22px; z-index: 70; box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center; display: none; }
+  .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; opacity: 0; pointer-events: none; transition: opacity .28s; }
+  @media (min-width: 1041px) { main { margin-left: 220px; } }
+  @media (max-width: 1040px) {
+    nav.anchor-nav { top: 0; height: 100vh; transform: translateX(-100%); box-shadow: var(--shadow-lg); width: 260px; max-width: 82vw; }
+    nav.anchor-nav.open { transform: translateX(0); }
+    .nav-overlay.show { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">课程精读 · 课程导论 <span class="tag">How to AI Almost Anything · L1 · 无忌</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
+    <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
+  </div>
+</header>
+
+<button class="nav-toggle" id="navToggle" aria-label="章节目录">☰</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="anchor-nav">
+  <div class="nav-title">📖 目录</div>
+  <div class="anchor-list" id="anchorList">
+    <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+    <a href="#s1" data-target="s1">01 这门课是谁开的</a>
+    <a href="#s2" data-target="s2">02 AI for Anything：动机案例</a>
+    <a href="#s3" data-target="s3">03 健康指标 + 交互式智能体</a>
+    <a href="#s4" data-target="s4">04 教什么：教原则不教方法</a>
+    <a href="#s5" data-target="s5">05 第二主题：多模态 AI</a>
+    <a href="#s6" data-target="s6">06 学习目标 + 先修条件</a>
+    <a href="#s7" data-target="s7">07 上课形式 + 四大模块</a>
+    <a href="#s8" data-target="s8">08 评分：40% 阅读 / 60% 项目</a>
+    <a href="#s9" data-target="s9">09 阅读讨论怎么运作</a>
+    <a href="#s10" data-target="s10">10 讨论角色 + 七种扮演</a>
+    <a href="#s11" data-target="s11">11 评分细则 + 典型一周</a>
+    <a href="#s12" data-target="s12">12 研究项目：选题方向</a>
+    <a href="#s13" data-target="s13">13 项目节奏：双周里程碑</a>
+    <a href="#s14" data-target="s14">14 杂项 + 本周作业</a>
+    <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+    <a href="#concepts" data-target="concepts">🗂 核心概念卡</a>
+    <a href="#takeaways" data-target="takeaways">✅ 该记住的几条</a>
+    <a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>MIT《How to AI Almost Anything》<br>Lecture 1：课程导论</h1>
+    <div class="hero-meta">
+      <span>🎓 Paul Liang · MIT Media Lab</span>
+      <span>⏱ 约 40 分钟</span>
+      <span>🎬 <a href="https://youtu.be/0MYt0u3CW5I" target="_blank" rel="noopener">原视频 youtu.be/0MYt0u3CW5I</a></span>
+      <span>📝 无忌课程精读 · 关键帧嵌入</span>
+      <span>🇨🇳 逐字稿英文 · 笔记中文</span>
+    </div>
+    <div class="hero-deck">
+      <strong>学完你能得到什么：</strong>这是 MIT Media Lab 2025 春季新课《How to AI Almost Anything》（如何把 AI 用到几乎任何东西上）的第一节。看完你会清楚<strong>这门课到底想教你什么、怎么上、怎么打分</strong>——它<strong>不是又一门"每周学一个算法"的机器学习课</strong>，而是教你一套<strong>把 AI 用到任意新模态（嗅觉、触觉、生理信号、社交……）上的"原则"</strong>：怎么想数据、怎么设计模型架构、怎么快速实验评估、怎么落地。课程一半是论文研读+讨论（40% 分），一半是一个学期的研究项目（60% 分）。这一集是给你画地图——看完你能判断"这课适不适合我、我该怎么投入"。
+    </div>
+  </div>
+
+  <!-- ===== 速览 ===== -->
+  <section class="chapter" id="overview">
+    <h2><span class="num">⚡</span><span class="title-text">一分钟速览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p><strong>这集讲啥：</strong>讲师 Paul Liang（MIT Media Lab 新教授，主持 Multisensory Intelligence 研究组）在第一节课介绍这门全新课程：它的核心理念、四大模块、上课节奏、评分规则、研究项目流程。基本是一份"课程说明书 + 领域风景巡礼"，几乎不涉及具体技术推导。</p>
+      <p><strong>这门课为什么不一样：</strong>传统 AI 入门课是"15 周、每周一个算法"地堆方法；这门课反过来——<strong>教"原则"不教"方法"</strong>。目标是让你能把 AI 用到那些<strong>还没被主流 AI 研究覆盖的新模态</strong>上：触觉、嗅觉、生理/可穿戴传感器、社交信号、表格数据……重点是培养"拿到一个新问题，该怎么想数据、想架构、想评估、想落地"的直觉。</p>
+      <p><strong>课程结构（记住这几个数字）：</strong></p>
+      <div class="metric-grid">
+        <div class="metric"><div class="v">4</div><div class="l">大模块（基础 / 多模态 / 大模型 / 交互）</div></div>
+        <div class="metric"><div class="v">40%</div><div class="l">论文阅读 + 课堂讨论</div></div>
+        <div class="metric"><div class="v">60%</div><div class="l">一学期研究项目（含 4 个检查点）</div></div>
+        <div class="metric"><div class="v">周二/周四</div><div class="l">周二讲课 · 周四讨论或上手</div></div>
+      </div>
+      <div class="callout accent">
+        <p><strong>一句话主线：</strong>世界是多模态的，AI 也该如此 → 这门课教你把 AI 推广到任意新模态的<strong>通用原则</strong>（数据 / 架构 / 评估 / 部署）→ 通过<strong>读前沿论文 + 做一个真研究项目</strong>把这套原则练成手感。<strong>整集就是把这条线的"为什么"和"怎么落地"讲清楚。</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S1 ===== -->
+  <section class="chapter" id="s1">
+    <h2><span class="num">01</span><span class="title-text">这门课是谁开的：Multisensory Intelligence 研究组</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">00:00</span>开场 + 教学团队</h3>
+      <p>讲师自我介绍：他叫 <strong>Paul（Paul Liang）</strong>，是 MIT Media Lab 和 EECS 的新教授，主持一个叫 <strong>Multisensory Intelligence（多感官智能）</strong> 的研究组。这是这门课的<strong>第三个版本</strong>——按 Media Lab 的传统，继著名的 "How to Make Almost Anything"（如何制造几乎任何东西）和 "How to Grow Almost Anything"（如何培育几乎任何东西）之后，来了第三门 "<strong>How to AI Almost Anything</strong>"。团队里还有两位助教 Shaka 和 David，负责作业和指导课程研究项目。</p>
+      <h3><span class="ts">00:43</span>研究组的三个信条</h3>
+      <p>这个研究组的方向，也基本就是这门课的价值取向，可以拆成三条：</p>
+      <ul>
+        <li><strong>① 多感官（multisensory）：</strong>下一代 AI 系统应该能"吃进"世界上的任何东西——从语言、视觉，到手势、各种传感器信号。课程大量篇幅在讲<strong>怎么设计能接纳几乎任意感官模态的 AI</strong>。</li>
+        <li><strong>② 增强人、而不只是替代人：</strong>不是造一个复制/取代人类能力的 AI，而是造能<strong>帮人达成更好集体结果</strong>的 AI（human-AI symbiosis，人机共生）。</li>
+        <li><strong>③ 安全与稳健：</strong>既然 AI 越来越能深度理解并和人互动，就必须保证它<strong>安全、稳健</strong>。课程末尾会专门讲这块。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_001.jpg" alt="Multisensory Intelligence 研究组介绍页">
+        <figcaption><span class="fno">frame_001 · 约 00:00</span> · Multisensory Intelligence 研究组的口号："Creating human-AI symbiosis across scales and sensory mediums to enhance productivity, creativity, and wellbeing."（跨尺度、跨感官地构建人机共生，提升生产力、创造力与福祉。）右边是 MIT 大圆顶前的团队合影。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（00:00–01:48）</summary><div class="tx-body">All right, folks. Welcome. Welcome to How to AI almost anything. We're very excited to offer this course for the first time. As is Media Lab tradition, following the courses on how to make and how to grow almost anything comes the third edition of how to AI almost anything. My name is Paul, I'm a new faculty at the MIT Media Lab and MIT EECS. I direct the Multisensory Intelligence research group, and alongside myself we have two fantastic TAs, Shaka and David, who will help with assignments and supervise course research projects. Our research focuses on building AI systems that are actually able to take in anything in the world — this next generation of AI systems that are multisensory in nature, from language to vision, gestures, and various sensors. We also build systems that help human experiences — not just replicate what humans can do, but help humans lead to better collective outcomes. And because AI systems are interacting very powerfully with humans, it's important they're safe and robust — towards the end of the course we'll cover how to make these systems truly safe and robust.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S2 ===== -->
+  <section class="chapter" id="s2">
+    <h2><span class="num">02</span><span class="title-text">AI for Anything：从机器人触觉到"闻花生"的芯片</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">01:48</span>世界是多模态的</h3>
+      <p>讲师的核心观察：<strong>我们身边的整个世界都是多模态的</strong>，而我们已经开始看到 AI 一点点学会处理越来越多的"媒介"。从处理文字的大语言模型，到能听懂语音/声音表达、读懂面部表情和肢体语言的系统，再到医疗里能从 X 光片给出合理预测、辅助医生诊断的 AI——这只是冰山一角。</p>
+      <h3><span class="ts">02:45</span>几个"最爱的"动机案例</h3>
+      <ul>
+        <li><strong>物理感知 / 机器人触觉：</strong>机器人手臂靠<strong>力觉和触觉</strong>判断抓的是硬物还是软物、该放到哪、位置对不对；同时身上的<strong>摄像头</strong>给出形状、颜色、大小。传感器越多越稳健——你故意扰动力觉模拟地震，它能靠视觉解题；用挡板遮住摄像头模拟雨雾，它能靠力觉解题。<strong>这就是"多模态互补"的直观演示。</strong></li>
+        <li><strong>AI for smell（嗅觉 AI）：</strong>研究组做了一块能<strong>感知食物饮料释放的挥发性气体</strong>的芯片。采够数据后训练 AI 去"闻"不同食物的气味。视频里那块芯片被编程成专门闻<strong>花生</strong>——拿到糖果、蛋糕或花生酱罐前就能检测出花生是否存在。<strong>对花生过敏的人非常有用。</strong></li>
+        <li><strong>生成式 AI（generative AI）：</strong>能把任意一种模态<strong>语义地翻译</strong>成另一种：文字→对应的视频；视频→匹配的音频/配乐。课程会专门讲这种"任意模态互译"的生成模型。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_002.jpg" alt="多模态生成式 AI 示意，VideoPoet 把多种模态互译">
+        <figcaption><span class="fno">frame_002 · 约 03:00</span> · 多模态生成式 AI 一图概览（以 VideoPoet 为例）：左边输入文字 / 图像 / 深度光流 / 掩码视频，右边输出文字转视频、图转视频、风格化、外扩绘、视频转音频——一个模型把各种模态语义互译。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（01:48–04:55）</summary><div class="tx-body">So, AI for anything. The whole world around us is multisensory, and we've started to see a glimpse of AI systems able to process and interact with more and more of these mediums. We've seen large language models for spoken or typed text; systems that understand speech and vocal expressions, facial gestures and body language to holistically understand how we communicate; tons of progress for AI in healthcare, making reasonable predictions on X-ray images to help doctors, understanding different cells and medical sensors — and that's just the tip of the iceberg. AI has made its way into physical sensing — in robots that require understanding force and tactile information, so robot arms can feel whether they're grasping a hard or soft object, where to put it. Most also have cameras telling shapes, colors, sizes. The more sensors, the more robust — you can mess up the force to simulate an earthquake and rely on vision, or occlude the cameras to simulate rain or fog and rely on force. We're also building AI for smell — a chip that senses volatile gases released by foods and beverages; you train AI to detect the smells. In this video the chip is programmed to smell peanuts — useful for someone allergic to peanuts. We're also going to cover generative AI that takes in any modality and semantically translates it to another — typing text and generating a corresponding video, or given a video generating a matching audio clip or soundtrack.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S3 ===== -->
+  <section class="chapter" id="s3">
+    <h2><span class="num">03</span><span class="title-text">健康全景指标 + 从"预测"到"会做事"的交互式智能体</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">04:55</span>日常可感知的健康指标</h3>
+      <p>我们一年才去医院一两次，但<strong>日常其实有大量可感知的健康信号</strong>。课程会讲怎么用 AI 接住这些"全景式（holistic）健康指标"：</p>
+      <ul>
+        <li><strong>身体健康：</strong>高分辨率理解 ICU 病人状态——是坐起来了、摔倒了、还是需要医护，紧急时把信息及时传给医生护士。</li>
+        <li><strong>情绪健康：</strong>身上、手机上越来越多的传感器，能感知情绪、压力、心情。</li>
+        <li><strong>社交健康：</strong>不只听你说的字面词，还结合非语言表情/手势，理解你在群体里的社交互动质量。</li>
+      </ul>
+      <h3><span class="ts">06:04</span>从感知到行动：交互式智能体</h3>
+      <p>前面讲的几乎都是<strong>感知（perception）</strong>——给一段数据，预测点什么。但还有新一代 AI 正在冒头：<strong>交互式智能体（interactive agents）</strong>，它不止做单步预测，而是<strong>连续采取多个动作来替人完成任务</strong>。</p>
+      <p>例子：你用自然语言对一个网页 agent 说"去亚马逊帮我买一副某颜色、评分至少 4.5 星的耳机"，它就会理解指令并执行一串动作——搜关键词"earphones"、按评分排序、按你过往偏好选颜色、加购物车、结账。这类 agent 还能帮你操作 PowerPoint、表格，未来会扩展到各种电脑任务。<strong>这是"会替你做事"的新一代 AI。</strong></p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_003.jpg" alt="交互式智能体在网页上替人下单的示意">
+        <figcaption><span class="fno">frame_003 · 约 06:00</span> · 交互式智能体：人给指令/反馈，agent 在网页、PowerPoint、表格等数字媒介上采取一连串动作（搜索→排序→选色→加购→结账）。下方引用 WebArena / VideoWebArena 等 benchmark 论文。</figcaption>
+      </figure>
+      <div class="callout info"><p>这一段把课程的<strong>四块版图</strong>串起来了：① 理解物理环境 → ② 处理/生成互联网上的各种数字媒介 → ③ 理解全景健康指标 → ④ 不止预测、还能替人做事的交互式智能体。后面的四大教学模块基本就是沿这条版图展开的。</p></div>
+      <details class="transcript"><summary>英文逐字稿（04:55–07:55）</summary><div class="tx-body">We're going to cover examples of applying AI for holistic indicators of health — not taken in the doctor's office, where we go once or twice a year, but day-to-day. For physical health, AI can understand at high resolution the status of patients in the ICU — sitting up, falling down, needing help — and relay that to doctors in emergencies. For emotional well-being, an increasing amount of sensors on our bodies and phones can sense mood, stress, and emotion. And AI can understand how well we interact socially through verbal words but also non-verbal expressions and gestures. Everything so far has mostly been perception — given some data modality, can I predict something. There's also a new generation of interactive agents that go beyond single-step prediction to taking multiple actions to solve tasks. Some of you have seen agents for the web — you give a natural language instruction, e.g. go to Amazon and purchase earphones with this color and at least 4.5 stars. The agent executes a sequence of actions — searching the keyword, sorting by rating, choosing a color based on preferences, adding to cart, checking out. They can help manipulate PowerPoint and spreadsheets, and eventually a multitude of computer tasks. So that's a quick glimpse: from understanding physical environments, to processing and generating digital mediums, to holistic health and wellness, and finally interactive agents that do tasks for us.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S4 ===== -->
+  <section class="chapter" id="s4">
+    <h2><span class="num">04</span><span class="title-text">这门课到底教什么：教"原则"，不教"方法"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">07:55</span>核心理念：principles over methods</h3>
+      <p>这是整集最关键的一段——讲师反复强调这门课和传统 AI 课的根本区别。</p>
+      <p>传统的"机器学习导论 / AI 导论"：15 周课，<strong>每周学一个算法，一个接一个</strong>，重点全在模型本身。而这门课<strong>反过来：教原则，不教方法</strong>。所谓"原则"，是指拿到一个新问题时，能<strong>直觉地</strong>想清楚四件事：</p>
+      <ul>
+        <li><strong>数据：</strong>你需要什么样的数据？从哪里采集？</li>
+        <li><strong>模型架构：</strong>需要什么样的架构？怎么设计它？</li>
+        <li><strong>实验与评估：</strong>怎么快速实验、并评估模型在你数据上是否成功？</li>
+        <li><strong>部署：</strong>真要落地前，有哪些现实世界的顾虑必须先解决？</li>
+      </ul>
+      <p>目标是教会你"怎么思考<strong>什么数据有用、怎么采</strong>、各种<strong>建模架构</strong>、以及设计完初版模型后那一整套<strong>迭代评估和部署流水线</strong>"。讲师还提到学生们感兴趣的方向：手势、医疗数据、生理/可穿戴传感器、移动数据，还有一个被低估的领域——社交网络。<strong>这就是课程第一主题：AI for new modality（把 AI 用到新模态）。</strong></p>
+      <details class="transcript"><summary>英文逐字稿（07:55–09:27）</summary><div class="tx-body">Hopefully all of you will learn something. The whole goal of the course is to teach the principles of applying AI for any modality, especially new modalities not at the forefront of AI research. By principles, I mean being able to think intuitively about what kind of data you need and where you'll collect it from, what model architectures you'd need and how to design them, how to quickly experiment and evaluate the success of your models, and what real-world concerns you've got to tackle before deploying. So it's quite different from traditional intro-to-ML and intro-to-AI courses, where you have 15 weeks of lecture, each week a different algorithm one by one, with the focus on the models. Here we're teaching the principles — not the methods themselves but principles of how to think about what data is useful and how to collect it, various forms of modeling architectures, and all these iterative evaluation and deployment pipelines. People are interested in gestures, medical data, physiological and wearable sensors, mobile data — and social networks, an understudied area of AI. So that's the first theme of the course: AI for new modality.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S5 ===== -->
+  <section class="chapter" id="s5">
+    <h2><span class="num">05</span><span class="title-text">第二主题：多模态 AI（把不同模态连起来）</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">09:27</span>为什么要把模态连起来</h3>
+      <p>课程第二个主题是<strong>多模态 AI（multimodal AI）</strong>。很多应用需要把不同数据模态<strong>连接</strong>到一起：比如把语言和手势连起来，整体理解一个人和他的社交互动；或把<strong>感知与执行（sensing and actuation）</strong>连成一个循环——感知、行动、再感知、再行动，反复多次。</p>
+      <p>这块要讲三件事：① 怎么<strong>构造数据</strong>，让你能学到模态之间的连接；② 怎么<strong>设计架构</strong>去学这些跨模态连接；③ 怎么<strong>评估和部署</strong>这些系统。<strong>这也对应后面 Module 2 的三节课：连接对齐 / 交互融合 / 跨模态迁移。</strong></p>
+      <div class="callout purple"><p><strong>两条主题一起记：</strong>① <strong>AI for new modality</strong>——把 AI 推广到单个新模态上；② <strong>multimodal AI</strong>——把多个模态连起来协同。前者是"拓宽"，后者是"连通"。这门课的技术内核就围着这两件事转。</p></div>
+      <details class="transcript"><summary>英文逐字稿（09:27–10:15）</summary><div class="tx-body">Naturally, the second theme of the course is multimodal AI. There are many applications where you have to connect different data modalities. For example, you might want to connect language and gestures to holistically understand a person and their social interactions. You might want to connect sensing and actuation and have a loop that senses and takes actions, senses and takes actions multiple times. So we're also going to cover elements of multimodal AI: how do you conceptually build data that enables you to learn the connections between modalities, how do you build the model architectures to learn these connections, and how would you evaluate and deploy these systems in practice.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S6 ===== -->
+  <section class="chapter" id="s6">
+    <h2><span class="num">06</span><span class="title-text">学习目标 + 先修条件（不满足也别慌）</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">10:15</span>三个学习目标</h3>
+      <p>课程是<strong>一半讲课、一半独立研究和讨论</strong>。三个学习目标：</p>
+      <ul>
+        <li><strong>研读前沿成就：</strong>通过讲课 + 个人读论文 + 批判论文，研究 AI 里那些"里程碑级"的成果，顺带<strong>练批判性阅读和批判性思维</strong>。</li>
+        <li><strong>看到未来：</strong>不只理解"已有的"，还要能<strong>预判未来的挑战和愿景</strong>——AI 还可能实现什么、怎么实现。</li>
+        <li><strong>动手：</strong>有很重的 hands-on 成分，去探索和实现一些新研究想法，朝那个未来推进。</li>
+      </ul>
+      <h3><span class="ts">11:07</span>先修条件（都是"最好有"，不是硬门槛）</h3>
+      <ul>
+        <li><strong>编程</strong>（最好是 Python；会别的语言也能很快上手，工具链大多是 Python）。</li>
+        <li>对<strong>现代 AI 的能力与局限</strong>有基本了解（不用懂数学细节；讲师玩笑说"每天刷 Twitter"就是个达标好办法）。</li>
+        <li>最好能带<strong>一些 AI 之外的领域知识</strong>进来（某个传感器、某个任务、某个你正在做的领域问题），大家合力找解法。</li>
+        <li><strong>加分项：</strong>之前给某个模态试过/原型过 AI，可以借这门课往研究问题里再深挖一层。</li>
+      </ul>
+      <details class="transcript"><summary>英文逐字稿（10:15–12:26）</summary><div class="tx-body">That's the overview of the course. There are several learning objectives. It's going to be half lectures and half independent research and discussions. The goal in the readings is to study recent pinnacle achievements in AI research, communicated through lectures but also individual paper readings and critiques — also to improve your critical reading and critical thinking skills. Another big goal is to not just understand what exists, but to project and understand future challenges and visions of what AI might achieve. And finally there's a big hands-on component where we explore and implement some of these new research ideas. Logistically, several preferred prerequisites — don't worry if you don't satisfy them, we'll tailor the experience. Ideally some programming, ideally Python, though you can pick it up. Some basic understanding of modern AI capabilities and limitations — you don't need the mathematical details, but you should know the latest advances; scrolling Twitter every day is a good way to achieve that prerequisite. Ideally you'll bring some external non-AI domain knowledge into the course — some sensor, task, domain or problem you're working with — and as a bonus if you've prototyped some AI for some modality, you could take it a step further.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S7 ===== -->
+  <section class="chapter" id="s7">
+    <h2><span class="num">07</span><span class="title-text">上课形式 + 四大模块（12–13 节课的地图）</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">12:28</span>每周怎么上</h3>
+      <p>每周二、周四 1–2pm 各一次：<strong>周二是一小时讲课</strong>（讲师或学生、客座讲者）；<strong>周四更动手、更互动</strong>——要么是课前读好论文、来课上讨论某个争议话题，要么是上手写代码的 tutorial。阅读作业在课外布置，为周四讨论做准备。此外有一个贯穿整学期的<strong>重头研究项目</strong>，会和大家已有的兴趣领域协同。</p>
+      <h3><span class="ts">13:38</span>四大模块（每个约 3–4 周）</h3>
+      <ol>
+        <li><strong>Module 1 · AI 基础：</strong>本周先做 AI 与课程导论；周四（特例）讲<strong>怎么做 AI 研究</strong>（文献综述→读论文→想点子→快速实验验证→写论文发表）。接下来三周讲 AI for Anything 的原则——<strong>数据</strong>（什么样的数据、怎么从互联网/世界采集）、<strong>模型架构</strong>（不求面面俱到，求能给你自己的数据设计/改造架构）、<strong>学习与泛化</strong>（训练函数、怎么监控学习过程、怎么选能泛化到新数据的模型）。</li>
+        <li><strong>Module 2 · 多模态 AI 基础：</strong>多模态连接与对齐（为什么模态相连、怎么学）、多模态交互与融合（fusion）、跨模态迁移（cross-modal transfer，目标模态数据少时，找别的来补）。Week 8 是春假。</li>
+        <li><strong>Module 3 · 大模型与现代 AI：</strong>讲大模型的<strong>预训练、scaling、微调</strong>（重点在微调——不指望谁去预训练 LLM，但你常需要把它微调到自己的领域）；大型多模态模型（视觉语言、视频语言、LLM+更多模态），重点是怎么快速把大模型适配到你关心的模态（往往不是语言）；以及现代<strong>生成式 AI</strong>（生成图像、传感器数据、视频、音乐、艺术）。</li>
+        <li><strong>Module 4 · 交互式 AI：</strong>多步推理（数学/逻辑这类要多步才能解的难题）→ 交互式、具身、可触（embodied/tangible）AI（让系统在真实世界里有物理形态）→ 人机交互（human-AI interaction，有人在回路里，安全等顾虑很重要）。</li>
+      </ol>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_006.jpg" alt="Lecture Topics 之 Module 2 多模态 AI 周次安排">
+        <figcaption><span class="fno">frame_006 · 约 15:00</span> · 讲课主题表里的 Module 2「多模态 AI 基础」：Week 5 连接与对齐、Week 6 交互与融合、Week 7 跨模态迁移、Week 8 春假停课。标题旁注明"subject to change, based on student interests"——课表会按学生兴趣调整。</figcaption>
+      </figure>
+      <p>讲师小结：整门课约 <strong>12–13 节</strong>讲课，铺在这四大模块里。</p>
+      <details class="transcript"><summary>英文逐字稿（12:28–18:38）</summary><div class="tx-body">The course delivery format: we meet twice a week, Tuesdays and Thursdays, 1 to 2 pm. Tuesdays are primarily one hour of lectures from myself, my students, or guest lecturers. Thursdays are more hands-on and interactive — a mix of readings done before class that we discuss, or a tutorial getting people hands-on with code. Reading assignments are given outside class. And there's a significant research component throughout the course that synergizes with everybody's current domains and modalities. There are four main modules, each lasting about three to four weeks. Module one covers the foundations of AI. Today is intro to AI and course logistics; Thursday (an exception) covers the basics of doing AI research — literature review, reading papers, coming up with good ideas, quickly experimenting and verifying, writing and publishing. The next three weeks cover the principles of applying AI to anything: data (properties of data, different forms, how to collect it from the internet or the world), then common model architectures (not all of them in detail, but the general principles so you can design a new architecture suitable for your data, probably with some adaptation), then learning and generalization (training functions, monitoring the learning process, choosing models that generalize to new data). Module two is the foundations of multimodal AI: reasons modalities are connected and ways of learning these connections, ways modalities interact through fusion methods, and cross-modal transfer (limited data in the modality you care about — how to find something else to supplement it). Spring break marks the midpoint. After break, module three: large models and modern AI — pre-training, scaling, and fine-tuning large language models, with a bigger focus on fine-tuning; large multimodal models — vision-language, video-language, LLM-plus-more-modalities — and how to quickly deploy and adapt them to your modalities (often not language); and modern generative AI that generates images, sensor data, videos, music, art. Module four is interactive AI: AI capable of multi-step reasoning (math and reasoning problems requiring multiple steps); interactive, embodied, tangible AI with a physical manifestation; and human-AI interaction with humans in the loop, where safety and other concerns matter. So about 12-13 lectures across four modules.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S8 ===== -->
+  <section class="chapter" id="s8">
+    <h2><span class="num">08</span><span class="title-text">评分总览：40% 阅读讨论 + 60% 研究项目</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">18:45</span>两大块成绩</h3>
+      <ul>
+        <li><strong>40% · 阅读作业与讨论：</strong>会分发若干论文，你读完后带到周四课上分组讨论，分享不同观点、批判这些论文。</li>
+        <li><strong>60% · 高质量研究项目：</strong>带几个检查点——proposal（含文献综述、理解问题）、midterm（实现你的想法）、final report（更多实现 + 错误分析）。</li>
+      </ul>
+      <p>讲师特别说明，这门课和"上课形式（周二/周四）"对应得很整齐：周二吸收、周四讨论或动手，课外做项目。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_005.jpg" alt="Course delivery format 上课形式四条">
+        <figcaption><span class="fno">frame_005 · 约 12:00</span> · 上课形式四条：周二 1 小时讲课、周四 1 小时讨论或上手 tutorial、课外阅读作业、课外重头研究项目（含报告与展示）。这页是 S7/S8 的总纲。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（18:45–19:40）</summary><div class="tx-body">Now grading overview. 40% of the grade will be assigned on reading assignments — several assignments where we distribute papers, you read them, bring what you read to class on Thursdays and discuss in groups, sharing opinions and critiquing these papers. That's roughly 40%. And 60% of the grade — you're expected to do a high-quality research project with several checkpoints: a proposal with reviewing the literature and understanding the problem, a midterm with implementations of your ideas, and a final report with more implementation and error analysis. So roughly 40% readings and discussions, 60% course research project.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S9 ===== -->
+  <section class="chapter" id="s9">
+    <h2><span class="num">09</span><span class="title-text">阅读讨论怎么运作：7 次作业、读+讨论的两段式</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">19:40</span>七次阅读作业</h3>
+      <p>整学期约 <strong>7 次阅读作业</strong>（不是每周都有，错开分布）。每次约 <strong>2 篇必读 + 5–6 篇选读</strong>，外加若干<strong>讨论探针（discussion probes）</strong>——既测你对单篇论文的理解，也测你能否把论文放进某个研究领域的大背景里。</p>
+      <h3><span class="ts">20:14</span>课前独立完成的三件事</h3>
+      <p>讨论前那一周，每个人<strong>独立</strong>做三件事（一般在讨论前的周末截止）：① 读论文；② 总结笔记；③ 自己再找几篇相关论文，并先<strong>自己尝试回答</strong>那些讨论问题。本质就是"深读、理解、用探针批判"。</p>
+      <h3><span class="ts">20:56</span>周四的两段式讨论</h3>
+      <ul>
+        <li><strong>联合环节（约 15 分钟）：</strong>大家聚一起，由"leads"做简短展示——总结论文、回答澄清问题、汇总同学们找到的相关论文。<strong>主要是学生在讲。</strong></li>
+        <li><strong>分组讨论（约 40 分钟）：</strong>尽量每组约 10 人，圆桌式来回讨论，每人就讨论探针发表观点、其他人赞同或反对；有记录者把讨论成果写成一份连贯报告。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_009.jpg" alt="Grading Scheme：参与讨论 15% 细则">
+        <figcaption><span class="fno">frame_009 · 约 24:00</span> · 阅读讨论评分细则之一：课堂参与占 15%，每次讨论 4 分——2 分看你分享观点的洞见与质量，2 分看你对别人问题/建议的互动跟进；全学期共 7 次讨论。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（19:40–22:04）</summary><div class="tx-body">In more detail, there are going to be seven reading assignments, roughly spread across the semester, not every week. In each we assign roughly two required papers and about five to six optional papers, along with several discussion probes — probes that test your understanding of these papers and how they fit into the broader context of a research area. There are three main assignment parts meant to be done individually, due the weekend before the discussion: read the papers, summarize notes, look for several other related papers, and take a first step at answering the discussion questions yourself. So reading papers in depth, understanding them, and critiquing them using the discussion probes — all done independently the week before. The discussion happens on Thursday: a joint portion where everybody meets for 15 minutes and several leads make a short presentation summarizing the papers, answering clarification questions, and summarizing the papers other students scouted. Then a separate session of discussion groups — about 10 students per group — and for about 40 minutes a round-table back-and-forth discussion, each student voicing an opinion about a discussion probe, others agreeing or disagreeing, with note-takers summarizing the outcomes into a coherent report.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S10 ===== -->
+  <section class="chapter" id="s10">
+    <h2><span class="num">10</span><span class="title-text">讨论角色：reading lead / synopsis lead + 七种扮演</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">22:04</span>两个固定角色</h3>
+      <ul>
+        <li><strong>Reading lead（阅读组长）：</strong>每周约 1–2 名。负责周四课开头的简短展示——总结论文、回答澄清问题、汇总同学找到的相关资源；讨论时也帮着记笔记。<strong>课前干大头。</strong></li>
+        <li><strong>Synopsis lead（综述组长）：</strong>讨论时先帮记笔记，更大的活儿是把整场来回讨论<strong>总结成一份连贯报告</strong>，公开发布、分享给全班。每个讨论周 1 名。<strong>课后干大头。</strong></li>
+      </ul>
+      <h3><span class="ts">26:00</span>实验性的七种"扮演角色"（TBD）</h3>
+      <p>讲师很喜欢的玩法：给一篇论文分配不同"扮演视角"来激活讨论（不会每个周四都全用上）：</p>
+      <ul>
+        <li><strong>Peer reviewer（同行评审）：</strong>像审稿人一样评这篇论文——优点、缺点、怎么改、有没有实验/数学错误。</li>
+        <li><strong>Archaeologist（考古学家）：</strong>假装在"过去"发现这篇论文——把它放进后续进展的脉络里：近期工作受它启发了？还是推翻了它？</li>
+        <li><strong>Academic researcher（学术研究者）：</strong>假装你是这个领域的人，读完后<strong>在它之上生成新想法</strong>、提出新研究愿景。</li>
+        <li><strong>Industry practitioner（业界从业者）：</strong>假装你是大公司研究主管，要说服老板"这篇论文能为公司赚大钱"。</li>
+        <li><strong>Hacker（黑客/快糙猛）：</strong>读完后能不能<strong>快速糙做一个 demo</strong> 复现这篇论文，从实现里学到了什么。</li>
+        <li><strong>Private investigator（私家侦探）：</strong>去追溯作者<strong>当初为什么做这篇</strong>——他们的背景、怎么被这个想法启发、如果重做会怎么做。</li>
+        <li><strong>Social impact（社会影响）：</strong>评估这篇论文对世界的正面/负面社会影响。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_008.jpg" alt="Discussion Roles：reading leads 职责">
+        <figcaption><span class="fno">frame_008 · 约 21:00</span> · 讨论角色之 Reading lead（每讨论组 1 名、每周共 2 名）：周日晚到周四准备 10–15 分钟展示、回答同学问题、汇总同学找到的论文，并在讨论中帮助记笔记。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（22:04–28:12）</summary><div class="tx-body">There are several discussion roles. The first is a reading lead — probably one or two per week — in charge of the short presentation at the beginning of Thursday's class: they prepare a presentation summarizing the papers, answering clarification questions, summarizing other resources students found, and help with note-taking. The other role is the synopsis lead — they help with note-taking but their bigger job is to summarize everything in the discussion into a coherent report that's publicly released and shared with the class; one per discussion week. Reading leads do most work before class and present; synopsis leads do most work after class. We may also experiment with other roles — TBD. A peer reviewer: pretend you're reviewing the paper — strengths, weaknesses, how it can be improved, any experimental or mathematical errors. An archaeologist: pretend you found this paper in the past — contextualize it relative to recent advances; did recent work get inspired by it or disprove it. An academic researcher: pretend you work in that area and generate new ideas and research visions on top of it. An industry practitioner: pretend you're head of research at a big company convincing your boss why this paper will make a lot of money. A hacker: someone who has to build a system quickly — come up with a quick and dirty demo implementing the paper and what you learn. A private investigator: trace why the authors worked on this paper, their backgrounds, how they got inspired, how they'd do things differently. And finally social impact: assess the positive or negative social impact on the world. So some interesting roles to play around with to simulate the discussion.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S11 ===== -->
+  <section class="chapter" id="s11">
+    <h2><span class="num">11</span><span class="title-text">评分细则 + 一个典型阅读周长啥样</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">24:57</span>40% 的拆分</h3>
+      <p>那 40% 的阅读讨论分进一步拆：</p>
+      <ul>
+        <li><strong>15% · 个人阅读：</strong>读论文、填表单、回答问题（细则可自行查）。</li>
+        <li><strong>15% · 周四参与讨论：</strong>确保人人发声——要说出独立观点，也要回应别人的分享。（前两项合计 30%。）</li>
+        <li><strong>10% · 当周特殊 leads：</strong>给 reading lead（课前准备展示）和 synopsis lead（课后写报告）的额外分。</li>
+      </ul>
+      <h3><span class="ts">28:16</span>典型一周的时间线</h3>
+      <p>对那 7 次阅读作业，一个典型节奏是：</p>
+      <ul>
+        <li><strong>前一周三：</strong>发布阅读作业（2 必读 + 若干选读 + 讨论探针 + 分配角色）。</li>
+        <li><strong>周三到周末：</strong>各自读论文。</li>
+        <li><strong>周一：</strong>提交个人阅读作业（你的反思 + 答题）。</li>
+        <li><strong>周一到周三：</strong>reading leads 备 slides、答澄清问题、汇总同学找到的资源。</li>
+        <li><strong>周四：</strong>全班碰面，reading leads 先讲，再分组讨论，leads 记笔记，synopsis leads 课后总结成连贯报告分享全班。</li>
+      </ul>
+      <p>讲师还提到会发一个<strong>poll</strong>，让大家选最感兴趣、想当 lead 的周次，并标出因出差/开会不能来的周。</p>
+      <details class="transcript"><summary>英文逐字稿（24:57–29:23）</summary><div class="tx-body">All this is provided online, but there's a grading scheme. The readings and discussions add up to 40%. 15% is done individually — reading the papers, filling out forms, answering questions. 15% is on the day of Thursday discussing — to make sure everybody voices their thoughts, you're supposed to say something independent and also reply to others. That's 30%. The last 10% is for the special leads that week — the reading lead who does more work before class preparing the presentation, and the synopsis lead who does more work after class writing the coherent report. So 40% total for readings and discussions. To summarize a typical week for those seven reading assignments — usually the previous Wednesday the assignment is released with two required and several optional papers, discussion probes, and assigned roles. We individually read over Wednesday-Friday-weekend and submit the individual reading assignment on Monday — personal reflections answering the questions. The reading leads then spend Monday to Wednesday preparing slides, answering clarification questions, summarizing scouted resources. On Thursday we all meet — reading leads present first, we discuss in groups, the synopsis and reading leads take notes, and the synopsis leads summarize into a coherent report shared with the class. I'm going to send out a poll for people to choose which weeks they'd like to take the lead and book out weeks they're unavailable due to travel or conferences.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S12 ===== -->
+  <section class="chapter" id="s12">
+    <h2><span class="num">12</span><span class="title-text">研究项目（60%）：选题方向一览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">29:39</span>项目基调</h3>
+      <p>剩下 60% 是一个高质量研究项目，类似一次独立研究（independent study）。<strong>最好组队</strong>（有理由也可单干）。可以和你正在做的硕博研究有共性，<strong>但不能完全照搬</strong>——相似的会想办法做出区别，避免一份活儿两边重复计分。最终报告要像一篇高质量 AI 研究论文，<strong>要真去探索新想法</strong>，而不是把现成的东西复现一遍。</p>
+      <h3><span class="ts">30:30</span>讲师列出的选题方向（都是主题，可自拟）</h3>
+      <ul>
+        <li><strong>新模态：</strong>把主要服务语言/视觉/音频的 AI 适配到新模态——可能是数据挑战（采集/标注）、架构挑战、或评估框架挑战。</li>
+        <li><strong>被深度学习"冷落"的领域：</strong>时间序列、生理传感器、表格数据上，传统方法（如梯度提升 gradient boosting）仍然很强，深度学习反而不灵——怎么调和？</li>
+        <li><strong>味觉/艺术/音乐/嗅觉、可触与具身系统。</strong></li>
+        <li><strong>AI 推理（当下大热点）：</strong>怎么让 AI 在数学/逻辑这类难题上跨多步稳健推理、构建 agentic 系统。</li>
+        <li><strong>交互式智能体：</strong>从"只预测"升级到"既预测又能控制系统"——比如不只感知佩戴者状态，还采取行动去调节、最大化其福祉（既感知又行动）。</li>
+        <li><strong>具身/可触 AI：</strong>给系统一个物理载体，核心研究问题是怎么让 AI 在设备上<strong>跑得快</strong>、满足现实物理约束。</li>
+        <li><strong>社交智能 AI：</strong>理解人的社交互动与社交关系——有些东西不是 10 秒视频能推断的，可能需要几个月甚至几年的相处数据。</li>
+        <li><strong>人机交互新媒介：</strong>AI 大多只在电脑上，能不能放到更直观、更可交互的别的媒介上？怎么让系统<strong>传达不确定性</strong>以赢得信任、<strong>主动向人求澄清</strong>以保留人的能动性？还有：<strong>超越"模仿人"的新任务</strong>——今天的 AI 大多是去模仿人类标注的 benchmark，能不能设计连人自己都做不到、从而带来真正协作的新任务？</li>
+        <li><strong>伦理与安全：</strong>系统强大但有局限——不可控、可能输出不安全文本或危险图像。怎么给这些安全顾虑建一套分类法（taxonomy），并用新数据或训练目标让它们部署时更安全？</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_011.jpg" alt="Research Projects on AI Reasoning 选题示例页">
+        <figcaption><span class="fno">frame_011 · 约 30:00</span> · 研究选题示例之一「AI Reasoning」：动机是多模态 LLM 里稳健、可靠、可解释的推理；挑战含细粒度组合推理、神经符号推理、基础模型里的涌现推理；并给了 CodeVQA / VisProg / Viper / Cola / NLVR2 等可上手的模型与数据集链接。</figcaption>
+      </figure>
+      <p>讲师说周四的课（Intro to AI research）会专门讲这些方向，并给更多"怎么想研究点子"的技巧。</p>
+      <details class="transcript"><summary>英文逐字稿（29:39–34:30）</summary><div class="tx-body">The other 60% — a high-quality research project, similar in spirit to an independent study project. Ideally in groups, but if there's a reason to work alone we're open to that. It can share commonalities with your current master's or PhD research but should not be a perfect duplicate — for similar ones we'll find a way so it's not exactly the same and double-counted. The final report should be like a high-quality AI research paper, and you're expected to explore new ideas instead of just implementing what's already out there. Some research themes: new modalities — adapting AI mostly built for language, vision, audio to new modalities, whether a data challenge (collecting, annotating), a model architecture challenge, or coming up with evaluation frameworks. Interesting ones: deep learning has not been very effective for time series, physiological sensors, and tabular data — traditional methods like gradient boosting still work really well; how do we reconcile this. Taste, art, music, smell, tangible and embodied systems. Big challenges in AI reasoning — the hot topic — getting AI to reason robustly across multiple steps for mathematical and logical reasoning, building agentic systems. Interactive agents — extend prediction to actually controlling a system; e.g. not just sense from a wearable but take actions to regulate the person so well-being is maximized. AI that is more embodied and tangible — a physical medium, where the core question is getting AI to run quickly on the device under physical constraints. Socially intelligent AI — understanding human social interactions and relationships, which can't be inferred from 10 seconds of video but might require months or years of data. Human-AI interaction — new mediums beyond the computer, conveying uncertainty so humans trust the system, asking humans for clarifications so they keep agency, and new tasks beyond imitating humans — most AI mimics human-annotated benchmarks; how to come up with new tasks humans themselves cannot accomplish, leading to true collaboration. And finally ethics and safety — these systems have limitations, not controllable, emitting unsafe text or dangerous images; come up with a taxonomy of safety concerns and new data or training objectives to make them safer. Thursday's lecture is intro to AI research, covering all this and more tips for coming up with ideas.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S13 ===== -->
+  <section class="chapter" id="s13">
+    <h2><span class="num">13</span><span class="title-text">项目节奏：双周导师会 + 16 周里程碑</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">34:41</span>双周导师会</h3>
+      <p>TA 和讲师都很投入帮大家做成项目，所以有<strong>每两周一次的必参会</strong>（约 20–30 分钟，周四课后）。每人会被分配一位主导师（讲师或某 TA）。会前要更新一份共享的 Google slide/doc，写清<strong>进展</strong>，更重要的是写清<strong>卡在哪</strong>——好让他们帮你 debug、想怎么改进系统。</p>
+      <h3><span class="ts">35:21</span>16 周里程碑路线图</h3>
+      <ul>
+        <li><strong>Week 1（本周）：</strong>起步。</li>
+        <li><strong>Week 2：</strong>pre-proposal——一个简短 Google 表单：名字、组员（或单干）、1–2 句话描述你想做的模态与任务。</li>
+        <li><strong>Week 3：</strong>各组展示 proposal——此时应已读完领域文献、给 state-of-the-art 做了分类、并列出后续想攻克的挑战。</li>
+        <li><strong>Week 4：</strong>proposal report（含 baseline 结果与新想法）。</li>
+        <li><strong>Week 6：</strong>新想法的初步实现；Week 4–6 间给你 proposal 反馈，确保想法合理。</li>
+        <li><strong>Week 8：</strong>春假（不开会、不干活、放松）。</li>
+        <li><strong>Week 9：</strong>midterm report（第一轮完整结果）+ 期中展示，从导师和同伴拿反馈。</li>
+        <li><strong>Week 11：</strong>更新结果，修掉期中没跑通的部分。</li>
+        <li><strong>Week 13：</strong>深挖方法、理解成败与局限——可视化方法怎么work、做用户研究看是否真达成目标。（也含 error analysis、ablations。）</li>
+        <li><strong>Week 14：</strong>项目终展。</li>
+        <li><strong>Week 16（最后一周）：</strong>final report 截止。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l1-intro/frame_013.jpg" alt="Schedule for Bi-Weekly Updates 双周里程碑表">
+        <figcaption><span class="fno">frame_013 · 约 36:00</span> · 双周书面更新与报告时间表：Week 3 提案展示 → W4 提案报告 → W6 初步实现 → W8 春假 → W9 期中报告+展示 → W11 更新结果 → W13 错误分析/消融/可视化 → W14 终展 → W16 终稿。节奏被刻意错开，保证每队学期末都能完成。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（34:41–37:24）</summary><div class="tx-body">To complete the logistics — the TAs and I are committed to helping you with a successful research project, so there are required bi-weekly meetings, about 20-30 minutes after Thursday's class. You'll be assigned a primary mentor, myself or a TA, and you prepare by updating a common Google slide or doc showing your progress but more importantly what you're stuck with, so we can help debug and improve the system. Here's a rough schedule of bi-weekly meetings with key checkpoints. Week one is this week. Week two there's a pre-proposal — a short Google form with your name, group members (or if you feel strongly about working alone), and a one-to-two-sentence description of the modalities and tasks. Week three all groups present their proposals — by then you're expected to have read the literature, taxonomized the state-of-the-art, and outlined challenges you'll tackle. Week four is a report version. By week six you should have some initial implementation; between week four and six we give feedback to ensure your ideas are reasonable. After spring break the midterm report is due with a first round of results, and we present in class for feedback. By week 11 you should have updated results, fixed whatever wasn't working. By week 13, delve deeper to understand successes and limitations — visualize how the method works, do user studies. Week 14 is the final presentation, and week 16, the last week, is when the final report is due. A rough structure, staggered to make sure every team completes a final research project by the end of the semester. You can do all this by yourself too — just the key deadlines between preference forms, proposal, midterm, and final reports.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S14 ===== -->
+  <section class="chapter" id="s14">
+    <h2><span class="num">14</span><span class="title-text">项目分数细则 + 出勤/wild card + 本周作业</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">37:49</span>60% 项目怎么分</h3>
+      <ul>
+        <li><strong>10%</strong> proposal · <strong>15%</strong> midterm · <strong>25%</strong> final report · <strong>10%</strong> 双周更新（检查你有没有在合理推进）。</li>
+      </ul>
+      <h3><span class="ts">38:14</span>出勤与 wild card</h3>
+      <p>正式注册拿学分的同学<strong>都要来上课</strong>（周二、周四）；也能容纳一些旁听者，取决于注册人数（要保证讨论组能小班进行）。有长途出差请提前告知好安排。还有<strong>wild card（延期卡）</strong>：阅读作业 2 张（7 次里有 2 次可晚交一天）；项目报告每队 2 张（可把期中/期末延 1–2 天）。</p>
+      <h3><span class="ts">39:05</span>课程网站 + 本周任务</h3>
+      <p>课程网站含所有信息，<strong>且对公众开放</strong>——讲义、视频、讨论纪要都会发到网上；Canvas 用来交阅读作业和项目报告。</p>
+      <div class="callout good">
+        <p><strong>本周作业（轻松）：</strong></p>
+        <ul style="margin-top:6px">
+          <li>本周<strong>没有阅读作业、没有 reading</strong>。</li>
+          <li>开始想<strong>你想做什么项目</strong>，找志同道合的<strong>队友</strong>。</li>
+          <li>会发一个 Google 表单（下周二截止）填<strong>项目偏好</strong>。</li>
+          <li>本周四 1–2pm 同地点继续——讲<strong>怎么做 AI 研究</strong>：怎么读论文、生成点子、快速执行研究想法、写作与总结结果。</li>
+        </ul>
+      </div>
+      <details class="transcript"><summary>英文逐字稿（37:49–40:07）</summary><div class="tx-body">Quick logistics about grading the course project — it's 60%: 10% for the proposal, 15% midterm, 25% for the final report, and 10% for the bi-weekly updates, so we'll check you're making reasonable progress. Everyone is expected to come to class if you register for credit. We can accommodate some listeners depending on registration — we have to make sure the discussion groups can happen in small groups. If registered, please come Tuesday and Thursday; let us know about long travel so we can plan. There are several wild cards to extend deadlines by 24 hours — two for reading assignments (there are seven total, so two can be one day late), and two project report wild cards per team to extend the midterm or final by one or two days. The course website contains all the information and is open to the public — all lecture slides, videos, and discussion notes will be posted online; we'll open Canvas for submissions. No assignments this week, no readings. If you start, it'd be good to start thinking about what projects you want to work on if you're committed to taking the course for credit, and finding teams and partners with common interests. We'll release a Google form due Tuesday next week for project preferences. This Thursday we meet here again 1 to 2 pm — still a lecture, on how to do AI research: how to read papers, generate ideas, quickly execute research ideas, and how to write and summarize your results.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== Feynman ===== -->
+  <section class="chapter" id="feynman">
+    <h2><span class="num">🧠</span><span class="title-text">费曼重讲：用大白话把这门课讲明白</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3>1. 先想个画面：MIT 的"如何 X 几乎任何东西"三连</h3>
+      <p>MIT Media Lab 有一门传奇课叫 <strong>"How to Make Almost Anything"（如何制造几乎任何东西）</strong>——一学期带你学会用各种机器把脑子里的东西真造出来。后来又有了 <strong>"How to Grow Almost Anything"（生物方向，如何培育几乎任何东西）</strong>。现在第三棒来了：<strong>"How to AI Almost Anything"——如何把 AI 用到几乎任何东西上。</strong>记住这个"几乎任何"，它就是这门课的野心：不挑食。</p>
+
+      <h3>2. 这门课和你印象里的"AI 课"差在哪</h3>
+      <p>你以前上的 AI/机器学习课，多半像<strong>背菜谱</strong>：第一周线性回归、第二周决策树、第三周 SVM……一周一道菜，背完 15 道。问题是，真到了厨房遇到一种<strong>没人写过菜谱的新食材</strong>（比如"气味"数据、"触觉"数据），你照样傻眼。</p>
+      <p>这门课反过来，它教你<strong>当厨师的思维方式</strong>，而不是背具体菜谱。讲师把它叫"教 principles（原则），不教 methods（方法）"。所谓原则，就是拿到任何一种新食材，你都会问自己同样四个问题：</p>
+      <ul>
+        <li><strong>食材（数据）：</strong>我需要什么样的数据？去哪儿弄？</li>
+        <li><strong>锅具（模型架构）：</strong>该用什么样的模型？怎么照着我的食材改造它？</li>
+        <li><strong>试味（实验/评估）：</strong>怎么快速试、怎么判断这道菜成没成？</li>
+        <li><strong>上桌（部署）：</strong>真端给客人前，有哪些现实坑要先填？</li>
+      </ul>
+      <div class="callout good"><p><strong>啊原来如此 ①：</strong>这门课不是再教你几个新模型，而是教你"<strong>面对一种全新的、AI 还没怎么碰过的数据，该怎么从零想清楚整条链路</strong>"。学会这个，比多背几个算法值钱得多。</p></div>
+
+      <h3>3. "几乎任何东西"具体指什么？——世界是多模态的</h3>
+      <p>讲师反复说一句话：<strong>我们身边的世界是 multisensory（多感官）的。</strong>你不是只靠文字理解世界——你还在看（视觉）、听（声音）、摸（触觉）、闻（嗅觉），还在读别人的表情和肢体语言。可今天大火的 AI 大多只啃文字和图片。</p>
+      <p>所以这门课盯的是那些<strong>被冷落的"模态"</strong>：触觉（机器人摸出软硬）、嗅觉（一块能"闻花生"的芯片，对过敏的人救命）、生理/可穿戴信号、社交互动……它要教你把 AI 这套本事，<strong>搬到这些新感官上去</strong>。这是第一个主题"AI for new modality"。第二个主题是把这些感官<strong>连起来</strong>（multimodal）——就像人是眼耳鼻手一起用，AI 也该学会"几个感官互相补位"（摄像头被遮住就靠手感解题）。</p>
+
+      <h3>4. 这门课怎么上：一半读论文吵架，一半自己做研究</h3>
+      <p>把这门课想象成<strong>"读书会 + 创业孵化器"各占一半</strong>：</p>
+      <ul>
+        <li><strong>读书会那半（占分 40%）：</strong>每隔阵子发几篇前沿论文，你先自己读、做笔记、再找几篇相关的、自己先试着回答几个"挑刺问题"。然后周四聚在一起<strong>分组吵架</strong>——有人赞同有人反对，还有人扮"审稿人""考古学家""黑客""私家侦探"等七种角色，从不同角度把论文嚼烂。每周轮两个组长：一个课前讲解（reading lead），一个课后写总结报告（synopsis lead）。</li>
+        <li><strong>孵化器那半（占分 60%）：</strong>你要做一个<strong>真·研究项目</strong>，像写一篇真论文那样，从提案、文献综述，到期中出第一批结果，再到期末深挖成败、做错误分析。导师每两周陪你过一次进度，重点是听你<strong>卡在哪</strong>、帮你 debug。16 周里钉了一串里程碑，节奏故意错开，保证人人都能跑到终点。</li>
+      </ul>
+      <div class="callout accent"><p><strong>啊原来如此 ②：</strong>这门课的"知识"不是老师喂给你的，而是你<strong>读出来、吵出来、做出来</strong>的。讲课只占一半，另一半全靠你自己动手——所以它更像研究生研讨课，不是刷题型的本科课。</p></div>
+
+      <h3>5. 一句话复述（你现在应该能讲出来）</h3>
+      <p>《How to AI Almost Anything》是 MIT 一门新的研讨课，理念是"<strong>世界是多模态的，AI 也该如此</strong>"。它<strong>不教你一个个算法，而是教你一套通用原则</strong>：面对任何一种新数据（哪怕是气味、触觉、生理信号），都能想清楚"要什么数据、用什么架构、怎么评估、怎么落地"。课程分四大模块（AI 基础 → 多模态 → 大模型 → 交互式 AI），上法是<strong>一半读前沿论文+分组讨论（40 分），一半做一个学期的真研究项目（60 分）</strong>。第一节课就是把这张地图摊开给你看。</p>
+    </div>
+  </section>
+
+  <!-- ===== Concepts ===== -->
+  <section class="chapter" id="concepts">
+    <h2><span class="num">🗂</span><span class="title-text">核心概念卡</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="concept-grid">
+        <div class="concept"><div class="cn">模态（modality）</div><div class="cd">一种"感知/数据的通道"：文字、图像、语音、视频、触觉、嗅觉、生理信号……每种是一种模态。</div><div class="cm"><b>在本课里：</b>第一主题就是把 AI 推广到那些"新模态"（主流 AI 还没怎么覆盖的）。</div></div>
+        <div class="concept"><div class="cn">多模态 / 多感官（multimodal / multisensory）</div><div class="cd">同时用多种模态，并学习它们之间的连接、互补与协同。</div><div class="cm"><b>在本课里：</b>第二主题；研究组就叫 Multisensory Intelligence，核心信条是"世界是多模态的，AI 也该如此"。</div></div>
+        <div class="concept"><div class="cn">原则 vs 方法（principles over methods）</div><div class="cd">不逐个教具体算法，而教"面对新问题如何想数据/架构/评估/部署"的通用思路。</div><div class="cm"><b>在本课里：</b>这门课和传统"每周一个算法"AI 课最根本的区别，被反复强调。</div></div>
+        <div class="concept"><div class="cn">感知 vs 交互式智能体（perception vs agents）</div><div class="cd">感知=给数据做单步预测；交互式 agent=连续采取多个动作替人完成任务。</div><div class="cm"><b>在本课里：</b>Module 4 的主线，从"只预测"升级到"既预测又能控制/行动"。</div></div>
+        <div class="concept"><div class="cn">生成式 AI（generative AI）</div><div class="cd">不只预测，还能生成新数据，并把一种模态语义地翻译成另一种（文→视频、视频→音）。</div><div class="cm"><b>在本课里：</b>Module 3 末尾专题，例图用 VideoPoet 演示任意模态互译。</div></div>
+        <div class="concept"><div class="cn">微调 / 预训练 / scaling（fine-tuning / pre-training）</div><div class="cd">预训练=从海量数据从头训大模型；scaling=把规模做大；微调=把训好的大模型适配到你的小领域。</div><div class="cm"><b>在本课里：</b>Module 3 重点放在<b>微调</b>——不指望学生预训练 LLM，但常需把大模型微调到自己的（非语言）模态。</div></div>
+        <div class="concept"><div class="cn">跨模态迁移（cross-modal transfer）</div><div class="cd">你关心的模态数据很少时，借另一种数据充裕的模态来补充、改善学习。</div><div class="cm"><b>在本课里：</b>Module 2 的一节（Week 7）；也是很多医疗/传感器项目的关键。</div></div>
+        <div class="concept"><div class="cn">具身 / 可触 AI（embodied / tangible AI）</div><div class="cd">让 AI 有物理形态、能在真实世界运作，核心难点是在设备上跑得够快、满足物理约束。</div><div class="cm"><b>在本课里：</b>Module 4 的一块，也是推荐的项目方向之一。</div></div>
+        <div class="concept"><div class="cn">discussion probes（讨论探针）</div><div class="cd">随论文一起给的引导性问题，既测对单篇的理解，也测能否把它放进领域大背景。</div><div class="cm"><b>在本课里：</b>课前个人作业要先自己回答，周四分组讨论再展开。</div></div>
+        <div class="concept"><div class="cn">reading lead / synopsis lead</div><div class="cd">每个讨论周的两个轮值角色：前者课前做讲解展示，后者课后把讨论写成连贯报告。</div><div class="cm"><b>在本课里：</b>当 lead 的那 10% 额外分；用 poll 让大家挑想带的周次。</div></div>
+        <div class="concept"><div class="cn">wild card（延期卡）</div><div class="cd">可把某次截止延 24 小时的"免死金牌"。</div><div class="cm"><b>在本课里：</b>阅读作业 2 张、项目报告每队 2 张。</div></div>
+        <div class="concept"><div class="cn">研究项目检查点（proposal / midterm / final）</div><div class="cd">把一个学期的研究拆成提案→期中→终稿三大节点，外加双周更新。</div><div class="cm"><b>在本课里：</b>占总分 60%（10/15/25/10），16 周里程碑错开排布。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Takeaways ===== -->
+  <section class="chapter" id="takeaways">
+    <h2><span class="num">✅</span><span class="title-text">这集最该记住的几条</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout good"><p><strong>① 它教"原则"不教"方法"。</strong>不是再背一堆算法，而是练就"拿到任意新数据，怎么从数据→架构→评估→部署想清整条链"的思维。这是它和普通 AI 课最根本的区别。</p></div>
+      <div class="callout accent"><p><strong>② 核心信条：世界是多模态的，AI 也该如此。</strong>课程盯的是被冷落的新模态（触觉、嗅觉、生理、社交……）+ 把多个模态连起来协同。两个主题：AI for new modality（拓宽）＋ multimodal AI（连通）。</p></div>
+      <div class="callout purple"><p><strong>③ 四大模块就是一张地图：</strong>AI 基础 → 多模态 AI → 大模型与现代 AI → 交互式 AI。约 12–13 节讲课，每模块 3–4 周，春假在 Week 8 切成上下半场。</p></div>
+      <div class="callout info"><p><strong>④ 这是研讨课，不是刷题课：40% 读论文+吵架，60% 做真研究。</strong>读那半要轮值当 lead、扮七种角色批判论文；做那半有提案/期中/终稿三检查点 + 双周导师会，重点汇报"卡在哪"。</p></div>
+      <div class="callout warn"><p><strong>⑤ 本周很轻松，但别浪费："想项目、找队友"才是真任务。</strong>无 reading、无作业；下周二交项目偏好表单；本周四继续讲"怎么做 AI 研究"。越早锁定方向和队友，后面 16 周越从容。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== References ===== -->
+  <section class="chapter" id="refs">
+    <h2><span class="num">🔗</span><span class="title-text">References</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <ol class="ref-list">
+        <li>Paul Liang（MIT Media Lab）— <em>How to AI Almost Anything · Lecture 1: Course Introduction</em>（本精读的原视频，MIT Media Lab，2025 春季，时长约 40 分钟）· <a href="https://youtu.be/0MYt0u3CW5I" target="_blank" rel="noopener">youtu.be/0MYt0u3CW5I</a></li>
+        <li>Multisensory Intelligence — 讲师在 MIT Media Lab 主持的研究组（课程价值取向的来源：多感官、增强人类、安全稳健）· <a href="https://mit.edu" target="_blank" rel="noopener">MIT Media Lab</a></li>
+        <li>Kondratyuk et al. — <em>VideoPoet: A Large Language Model for Zero-shot Video Generation</em>, ICML 2024（frame_002 多模态生成式 AI 示例图来源）</li>
+        <li>Zhou et al. — <em>WebArena: A Realistic Web Environment for Building Autonomous Agents</em>, ICLR 2024 · Jang et al. — <em>VideoWebArena</em>, ICLR 2025（frame_003 交互式智能体示例图引用）</li>
+      </ol>
+      <p style="font-size:13px;color:var(--text-mute)">逐字稿基于视频 YouTube 自动字幕清洗去重而成（自动字幕含识别误差，已做断句与可读性修整；人名/术语以正文中文笔记为准，部分专有名词如 Shaka/David 等拼写以听感为准可能有误）。关键帧截图按 frame_NNN = (NNN−1)×180 秒映射到视频时间。</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
+
+<footer>
+  <p>课程精读 · 无忌 · MIT《How to AI Almost Anything》Lecture 1 课程导论 · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；内容理解以中文笔记与原视频为准。</p>
+</footer>
+
+<script>
+(function(){
+  // 主题切换
+  var themeBtn=document.getElementById('themeToggle');
+  var saved=localStorage.getItem('course-theme');
+  if(saved){document.body.setAttribute('data-theme',saved);themeBtn.textContent=saved==='dark'?'☀️':'🌙';}
+  themeBtn.addEventListener('click',function(){
+    var cur=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.body.setAttribute('data-theme',cur);
+    localStorage.setItem('course-theme',cur);
+    themeBtn.textContent=cur==='dark'?'☀️':'🌙';
+  });
+
+  // 进度条 + 回到顶部
+  var progressEl=document.getElementById('progress');
+  var backTopEl=document.getElementById('backTop');
+  function updateProgress(){
+    var docHeight=document.documentElement.scrollHeight-window.innerHeight;
+    var scrolled=window.scrollY;
+    var ratio=docHeight>0?scrolled/docHeight:0;
+    progressEl.style.width=(ratio*100)+'%';
+    backTopEl.classList.toggle('show',scrolled>400);
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+  backTopEl.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // 章节折叠
+  document.querySelectorAll('section.chapter > h2').forEach(function(h2){
+    h2.addEventListener('click',function(){h2.parentElement.classList.toggle('collapsed');});
+  });
+
+  // 抽屉导航
+  var nav=document.querySelector('nav.anchor-nav'),tog=document.getElementById('navToggle'),ov=document.getElementById('navOverlay');
+  function closeNav(){nav.classList.remove('open');ov.classList.remove('show');}
+  if(nav&&tog&&ov){
+    tog.addEventListener('click',function(){var o=!nav.classList.contains('open');nav.classList.toggle('open',o);ov.classList.toggle('show',o);});
+    ov.addEventListener('click',closeNav);
+    document.querySelectorAll('.anchor-list a').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=1040)closeNav();});});
+  }
+
+  // anchor 点击展开折叠章节
+  var anchorLinks=document.querySelectorAll('#anchorList a');
+  anchorLinks.forEach(function(a){
+    a.addEventListener('click',function(){
+      var target=document.getElementById(a.dataset.target);
+      if(target&&target.classList.contains('collapsed'))target.classList.remove('collapsed');
+    });
+  });
+
+  // scroll-spy 高亮
+  var sections=Array.prototype.map.call(anchorLinks,function(a){return document.getElementById(a.dataset.target);}).filter(Boolean);
+  function highlightAnchor(){
+    var offset=120,current=null;
+    for(var i=0;i<sections.length;i++){var rect=sections[i].getBoundingClientRect();if(rect.top-offset<=0)current=sections[i].id;}
+    anchorLinks.forEach(function(a){a.classList.toggle('active',a.dataset.target===current);});
+    var activeLink=document.querySelector('#anchorList a.active');
+    if(activeLink)activeLink.scrollIntoView({block:'nearest'});
+  }
+  window.addEventListener('scroll',highlightAnchor,{passive:true});
+  highlightAnchor();
+})();
+</script>
+
+<script>/* PDF-HIDE-REFS */
+(function(){
+  function hide(){document.querySelectorAll('section.chapter').forEach(function(s){var h=s.querySelector('h2');if(h&&/references|参考文献/i.test(h.textContent)){s.setAttribute('data-printhidden','1');s.style.display='none';}});}
+  function show(){document.querySelectorAll('[data-printhidden]').forEach(function(s){s.style.display='';s.removeAttribute('data-printhidden');});}
+  window.addEventListener('beforeprint',hide);
+  window.addEventListener('afterprint',show);
+})();
+</script>
+</body>
+</html>

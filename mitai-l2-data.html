@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>课程精读 · How to AI Almost Anything · Lecture 2 数据、结构、信息 · 无忌</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --bg-elevated: #ffffff;
+    --bg-stripe: #f5f7fa;
+    --text: #1a1d23;
+    --text-soft: #4a5160;
+    --text-mute: #7c8493;
+    --border: #e3e6ec;
+    --border-strong: #cdd2da;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --accent-text: #1d4ed8;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --info: #0891b2;
+    --info-soft: #cffafe;
+    --code-bg: #f1f3f7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.04);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg-soft: #161922;
+    --bg-elevated: #1c2030;
+    --bg-stripe: #1a1e2a;
+    --text: #e6e9f0;
+    --text-soft: #b6bcc9;
+    --text-mute: #8a92a3;
+    --border: #2a2f3d;
+    --border-strong: #3a4154;
+    --accent: #60a5fa;
+    --accent-soft: #1e3a8a55;
+    --accent-text: #93c5fd;
+    --good: #4ade80;
+    --good-soft: #14532d55;
+    --warn: #fbbf24;
+    --warn-soft: #78350f55;
+    --bad: #f87171;
+    --bad-soft: #7f1d1d55;
+    --info: #22d3ee;
+    --info-soft: #155e7555;
+    --code-bg: #0a0d14;
+    --purple: #a78bfa;
+    --purple-soft: #4c1d9555;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: 60px;
+    transition: background-color .25s, color .25s;
+  }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple)); z-index: 1000; transition: width .1s linear; }
+  header.topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 980px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; color: var(--text); white-space: nowrap; }
+  .brand .tag { margin-left: 6px; font-weight: 500; font-size: 11px; color: var(--text-mute); padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; }
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); cursor: pointer; font-size: 18px; transition: transform .15s, background-color .15s; }
+  .icon-btn:active { transform: scale(.94); }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .hero { padding: 28px 4px 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.5px; background: linear-gradient(135deg, var(--text) 0%, var(--accent-text) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-mute); }
+  .hero-meta span { background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .hero-meta a { color: var(--accent-text); text-decoration: none; }
+  .hero-deck { margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; color: var(--text); font-size: 15px; }
+  section.chapter { margin: 24px 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  section.chapter > h2 { font-size: 20px; margin: 0; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); user-select: none; background: var(--bg-elevated); transition: background-color .15s; min-height: 56px; }
+  section.chapter > h2:active { background: var(--bg-soft); }
+  section.chapter > h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 14px; font-weight: 700; }
+  section.chapter > h2 .title-text { flex: 1; }
+  section.chapter > h2 .caret { transition: transform .25s; color: var(--text-mute); font-size: 14px; }
+  section.chapter.collapsed > h2 .caret { transform: rotate(-90deg); }
+  section.chapter.collapsed > h2 { border-bottom-color: transparent; }
+  .chapter-body { padding: 18px 20px 22px; max-height: 100000px; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+  section.chapter.collapsed .chapter-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  h3 { font-size: 17px; margin: 22px 0 10px; color: var(--text); padding-left: 10px; border-left: 3px solid var(--accent); }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text-soft); }
+  p { margin: 8px 0 12px; color: var(--text-soft); }
+  strong { color: var(--text); }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--text-soft); }
+  li { margin: 4px 0; }
+  .callout { margin: 14px 0; padding: 12px 14px; border-radius: 10px; border-left: 4px solid; font-size: 14.5px; line-height: 1.65; }
+  .callout.info { background: var(--info-soft); border-color: var(--info); }
+  .callout.good { background: var(--good-soft); border-color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .callout.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.purple { background: var(--purple-soft); border-color: var(--purple); }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; }
+  .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: none; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 40; border: none; }
+  .back-to-top.show { display: flex; }
+  .back-to-top:active { transform: scale(.94); }
+  footer { text-align: center; padding: 24px 16px; color: var(--text-mute); font-size: 13px; border-top: 1px solid var(--border); margin-top: 32px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text); }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin: 12px 0; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+  pre code { background: none; padding: 0; }
+  hr.soft { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+  blockquote { margin: 12px 0; padding: 10px 16px; border-left: 4px solid var(--text-mute); background: var(--bg-soft); border-radius: 6px; color: var(--text-soft); font-size: 14.5px; }
+  .pill { display: inline-block; padding: 3px 9px; font-size: 11px; font-weight: 600; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-soft); white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .pill.purple { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .metric { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; }
+  .metric .v { font-size: 22px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; }
+  .metric .l { font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+  /* ---- 课程精读专用 ---- */
+  .ts { display: inline-block; font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+  .transcript { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; background: var(--bg-soft); }
+  .transcript > summary { padding: 10px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-soft); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; min-height: 44px; }
+  .transcript > summary::-webkit-details-marker { display: none; }
+  .transcript > summary::before { content: "▶"; font-size: 11px; color: var(--text-mute); transition: transform .2s; }
+  .transcript[open] > summary::before { transform: rotate(90deg); }
+  .transcript .tx-body { padding: 4px 16px 16px; font-size: 13.5px; line-height: 1.7; color: var(--text-mute); font-style: italic; border-top: 1px solid var(--border); }
+  figure.frame { margin: 16px 0; }
+  figure.frame img { width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+  figure.frame figcaption { margin-top: 6px; font-size: 12.5px; color: var(--text-mute); line-height: 1.5; text-align: center; }
+  figure.frame figcaption .fno { font-family: ui-monospace, monospace; color: var(--accent-text); font-weight: 700; }
+  .concept-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0; }
+  .concept { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+  .concept .cn { font-size: 15px; font-weight: 700; color: var(--text); }
+  .concept .cn code { font-size: 13px; }
+  .concept .cd { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+  .concept .cm { font-size: 13px; color: var(--text-mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .concept .cm b { color: var(--accent-text); }
+  .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 8px 10px 8px 36px; position: relative; border-bottom: 1px dashed var(--border); font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+  .ref-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 4px; top: 8px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .ref-list li a { color: var(--accent-text); text-decoration: none; word-break: break-all; }
+  .ref-list li a:hover { text-decoration: underline; }
+  @media (max-width: 480px) {
+    .hero { padding: 18px 4px 8px; }
+    .hero h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 17px; padding: 14px 14px; }
+    .chapter-body { padding: 14px 14px 18px; }
+    h3 { font-size: 16px; }
+  }
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0 !important; font-size: 11pt; line-height: 1.55; }
+    header.topbar, #progress, .back-to-top, nav.anchor-nav, .nav-toggle, .nav-overlay, #pdfBtn { display: none !important; }
+    main { margin: 0 !important; max-width: 100% !important; padding: 0 !important; }
+    .hero h1 { -webkit-text-fill-color: #1a1d23 !important; color: #1a1d23 !important; background: none !important; }
+    section.chapter { box-shadow: none !important; border: 1px solid #d9dde5 !important; margin: 14px 0 !important; }
+    section.chapter > h2 { cursor: default; position: static; }
+    section.chapter.collapsed .chapter-body, .chapter-body { max-height: none !important; overflow: visible !important; padding: 14px 18px 18px !important; }
+    .caret { display: none !important; }
+    .transcript { break-inside: avoid; }
+    .transcript .tx-body { max-height: none !important; }
+    .callout, .metric-grid, .concept, figure.frame { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    a { color: #1d4ed8 !important; text-decoration: none; }
+  }
+  nav.anchor-nav { position: fixed; top: 100px; left: 0; width: 220px; height: calc(100vh - 100px); overflow-y: auto; overflow-x: hidden; background: var(--bg-soft); border-right: 1px solid var(--border); z-index: 60; padding: 16px 0 40px; transition: transform .28s ease; white-space: normal; }
+  nav.anchor-nav::-webkit-scrollbar { width: 6px; }
+  nav.anchor-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nav-title { padding: 4px 20px 12px; font-size: 13px; font-weight: 700; color: var(--text-mute); }
+  .anchor-list { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .anchor-list a { display: block; min-height: 38px; padding: 9px 12px; border-radius: 8px; font-size: 13px; line-height: 1.35; color: var(--text-soft); text-decoration: none; border-left: 3px solid transparent; }
+  .anchor-list a.active { color: var(--accent-text); background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .nav-toggle { position: fixed; left: 16px; bottom: 24px; width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff; border: none; font-size: 22px; z-index: 70; box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center; display: none; }
+  .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; opacity: 0; pointer-events: none; transition: opacity .28s; }
+  @media (min-width: 1041px) { main { margin-left: 220px; } }
+  @media (max-width: 1040px) {
+    nav.anchor-nav { top: 0; height: 100vh; transform: translateX(-100%); box-shadow: var(--shadow-lg); width: 260px; max-width: 82vw; }
+    nav.anchor-nav.open { transform: translateX(0); }
+    .nav-overlay.show { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">课程精读 · 数据·结构·信息 <span class="tag">How to AI · Lecture 2 · 无忌</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
+    <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
+  </div>
+</header>
+
+<button class="nav-toggle" id="navToggle" aria-label="章节目录">☰</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="anchor-nav">
+  <div class="nav-title">📖 目录</div>
+  <div class="anchor-list" id="anchorList">
+    <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+    <a href="#s1" data-target="s1">01 这集讲什么 + 逻辑</a>
+    <a href="#s2" data-target="s2">02 数据是核心原料 · 从原始到抽象</a>
+    <a href="#s3" data-target="s3">03 视觉模态</a>
+    <a href="#s4" data-target="s4">04 语言模态 · bag-of-words</a>
+    <a href="#s5" data-target="s5">05 音频模态</a>
+    <a href="#s6" data-target="s6">06 传感 / 时间序列模态</a>
+    <a href="#s7" data-target="s7">07 表格模态</a>
+    <a href="#s8" data-target="s8">08 图模态</a>
+    <a href="#s9" data-target="s9">09 集合 / 点云模态</a>
+    <a href="#s10" data-target="s10">10 模态画像：五个维度</a>
+    <a href="#s11" data-target="s11">11 三大学习范式</a>
+    <a href="#s12" data-target="s12">12 更多学习范式</a>
+    <a href="#s13" data-target="s13">13 交互式学习范式</a>
+    <a href="#s14" data-target="s14">14 过拟合 vs 泛化</a>
+    <a href="#s15" data-target="s15">15 How To Data 四步</a>
+    <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+    <a href="#concepts" data-target="concepts">🗂 核心概念卡</a>
+    <a href="#takeaways" data-target="takeaways">✅ 该记住的几条</a>
+    <a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>《How to AI (Almost) Anything》Lecture 2：数据、结构、信息</h1>
+    <div class="hero-meta">
+      <span>🎓 Paul Liang · MIT MAS.S60</span>
+      <span>⏱ 约 54:14</span>
+      <span>🎬 <a href="https://youtu.be/fLybbXyfN28" target="_blank" rel="noopener">原视频 youtu.be/fLybbXyfN28</a></span>
+      <span>📝 无忌课程精读 · 关键帧嵌入</span>
+      <span>🇨🇳 逐字稿英文 · 笔记中文</span>
+    </div>
+    <div class="hero-deck">
+      <strong>学完你能得到什么：</strong>你会拿到一张"看任何数据集都能套上去的清单"。这集 Paul Liang 先带你认遍机器学习里六大类数据形态（视觉 / 语言 / 音频 / 传感 / 表格 / 图 / 集合），再把它们抽象成一个统一的 <strong>「模态画像」（modality profile）</strong>框架——任何数据都从五个维度去问自己：元素是什么、出现多密、怎么组合成结构、含多少信息、有什么噪声。然后他梳理了学习范式的全景（监督 / 无监督 / 强化、再到多模态 / 多任务 / 迁移 / 跨模态 / 自监督预训练 / 课程 / 主动 / 人在环），最后用<strong>过拟合 vs 泛化</strong>和一张 <strong>How To Data 四步清单</strong>收尾。看完你能在动手建模前，先把"数据该怎么想"这件事想清楚。
+    </div>
+  </div>
+
+  <!-- ===== 速览 ===== -->
+  <section class="chapter" id="overview">
+    <h2><span class="num">⚡</span><span class="title-text">一分钟速览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p><strong>这集讲啥：</strong>整堂课的主题是 <strong>data（数据）</strong>。Paul Liang 说数据是当今机器学习与 AI <strong>最重要的原料</strong>。他先逐个展示常见的数据"模态"（modality，即数据被感知/表达的方式），再把它们提炼成一个统一的「模态画像」框架，最后讲清楚拿到数据后怎么"学"（各种学习范式）以及怎么判断学得好不好（过拟合 vs 泛化）。</p>
+      <p><strong>为什么重要：</strong>大多数课一上来就讲模型。这集刻意先讲数据——因为<strong>模型选得再花哨，数据没想清楚也白搭</strong>。"先想数据、再选模型"是这门课贯穿始终的态度，也是做课程项目挑数据集时最实用的一把尺子。</p>
+      <p><strong>学完你手里会多出三样东西：</strong></p>
+      <div class="metric-grid">
+        <div class="metric"><div class="v">6+</div><div class="l">种数据模态（视觉/语言/音频/传感/表格/图/集合）</div></div>
+        <div class="metric"><div class="v">5</div><div class="l">个「模态画像」维度（元素/粒度/结构/信息/噪声）</div></div>
+        <div class="metric"><div class="v">10+</div><div class="l">种学习范式全景图</div></div>
+        <div class="metric"><div class="v">4 步</div><div class="l">How To Data 清单（动手建模前必做）</div></div>
+      </div>
+      <div class="callout accent">
+        <p><strong>一句话主线：</strong>数据从<strong>原始</strong>（贴近传感器、高维噪声）一路被<strong>抽象</strong>成有用特征 → 任何模态都用同一套「画像」去拆解（元素 / 粒度 / 结构 / 信息 / 噪声）→ 配上合适的学习范式 → 用"能不能泛化到未来数据"来检验。整集就是把"<strong>如何思考数据</strong>"讲透。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S1 ===== -->
+  <section class="chapter" id="s1">
+    <h2><span class="num">01</span><span class="title-text">这集讲什么 + 课程逻辑（Piazza / 日历 / 项目）</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">00:00</span>本集路线图</h3>
+      <p>Paul 开场点题：今天是 Lecture 2，主题是<strong>数据、结构与学习</strong>。"<strong>数据是当今机器学习和 AI 里最重要的原料。</strong>"这堂课会：① 过一遍各种数据形态（视觉、语言、听觉、传感、集合、图）；② 把这些形态<strong>抽象成一个统一框架</strong>，讨论"什么让一种数据独一无二"、它有哪些属性、该为它设计什么样的模型；③ 用真实数据集举例，并讲<strong>标签（labels）</strong>——你常常拿到的是原始数据，想学出特征好去打标签或做推断；④ 为做这些推断，介绍各种<strong>标签类型和学习范式</strong>。</p>
+      <h3><span class="ts">01:00</span>课程逻辑：Piazza、日历、项目表</h3>
+      <p>进入正题前先讲一堆事务：所有人都应被加进 <strong>Piazza</strong>（课程公告、幻灯片、日历、提纲都发在那）；今天截止的是<strong>项目偏好表（project preferences form）</strong>——填名字、已有/想找的队友、感兴趣的项目方向；下周三（Week 3）周一周二课表对调（总统日），<strong>下周二不上课</strong>，所以要把内容重排塞进其他课时。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_003.jpg" alt="Piazza 项目偏好表公告页">
+        <figcaption><span class="fno">frame_003 · 约 06:00</span> · 课程的 Piazza 公告页：项目偏好表 + 项目说明都挂在这里。课程把"找队友、定项目数据"这件事放得很靠前——这也呼应了整集"先想数据"的态度。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（00:00–05:30）</summary><div class="tx-body">Okay. So today we're going to look at lecture two on data, structure and learning. In this lecture we're going to look at various forms of data. Data is probably the most important ingredient in machine learning and AI nowadays. We look at examples of visual, language, auditory, sensing, set and graph data. We'll then generalize all these data forms into a general discussion of what makes data unique — what are the properties in your data, how you should think about your data, and what are the right modeling architectures to design for your data. We'll give examples of real world data sets and we'll also talk about labels. Often you have raw data coming in but trying to learn some features so that you can label or make some inferences on them... Before getting into the lecture, just some logistics: all of you should have been added to Piazza... Piazza will be our resource where all the announcements will be made, including links to all the websites, lecture slides, course calendar, syllabus and so on. Our first announcement is that we have this project preferences form that is due by the end of today... Next week, week three, Tuesday and Monday are actually swapped — Monday is President's Day, so they're cancelling class on Tuesday... everything on Tuesday is canceled. This calendar covers the topics for every week and any important assignments... next Thursday February 20th is going to be your first proposal presentation.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S2 ===== -->
+  <section class="chapter" id="s2">
+    <h2><span class="num">02</span><span class="title-text">数据是核心原料：从原始到抽象的层级</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">05:30</span>把数据看成"某个感官模态"</h3>
+      <p>正式进入今天的内容。Paul 说：在机器学习里我们总在谈数据，<strong>数据是任何成果的关键</strong>。要把数据想成属于某种<strong>感官模态（sensory modality）</strong>——也就是数据在世界里被表达或被感知的某种方式。每种数据背后通常都有个<strong>传感器</strong>在采集它。</p>
+      <h3><span class="ts">06:00</span>原始 → 抽象：一条信息的"提纯"链</h3>
+      <p>关键直觉：数据可以从<strong>"原始（贴近传感器）"</strong>排到<strong>"抽象（远离传感器）"</strong>。</p>
+      <ul>
+        <li><strong>原始数据</strong>：麦克风直接录的语音信号、相机直接拍的图像。</li>
+        <li><strong>第一层抽象</strong>：从语音里抽出"说了哪些词"（语言）；从图像里检测出"有哪些物体、在什么位置"——<strong>保留一部分信息、扔掉另一部分</strong>，这就是抽象。</li>
+        <li><strong>更抽象</strong>：从语言里判断说话人的情绪（正面/负面）；从检测到的物体里推出精确的物体类别。</li>
+      </ul>
+      <div class="callout accent"><p><strong>这就是机器学习/AI 的本质：</strong>把<strong>高维、噪声大、脏</strong>的原始数据，学成对你关心的任务<strong>有用的抽象</strong>，再在抽象上做推断。整门课就是在回答两件事：世界上有哪些数据形态，以及怎么把它们学成有用的抽象。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_002.jpg" alt="课程日历，列出每周主题与作业">
+        <figcaption><span class="fno">frame_002 · 约 03:00</span> · 课程日历：Foundations 1 就是「Data, structure, information」（本集）。课程结构本身也是从"数据基础"出发，再到"学习与泛化"、"常见模型架构"，最后才到多模态。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（05:30–07:30）</summary><div class="tx-body">Jumping into today's lecture. In machine learning we often talk about data — data is key to any accomplishments in machine learning. You want to think of this data as belonging to some sensory modality. These sensory modalities essentially refer to some way in which data is expressed or perceived in the world. When you look at data, you often think there's some sensor behind which data is collected. You can look at data modalities from more raw — closer to the sensor — to more abstract, further away from the sensor. Raw data can include a speech signal directly collected from a microphone, an image directly captured from a camera. You can then make abstractions: extract the specific words a person is speaking from their speech signal — keeping some information and throwing some away. You can detect objects from images — again a form of abstraction. And you can go even more abstract: from language you can detect somebody's sentiment, positive or negative; from detected objects you can extract the exact object categories. Machine learning and AI is mostly about learning these abstractions — going from raw data, which is often very high dimensional, noisy, unclean, to learning useful abstractions and making inferences.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S3 ===== -->
+  <section class="chapter" id="s3">
+    <h2><span class="num">03</span><span class="title-text">视觉模态：像素张量 → 物体分类</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">07:30</span>图像在计算机里长什么样</h3>
+      <p>每种模态都得在计算机里"表示"出来。一张彩色图像通常表示成<strong>三维矩阵：高 × 宽 × 通道</strong>（channels 就是 RGB 等颜色数）。</p>
+      <h3><span class="ts">08:00</span>能做的推断</h3>
+      <p>从图像可以做：<strong>二分类</strong>（有没有狗）、<strong>多分类</strong>（在一大堆类别里选对的那个）。这是视觉数据和它典型推断任务的例子。</p>
+      <div class="callout info"><p>记住这个套路：<strong>每讲一种模态，Paul 都问同两件事——"它在计算机里怎么表示？"和"能在它上面做哪些推断/任务？"</strong>后面每种模态都照这个模板走。</p></div>
+      <details class="transcript"><summary>英文逐字稿（07:30–08:30）</summary><div class="tx-body">All of you have probably seen visual modalities. Here's a color image. These modalities have to be represented in some way on your computer. Images you might want to classify will be represented as pixels, where you have a height, a width, and each dimension has some channels — the number of colors, RGB, behind them. So it's usually a three-dimensional matrix: height, width and channels. From these images you can classify the presence of an object — posed as a binary classification problem, whether there is a dog or there isn't a dog. You can also pose it as a multiclass classification problem, where you have a large set of categories and your goal is to choose one of the right categories.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S4 ===== -->
+  <section class="chapter" id="s4">
+    <h2><span class="num">04</span><span class="title-text">语言模态：bag-of-words 的好与坏</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">08:30</span>文字怎么变成数字：词袋（bag-of-words）</h3>
+      <p>语言数据网上到处都是：写的（亚马逊评论）、说的（电影/电视里的对白）。但"humorous"这种字符串，机器没法直接吃。最简单的表示法是<strong>词袋（bag-of-words）</strong>：先收集一本"词典"列出所有出现过的词，再用一个<strong>0/1 向量</strong>标记——某个词出现就在它对应的位置放 1，其余全放 0。向量长度 = 词典里词的数量。</p>
+      <h3><span class="ts">09:00</span>能做的推断 + 词袋的硬伤</h3>
+      <p>有了向量就能分类：情绪正负、词性（名词/动词/形容词）、命名实体（是不是某地点/某物体）。现在我们不训练词级模型，而是<strong>句子/段落级</strong>：判断整段评论是正面还是负面，甚至自动生成一段回复。</p>
+      <div class="callout warn"><p><strong>词袋的硬伤：只数"哪些词出现"，不管词的顺序。</strong>"not happy"（不开心）和"happy …… not（在别处）"含义天差地别，词袋分不出来。这正是后面要用更好的表示法（序列模型、Transformer）的动机。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_009.jpg" alt="语言模态：评论文本转成 bag-of-word 0/1 向量做文档级分类">
+        <figcaption><span class="fno">frame_009 · 约 24:00</span> · 语言模态：把一条评论（写的）/对白（说的）转成 "bag-of-word" 0/1 向量，向量长度 = 词典大小，再做文档级情绪分类。底下那行红框灵魂提问——"词的顺序怎么办？"</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（08:30–11:30）</summary><div class="tx-body">Language data — you can get lots of language data on the internet. Here's some written language on Amazon that somebody wrote after purchasing an item; you can also get spoken language, actual recordings of people speaking in movies or TV shows. From language data you could infer the sentiment — whether a word like "humorous" can be inferred as positive or negative. How would you represent this data? Bag of words is one simple way: you first collect a dictionary of all the words, and you put an index one if that particular word is of interest — humorous is the eighth word, you put a one at the eighth position and zero everywhere else. You could classify whether it's positive or negative, what part of speech it is — noun, verb, adjective — whether it's a named entity. Nowadays we don't train word-level models, we train sentence or paragraph level models... these are document-level classification tasks. A bag of words, just counting which words appear, doesn't deal with the ordering of words. "Not happy" — these two words one after the other mean something important, versus "happy ... not somewhere else." So we'll look at better ways of representing your data throughout the course.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S5 ===== -->
+  <section class="chapter" id="s5">
+    <h2><span class="num">05</span><span class="title-text">音频模态：采样率、时间窗、频谱图</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">11:00</span>声音是被"离散化"的连续信号</h3>
+      <p>麦克风从世界里的连续声音里，按<strong>固定频率采样</strong>，得到离散的声学信号。从这个信号能做<strong>自动语音识别（ASR）</strong>。几个关键参数：</p>
+      <ul>
+        <li><strong>采样率（sampling rate）</strong>：多频繁地录一个样本。</li>
+        <li><strong>位深（bit depth）</strong>：每个样本记录多少信息。</li>
+        <li><strong>时间窗（time window）</strong>：在多长的窗里去识别一个词。窗太短→只听到一个音素/字符；窗太长→把不止一个词都混进来，模型不够精确。</li>
+      </ul>
+      <h3><span class="ts">12:00</span>频谱图：把音频当成图像</h3>
+      <p>音频可以用<strong>频谱图（spectrogram）</strong>表示——把时间维转成"频率 + 幅度"。神奇的是：<strong>可以把频谱图当成一张图像，直接喂给图像识别模型</strong>去推断。这揭示了音频和视觉模态之间的关联。除了识别说了什么词，还能识别<strong>情绪</strong>（不只看说了啥，还看怎么说的——音量大小、语速快慢、音质）。</p>
+      <div class="callout info"><p><strong>关键彩蛋：模态之间会"互相借力"。</strong>频谱图能当图像处理，说明同一套模型/直觉有时能跨模态复用——这是后半节"迁移 / 跨模态学习"的伏笔。（注：这一段视频里没有单独的清晰幻灯片，故不配图。）</p></div>
+      <details class="transcript"><summary>英文逐字稿（11:00–12:30）</summary><div class="tx-body">Audio is another common modality. Sometimes you obtain acoustic signals from a microphone, and usually these signals are discretized because microphones are sampling at some fixed frequency from the continuous data in the world. From this audio signal you might infer what the person was speaking — automatic speech recognition. There are several key parameters: what the sampling rate is, what the bit depth is, and what the time window is — if your time window is too short you might only hear a particular phone or character; too long and you start recognizing more than just a word. You might have heard of spectrograms, which transform the time dimension to a frequency dimension — frequency and amplitude. People have found surprisingly that you can treat the spectrogram as an image and even give it to an image recognition model. So there's some relationship between audio modalities and visual modalities. You can recognize spoken words, but also emotion — not just from the words but the way they say it: the magnitude and amplitude of their voice, how fast or slow they're saying things, and the voice quality.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S6 ===== -->
+  <section class="chapter" id="s6">
+    <h2><span class="num">06</span><span class="title-text">传感 / 时间序列模态：多了一个"时间"轴</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">12:30</span>机器人传感器：力-力矩 + 本体感觉</h3>
+      <p>做机器人或环境传感时，常常<strong>跨时间</strong>测量某个物理现象。例子：<strong>六轴力-力矩传感器（force-torque sensor）</strong>——跨时间测量，每个维度是六个力分量之一，形状像 <code>T × 6</code>。机器人还常有<strong>本体感觉（proprioception）</strong>数据：测量系统内部状态，比如机械臂当前位置、关节角度、速度，形状像 <code>T × 2</code>。</p>
+      <h3><span class="ts">14:00</span>能做的推断：感知 + 行动</h3>
+      <p>拿这些传感数据训模型，可以输出：抓的是什么物体、物体属性（软/硬/刚性/形状）、以及<strong>下一步该采取什么动作</strong>。动作执行后又会产生新一时刻的读数——形成"感知→行动→新读数"的循环。</p>
+      <h3><span class="ts">15:00</span>"传感"≈"时间序列"</h3>
+      <p>核心特征：<strong>多了一个时间维</strong>，你会想把它画出来看。"sensor"和"time series"常被混用：<strong>time series 是 sensor 的推广</strong>——任何带时间维的都算时间序列（比如股价随时间变化是时间序列，但不算传感数据）。找模型时这两类关键词都可以搜。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_005.jpg" alt="传感模态：力-力矩传感器时间序列 + 机械臂本体感觉">
+        <figcaption><span class="fno">frame_005 · 约 12:00</span> · 传感模态：上图是六轴力-力矩传感器的时间序列（T×6），下图是机械臂的本体感觉（位置+速度，T×2）。横轴都是时间——这是传感/时序数据区别于图像的根本特征。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（12:30–15:30）</summary><div class="tx-body">Sensing modality — if you're working with robots or environmental sensors, you often collect data across time. You're measuring some physical phenomena across time, and on the y-axis you're showing how that sensor varies. This is an example of a force-torque sensor often applied on robots, sensing across time, each dimension being some six-axis force-torque sensor measuring force across six different components. Often you also have internal proprioception data — these embodied systems have internal states measuring where the robot is, what angles the robot arm are, speed, velocity. So it's something like T by two. With all this sensor data you can train a model that takes in sensor data and outputs something: predict what object it's grasping, a property of the object (soft, hard, rigid, different shapes), and the next actions the robot should take — which then gives you a new set of readings for the next time step. Sometimes people say sensor, sometimes time series — they're used interchangeably. Time series is technically a generalization of sensor data to anything that has a time dimension. Financial data has this time dimension — measuring how a stock price changes — that's time series but you wouldn't consider it sensor data.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S7 ===== -->
+  <section class="chapter" id="s7">
+    <h2><span class="num">07</span><span class="title-text">表格模态：顺序无关、值偏离散</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">15:30</span>MIMIC 医疗数据：表格 + 时间序列混合</h3>
+      <p>医疗常用的 <strong>MIMIC 数据集</strong>同时有两种模态：<strong>表格信息</strong>（患者年龄、性别、种族、既往病史）+ <strong>时间序列</strong>（进 ICU 后到出院期间的通气、心率、血糖随时间变化）。两者合起来可推断死亡率、疾病（ICD9 编码）、住院时长等。</p>
+      <h3><span class="ts">16:30</span>表格数据的两个独特性质</h3>
+      <ul>
+        <li><strong>列顺序无关：</strong>先放年龄还是先放性别，本质上不该改变模型对数据的理解。<strong>如果你的模型对列的排列顺序敏感，就有麻烦。</strong></li>
+        <li><strong>值偏离散：</strong>性别、种族往往是几个"桶"，不像图像/传感那样是连续数据。这给建模带来独特挑战。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_006.jpg" alt="表格模态：MIMIC 医疗数据，患者表格信息 + ICU 时间序列">
+        <figcaption><span class="fno">frame_006 · 约 15:00</span> · 表格模态（MIMIC 数据集）：左侧 SUBJECT_ID 是表格型患者信息（年龄/性别/种族），中间是 ICU 期间的时间序列（机械通气、心率、血糖），右侧推断死亡率 / ICD9 编码。表格+时序两种模态在同一个数据集里共存。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（15:30–17:00）</summary><div class="tx-body">Tabular modalities. Here I'm showing a mix of both tabular and time series — a common data set used in the medical domain called the MIMIC data set has two modalities. Tabular information about the particular patient: age, gender, ethnicity, previous medical conditions, all the things you'd typically see in a tabular form. And at the same time you have time series modalities: once the patient is admitted to the ICU, what was the ventilation, heart rate across time, glucose rates across time. Together these can make inferences on medical procedures — mortality rate, what disease as measured by ICD9 codes, how long they stayed in the ICU. Tabular modality is pretty unique: one key property is you can interchange any of these values — whether you put age then gender or gender then age shouldn't change how you make emphasis. If your model is sensitive to the ordering within these values, you can be in trouble. Another challenge is the data is often more discrete in nature — gender, ethnicity are a couple of buckets, not the continuous data we're used to with images or sensors.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S8 ===== -->
+  <section class="chapter" id="s8">
+    <h2><span class="num">08</span><span class="title-text">图模态：节点 + 边，关系本身就是数据</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">17:00</span>图无处不在</h3>
+      <p>社交网络、经济网络、生物医学网络（蛋白质如何相互作用）、互联网……都是图。图由<strong>节点（nodes，图里的点）</strong>和<strong>边（edges，告诉你哪些节点相连）</strong>组成。关键直觉：<strong>不能只看单个节点，得看它和别人的关系。</strong></p>
+      <h3><span class="ts">17:30</span>图上的核心任务</h3>
+      <ul>
+        <li><strong>节点分类</strong>：判断每个节点的某种属性（社交网络里某人偏正/偏负、政治倾向）——但要靠他的好友、点过的页面一起推断。</li>
+        <li><strong>链接预测</strong>：给两个节点，预测它们相连的概率（两个蛋白质会不会结合、两个人会不会成为好友）。</li>
+        <li><strong>把图当知识库用</strong>：早期问答系统（如 IBM Watson 玩 Jeopardy）靠查询<strong>知识图谱</strong>取答案；现在常做大语言模型 + 知识图谱的混合（让 LLM 去查询/检索图里的显式知识）。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_007.jpg" alt="图模态：社交/经济/生物医学/互联网等网络，及图上的任务">
+        <figcaption><span class="fno">frame_007 · 约 18:00</span> · 图模态：社交网络、经济网络、生物医学网络、互联网、神经元网络都是图。右侧列出图上的任务——节点分类、链接预测；以及把图当知识库（知识图谱做问答、社交网络做情感分析）。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（17:00–19:30）</summary><div class="tx-body">Graph is also another form of data. Graphs are everywhere — a social network: you don't want to just make inferences on a single person, you want to use his relationships with other people. Economics networks, biomedical networks (how proteins interact with other proteins), the internet. With graph modalities you typically have a set of nodes — individual points — and edges telling you which nodes are connected with which. Important tasks: node classification — classify some property of each node, e.g. in a social network classify each person as positive/negative or political leaning, but you have to look at their friends and what pages they click on. Link prediction — given two nodes, the probability they might be linked: given two proteins, the likelihood they interact or bind; given two people, the likelihood they'll be good friends. There are also tasks using graphs as a database: building a question answering system — early QA systems like IBM Watson, which was superhuman at Jeopardy, had access to knowledge graphs of common sense knowledge, queried them and retrieved answers in real time. Nowadays people use large language models, but there's lots of work on hybrids where knowledge is stored in parameters versus explicit knowledge graphs that an LLM might query and retrieve from.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S9 ===== -->
+  <section class="chapter" id="s9">
+    <h2><span class="num">09</span><span class="title-text">集合 / 点云模态：顺序不重要</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">19:30</span>集合：和表格像，但更强调"无序"</h3>
+      <p>集合模态和表格有共性——<strong>哪些元素在集合里很重要，但元素的顺序不重要</strong>。例子：一堆名人头像，要分类发色/肤色/年龄等属性，但谁排第一谁排第二无关紧要。<strong>如果模型对图像出现的顺序敏感，它就不如一个对顺序不敏感的模型。</strong>能做的任务：异常检测（哪张不属于这个集合）、集合扩展（按某属性多采样几个）。</p>
+      <h3><span class="ts">20:30</span>点云：3D 版的集合</h3>
+      <p>2D 图像有高和宽；<strong>点云（point clouds）</strong>是 3D 版——每个点是 <code>xyz</code>，一堆点（cloud）合起来重建/可视化 3D 物体，<strong>点的顺序同样不重要</strong>。任务：点云扩展（采样不同朝向的椅子）、分类、异常检测。</p>
+      <div class="callout warn"><p><strong>集合/点云的铁律：顺序不该影响结果。</strong>如果你建了个对集合元素顺序、或点云里点的顺序敏感的模型，就等于没充分利用数据，效果会变差。（这个"对顺序的处理方式"正是 S10 里"结构"维度要回答的问题。）</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_008.jpg" alt="集合模态：名人头像集合 + 3D 点云物体">
+        <figcaption><span class="fno">frame_008 · 约 21:00</span> · 集合模态：上图是名人头像构成的"集合"（按发色/妆容等属性分组），下图是 3D 点云（每个物体由一堆 xyz 点云组成）。右侧任务：集合异常检测/扩展/补全、点云分类/生成。共同点——元素无序。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（19:30–22:00）</summary><div class="tx-body">Set modality shares some commonalities with tabular modality. You might have some group or distribution of objects where which objects are in the set and not in the set are very important, but critically the order of elements within the set is not critical. Here I might be looking at a bunch of celebrity images — you might be trying to classify properties: hair color, skin color, age. Whether this celebrity appears first or that one first is not critical. In fact if your model is sensitive to the order in which these images appear, then your model will not work as well. Given sets, you can detect anomalies — figure out which image does not belong; you can do set expansion — sample more elements with a particular property. Point clouds are another example: we saw 2D images with height and width; point clouds are 3D versions — each point is xyz, and "clouds" because you have a bunch of points where the order isn't important, but together they let you reconstruct and visualize 3D objects. You might want point cloud expansion, classification, anomaly detection. Key difference: the order does not matter. If you build a model sensitive to the order of elements in your set or points in your point cloud, you're not leveraging your data enough.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S10 ===== -->
+  <section class="chapter" id="s10">
+    <h2><span class="num">10</span><span class="title-text">模态画像：一张套遍所有数据的"五维清单"</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">22:00</span>统一框架：modality profile</h3>
+      <p>过完所有模态后，Paul 抛出他的统一框架——<strong>模态画像（modality profile）</strong>：拿到任意来源、任意模态的数据，都值得从几个维度去想"这种模态独有的品质和结构"。他用两个相关的例子来讲：一张图片 + 它的描述句"一个茶杯在笔记本电脑右边、在一个干净的房间里"。</p>
+      <h3><span class="ts">23:00</span>维度①：分布（distribution）</h3>
+      <p>先看<strong>数据里单个元素的分布</strong>。图像里：沙发、钥匙、笔记本、桌子各是一个元素；语言里：的/在/这些停用词不重要，茶杯/笔记本/干净房间这些关键词才要建模。要想清楚这些元素是<strong>连续还是离散</strong>、它们的<strong>支撑集（support，所有可能的元素）</strong>是什么（图像里是 bounding box 区域，语言里是词）。核心问题：<strong>怎么给每个元素学一个好表示</strong>（哪怕笔记本被茶杯部分遮挡也认得出）。</p>
+      <h3><span class="ts">23:30</span>维度②：粒度（granularity）</h3>
+      <p>元素<strong>出现得多频繁</strong>？一张图也许就三四个主要物体；一段话有多少词（每分钟多少词）。粒度会影响你后面怎么把"单个元素的表示"组合起来。</p>
+      <h3><span class="ts">24:00</span>维度③：结构（structure）</h3>
+      <p><strong>元素如何组合成更高层的信息</strong>。图像往往是<strong>空间结构</strong>（茶杯在桌上、笔记本在茶杯左边）；语言则有两派看法——一派认为该按<strong>语法层级组合</strong>（很 Chomsky 的思路，先认名词再往上拼），但经验上<strong>直接当序列喂给 Transformer/LLM 往往效果最好</strong>。图/树则各有自己的组合结构。你该<strong>照着数据的结构去设计模型</strong>。</p>
+      <h3><span class="ts">27:30</span>维度④：信息（information）& 维度⑤：噪声（noise）</h3>
+      <p><strong>信息</strong>：组合成高层表示后，这个模态提供多少信息、能做哪些推断？不同模态信息量不同，且<strong>会互相重叠</strong>。<strong>噪声</strong>：这个维度大家常忽略但很重要——从传感器采来的模态总是不完美的：相机有抖动/遮挡，打字有错别字，说话有口误。每种模态都有它<strong>独特的噪声模式</strong>，要提前想清楚。</p>
+      <div class="callout accent"><p><strong>整集的"压箱底工具"就是这五维清单。</strong>拿到任何数据集，依次问：① <strong>元素</strong>是什么、什么分布；② 出现多<strong>密</strong>（粒度）；③ 怎么<strong>组合成结构</strong>（空间/层级/序列）；④ 含多少<strong>信息</strong>、和别的模态重不重叠；⑤ 有什么<strong>噪声</strong>。（外加一条：它和你要预测的任务有多相关。）</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_010.jpg" alt="模态画像：以茶杯/笔记本图像与描述句为例讲分布与元素">
+        <figcaption><span class="fno">frame_010 · 约 27:00</span> · 模态画像维度①「分布」：用"茶杯在笔记本右边、在干净房间里"这张图+句子，拆出各自的元素（红色三角=视觉元素集合，蓝色圆=语言词集合），讨论它们是离散/连续、支撑集是什么。</figcaption>
+      </figure>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_011.jpg" alt="模态画像：结构——静态/时序/空间/层级，语法树与分形">
+        <figcaption><span class="fno">frame_011 · 约 30:00</span> · 模态画像维度③「结构」：元素如何组合成整体数据——可以是静态/时序/空间/层级。右边的语法树（NP→...）就是语言的层级结构，右下蓝色树是另一种层级组合方式。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（22:00–31:00）</summary><div class="tx-body">I like to generalize things and come up with a unified framework — I'm going to call it a modality profile. Given any source of data from any modality you collect and label, it's always useful to think about several dimensions of that modality — the unique qualities and structures unique to that modality. Let me show examples using one visual and one language example: "A teacup on the right of a laptop in a clean room" is a rough caption for this image. One first dimension is the distribution of individual elements in your data — one element is the sofa, one is the key, one is a laptop, one is a table; same for language, there are stop words I might not care about (the, of) but key elements I care about (teacup, laptop, clean room). I reason about what these elements are, specifically the distribution — whether they're continuous or discrete and what their support is, all possible elements I have to capture. In images those are bounding box regions; in language those are words. How do I learn a good representation that captures this being a laptop even though it's partially occluded? Second dimension is granularity — how frequently do these elements occur: a couple of objects per image, words per minute in speech. A third dimension is structure — how these elements compose to form higher-level information. An image is often a spatial structure — the chair in front of the table, the teacup on top of the table. For language, depending on philosophy, some think it should be composed hierarchically through a grammar — a very Chomsky way; but empirically what works best may not respect all that grammatical structure — you can treat it as sequences and use a sequence model, transformer, LLM. Same for graphs or trees. We also care about the total information in your modalities — once you combine them into abstract representations, what information does it provide, what inferences can I make? Some modalities have more information than others and they can overlap. And lastly, a dimension we typically don't think about but is very important: noise. When you collect these modalities from a sensor, they're imperfect — cameras prone to jitters, shakes, occlusions; language prone to typos when typed, mistakes when spoken. There's often a unique pattern to the types of noise.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S11 ===== -->
+  <section class="chapter" id="s11">
+    <h2><span class="num">11</span><span class="title-text">三大学习范式：监督 / 无监督 / 强化</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">31:30</span>有了数据，怎么"学"</h3>
+      <p>高层看有三类学习范式（非穷尽、彼此重叠、还在不断扩展）：</p>
+      <ul>
+        <li><strong>监督学习（supervised）</strong>：有标签 Y。数据 X 进来，配上你想预测的标签——图像配物体类别、蛋白质配相互作用、一句西班牙语配它的英文翻译。<strong>你愿意提供这份监督。</strong></li>
+        <li><strong>无监督学习（unsupervised）</strong>：没标签。因为<strong>标注太贵 / 太费人力 / 太主观</strong>（如情绪）。只有 X，希望学出一些日后有用的特征。例子：降维可视化（不需标签）、训练生成模型（估计数据分布、生成更多样本，如生成新蛋白质 / 新图像）。</li>
+        <li><strong>自监督学习（self-supervised）</strong>：监督和无监督的交叉——海量无标签数据，但<strong>在无标签数据上自定义训练目标</strong>学出特征，再迁移/微调到少量有标签的监督任务。例子：学会生成狗的图像，学到的特征对识别狗也很有用。</li>
+      </ul>
+      <h3><span class="ts">35:00</span>强化学习：跨多步、要权衡长期回报</h3>
+      <p>监督/无监督多是<strong>单步</strong>（预测完就结束）。<strong>强化学习（RL）</strong>处理<strong>多步</strong>问题：下棋/围棋有"状态→动作→新状态"的循环，直到赢棋。最大的挑战：<strong>不能只在每一步贪心选最优</strong>，有时要牺牲短期、换长期更优。RL 见于游戏、机器人，以及现在的大语言模型——把人和 LLM 的多轮对话看成多步交互，目标是最大化长期回报。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_013.jpg" alt="三大学习范式：监督/无监督/强化学习的维恩图">
+        <figcaption><span class="fno">frame_013 · 约 36:00</span> · 三大学习范式维恩图：监督 / 无监督 / 强化学习——三圈有交叠（中间地带就是自监督、半监督等）。右侧示例：围棋、自动驾驶、翻译、风格迁移、语音助手、蛋白质结构…… 分类可继续细化。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（31:30–36:00）</summary><div class="tx-body">Now that you have data, we have to talk about learning. There are generally three types of learning paradigms (non-exhaustive, they overlap, constantly expanding): supervised, unsupervised, reinforcement learning. Supervised learning means there is some supervision — raw data comes in, supervision usually in the form of labels: images with labels for what objects are inside, a protein with labels for which proteins it interacts with, a sentence in Spanish with the corresponding translation. You have data X and labels Y. Unsupervised learning — no supervision, because annotating is expensive, requires human labor, or labels are subjective (a person's emotion). You only have data X, hoping to learn features useful later. Types: dimensionality reduction / visualization (no label needed), training generative models — lots of protein data without labels, you can still estimate the distribution and generate more; same for images. Self-supervised learning has intersected supervised and unsupervised — lots of unlabeled data, but you define good training objectives on unlabeled data to learn features that can be transferred or fine-tuned with little labeled data. If you can learn the distribution of dog images and generate new ones, those features are useful for identifying dogs. Reinforcement learning looks at problems across multiple time steps — games like chess and go have a state, actions, transitioning into a new state, until you've won. The key difference: we can no longer maximize the best action at a local step — you might take suboptimal short-term actions for better long-term ones. We see RL in games, robotics, and nowadays large language models — multi-step interactions to maximize long-term reward.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S12 ===== -->
+  <section class="chapter" id="s12">
+    <h2><span class="num">12</span><span class="title-text">更多学习范式：多模态 / 多任务 / 迁移 / 跨模态 / 自监督预训练</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">36:30</span>它们对"你需要什么数据"提出不同要求</h3>
+      <p>Paul 强调：这些范式对挑课程项目数据集很有用——<strong>看你能拿到什么样配对的数据，决定能用哪种学习方式。</strong></p>
+      <ul>
+        <li><strong>监督</strong>：X→Y，需要成对的有标签数据（X 和 Y）。</li>
+        <li><strong>多模态学习</strong>：多个 X（X1、X2 各提供互补信息）→ Y。信息更多，但需要 (X1, X2, Y) 配齐的数据，往往更难收集、量更少。</li>
+        <li><strong>多任务学习</strong>：X → 同时预测 Y1 和 Y2，利用两个任务互补（如同时预测情绪和压力）。做得好会非常好；代价是需要 (X, Y1, Y2) 都齐的数据。</li>
+        <li><strong>迁移学习</strong>：分两阶段——先用 (X, Y1) 训一个模型，再把它<strong>迁移</strong>到第二个任务继续训 (X, Y2)。特别适合 Y1、Y2 数据量<strong>不对称</strong>的情况（先用海量自然图像训练，再迁移到稀少的医学图像）。</li>
+        <li><strong>跨模态学习（cross-modal）</strong>：迁移到不同输入模态。神奇之处：<strong>语言上训的 LLM 能迁移到代码、数学、蛋白质结构、基因序列，甚至机器人状态/动作、游戏状态</strong>——能迁移到一大堆东西。</li>
+        <li><strong>自监督预训练</strong>：迁移学习的延伸，第一步不用任何标签——做 X→X′（X′ 是你自动造出来的"自监督标签"）：用图左半预测右半、拼图、自回归预测下一个词、给图加噪再去噪/旋转再转回……只要 X 和 X′ 之间有能自动构造的关系，就能拿到<strong>近乎无限</strong>的训练对，学出很强的特征再迁移到任务 Y。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_014.jpg" alt="更多学习范式方块图：监督/多模态/多任务/迁移/跨模态/自监督预训练">
+        <figcaption><span class="fno">frame_014 · 约 39:00</span> · 更多学习范式的"方块图"：监督(X→y)、多模态(X1,X2→y)、多任务(X→y1,y2)、迁移学习(X→y1 再 X→y2)、跨模态(X1→y 再 X2→y)、无监督/自监督预训练(X→X′ 再 X→y)。每种对"你需要配对什么数据"要求不同。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（36:30–42:00）</summary><div class="tx-body">More learning paradigms — useful as you think about course projects and what forms of data you can collect. Supervised: X comes in, model predicts Y — you need data with both X and Y paired and labeled. Multimodal learning: multiple X's come in, each providing complementary information, you make an inference on Y — more information, but you need data with X1, X2 and Y. Multitask learning: X comes in, predict Y1 and Y2 together, leveraging that two tasks are complementary (predict a person's emotion and stress; predict a property of an object and the next action). If it works well it works really well; you need X, Y1 and Y2 together. Transfer learning: train a model X to Y1, then take that trained model and transfer it to a second task, continue training on Y2 — done in two stages; particularly useful with an unequal distribution of Y1 and Y2 (train an image model on natural images, tons from the internet, then transfer to medical images where you have much less). Cross-modal learning is the extension for different modalities — train X1 modality for Y and transfer to X2 modality. X1 could be language: you train LLMs and surprisingly they transfer not just to language but to code, math, protein structures, genomic sequences, sequences of robotic states and actions, game states. Unsupervised/self-supervised pre-training is an extension of transfer learning — instead of supervised X to Y1, you do unsupervised learning, X to X prime; you don't need any labels, X prime is the self-supervised label you've created: use the left half of an image to predict the right half, a jigsaw puzzle, autoregressive next-word generation, rotate or add noise and try to remove it. As long as there's some relationship between X and X prime you can do automatically, you have unlimited access to pairs to pre-train your model — and those features can transfer to some task Y.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S13 ===== -->
+  <section class="chapter" id="s13">
+    <h2><span class="num">13</span><span class="title-text">交互式学习范式：RL / LLM 适配 / 课程 / 主动 / 人在环</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">45:00</span>从"只做预测"到"会交互"</h3>
+      <p>前面多是非交互的（做完预测就结束）。交互式范式让模型"动起来"：</p>
+      <ul>
+        <li><strong>强化学习（RL）</strong>：状态进来→多个动作、多个状态→最终拿到奖励，目标是最大化长期回报。</li>
+        <li><strong>LLM 适配</strong>：把原本输出类别/数字的监督模型，改造成<strong>能用语言输出</strong>——这样就能追问（"是哪种猫？"）、甚至让模型<strong>解释</strong>它为什么判成猫（四条腿、不同颜色……）。代价：怎么不胡说（hallucination）仍是难题。</li>
+        <li><strong>课程学习（curriculum）</strong>：像学生一样<strong>先学简单任务、再上难任务</strong>。直接上最难的任务模型会很烂；怎么排课程是开放问题。</li>
+        <li><strong>主动学习（active）</strong>：模型先在简单数据上预测，再<strong>根据当前状态去搜更难的数据/任务</strong>来攻。</li>
+        <li><strong>人在环学习（human-in-the-loop）</strong>：在 X→预测之间塞入<strong>人类反馈</strong>，迭代多轮直到满意；之后还可以训一个模型去<strong>模仿人类怎么给反馈</strong>，从而自动化。</li>
+      </ul>
+      <div class="callout info"><p><strong>课堂问答两则（值得记）：</strong>① 关于"LLM 算不算 RL"——你可以把<strong>每个词当一步</strong>、整段回答当一个多步问题；奖励来自人类对输出好坏的评分（RLHF 就靠这些人类监督）。② 关于自监督后怎么用——通常<strong>保留大部分预训练块</strong>，再训个独立的线性分类头、或微调末几层、或用 <strong>LoRA（低秩适配）</strong>，不必重训整个大模型。</p></div>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_016.jpg" alt="交互式学习范式：强化学习、课程/主动学习、LLM 适配">
+        <figcaption><span class="fno">frame_016 · 约 45:00</span> · 交互式学习范式：强化学习(X→…→X→r 多步拿奖励)、课程/主动学习(先 y easy 再 y hard)、LLM 适配(把 X→y 改成 X→y+language，让模型能解释、能被追问)。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（45:00–48:00，含 Q&amp;A）</summary><div class="tx-body">More interactive learning paradigms. RL: your data (or state) comes in, you take multiple actions, get multiple states, multiple observations, eventually get some reward — maximize long-term reward. LLM adaptation: you might have a supervised model X→Y predicting a category or number; you can adapt it so the model outputs language — instead of just predicting cat or dog, you can ask follow-up questions (what type of cat), and even prompt the model to explain why it was a cat (four legs, different colors). How to do that robustly without hallucinations is still a question. Curriculum learning / active learning: if a task Y is really hard, training directly on Y gives a terrible model; first supervise on easier tasks, like a student learning a curriculum from easier to harder. Active learning: have your data, a model makes predictions on easy data, then based on the model's current state you search for increasingly difficult data/tasks. Human-in-the-loop learning: there's some human feedback in the middle, used to train a model for new X's, done iteratively as many loops as needed; eventually you can train another model to mimic how the human gives feedback. [Q&A] On RL for LLMs: you can treat each word as a step and the whole response as a multi-step problem, or multiple responses each as one step; rewards come from people rating good/bad — all the human supervision goes into the reward function (RLHF still relies on human feedback). On self-training: you keep most of the block (it's a big model), then train a separate linear classification head, adapt some final layers, or do low-rank adaptation (LoRA) — you don't have to retrain the entire model.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S14 ===== -->
+  <section class="chapter" id="s14">
+    <h2><span class="num">14</span><span class="title-text">过拟合 vs 泛化：真正的目标是未来的数据</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">48:00</span>学习 = 在一类模型里找关系</h3>
+      <p>机器学习的整个目标，是<strong>找一个好模型去学数据里的关系/特征</strong>。你先选定一<strong>类</strong>模型（神经网络、LLM、线性函数、决策树……），用带标签的 (X, Y) 数据去学一个函数 <code>X → F/H → Y</code>。模型表现好不好，很大程度取决于你<strong>怎么选模型类、怎么定参数</strong>。</p>
+      <h3><span class="ts">49:00</span>过拟合 vs 欠拟合 vs 泛化</h3>
+      <p>但在钻进模型本身之前，得先问：<strong>怎么判断一个模型好不好？</strong>核心问题是<strong>过拟合 vs 泛化</strong>——真正的目标是<strong>泛化到未来的数据</strong>（明天拍的新照片、一年后和 LLM 的新对话都要做得好）。</p>
+      <ul>
+        <li><strong>欠拟合（underfitting）</strong>：模型连训练数据里的关系都没学到。</li>
+        <li><strong>过拟合（overfitting）</strong>：模型把训练数据"背"得太死（那条扭来扭去的蓝线），没抓住平滑的真实关系，部署到测试数据上就崩。</li>
+      </ul>
+      <h3><span class="ts">50:30</span>train / validation / test 三分</h3>
+      <p>实践中把数据<strong>分成训练 / 验证 / 测试</strong>：训练集上训模型、验证集上调超参、测试集上衡量——测试集是"未来真实数据"的<strong>替身</strong>。关键：<strong>测试数据的条件要尽量贴近真实部署的条件</strong>。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_017.jpg" alt="过拟合 vs 泛化：散点拟合曲线，目标是泛化到未来数据">
+        <figcaption><span class="fno">frame_017 · 约 48:00</span> · 过拟合 vs 泛化：一堆 (x₁, y) 散点。学得太死、扭来扭去地穿过每个点就是过拟合；我们真正想要的是能<strong>泛化到未来数据</strong>的平滑关系。靠 train/val/test 三分来模拟"在未见数据上的表现"。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（48:00–50:30）</summary><div class="tx-body">The whole goal of machine learning AI is to find a good model to learn relationships and features from your data. You consider a class of models — neural networks, LLMs, linear functions, decision trees. In one dimension you have X, Y, some data with both X and Y labels — you learn a function that captures the relationship: X comes in, you learn some function F or H and make predictions Y. How well your model performs depends on how you choose the model and define its parameters. But before diving into the model, how do you even evaluate how good a model is? There's this problem called overfitting versus generalization. The real goal is to generalize to future data — you train on collected data, but your hope is to generalize to new data: a photo taken tomorrow, someone interacting with your LLM a year from now. Sometimes the model doesn't even capture the relationship — that's underfitting. If it captures the relationship too well — overfitting — it's specialized to your training data and might not generalize when deployed on test data; this blue curve is clearly overfitting. Generally you collect data, split into training, validation and testing, train on the training set, validate and tune hyperparameters on validation, measure on test as a mimic for how the model does on true future data. It's critical to make sure your test data conditions match as closely as possible to the conditions you'll deploy in.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S15 ===== -->
+  <section class="chapter" id="s15">
+    <h2><span class="num">15</span><span class="title-text">How To Data：动手建模前必做的四步</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">51:00</span>每集都以"How to 某件事"收尾，今天是 How To Data</h3>
+      <p>Paul 说他每节课都会以一张"How to …"清单结尾。今天的主题是数据，所以是 <strong>How To Data</strong>——而且这四步<strong>必须先于选模型做</strong>：</p>
+      <ol>
+        <li><strong>决定收多少数据、标多少。</strong>权衡收集成本、雇人标注的人力/金钱/时间成本。</li>
+        <li><strong>清洗数据。</strong>归一化/标准化把一切压进合理范围，找出噪声数据、检测离群点/异常（有现成工具包）。</li>
+        <li><strong>可视化数据。</strong>很多人做得不够——一定要画出来！1D 直接散点看是不是线性关系；高维就用<strong>降维（PCA、t-SNE）</strong>看数据是否真的落进你想预测的那些簇。</li>
+        <li><strong>定评估指标。</strong>平方误差（连续预测）/ 分类错误率 / 用户研究 / 可用性测试。还要分<strong>代理指标（proxy）和真实指标（real）</strong>——真实指标常是"人将来怎么用"，但建模时不想总拉真人来迭代，就用代理指标近似；同时兼顾<strong>定量与定性</strong>。</li>
+      </ol>
+      <div class="callout good"><p><strong>顺序很重要：1→2→3→4 全做完，才轮到选模型类、定学习算法、做真正的机器学习。</strong>这正是整门课"先想数据、再选模型"态度的落地清单。</p></div>
+      <p><strong>本集小结（Paul 的收尾）：</strong>看了几种常见数据模态 → 给了一个统一的「画像」框架去想数据的各个维度 → 过了数据/标签/学习目标的类型 → 讲了过拟合/欠拟合与泛化的挑战。作业：本周暂无阅读；今天前填项目偏好表；没队友的去 mingle；下周四做项目提案展示（每队约 5 分钟）；本周四有 PyTorch / Hugging Face 工具教程。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l2-data/frame_018.jpg" alt="How To Data 四步总结 + t-SNE 聚类可视化示例">
+        <figcaption><span class="fno">frame_018 · 约 51:00</span> · How To Data 四步：① 决定收多少/标多少；② 清洗（归一化、找噪声、异常检测）；③ 可视化（画散点 + PCA/t-SNE 降维看簇）；④ 定评估指标（代理+真实、定量+定性）。右图是 t-SNE 把高维细胞数据降到 2D 后看到的清晰簇。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（51:00–54:14）</summary><div class="tx-body">Summary: how to data. I'm going to end every slide with "how to something" — this theme was data. Firstly, decide how much data to collect and how much to label — take into account the costs of collecting data, hiring human annotators, monetary costs, time costs. Clean data — usually some normalization or standardization so everything fits into a good range; find noisy data, detect outliers, anomalies (there are packages). Visualize your data — not many people do this enough, but plot it: if this is x1 and this is y, I plot it and know I'm looking for a linear relationship. That's 1D; for higher dimensions there's dimensionality reduction — PCA, t-SNE — to identify your clusters: do my data even fall into the clusters I want to predict before I design any model. Decide on an evaluation metric — squared error for continuous prediction, classification error, or something more involved like a user study or usability test. Look at proxy metrics and real metrics: if your real metric is how a human uses it in the future but you don't want to iterate with humans while designing, use proxy metrics that approximate the real metric; quantitative and qualitative. And then and only then you choose a model class, learning algorithm and do the machine learning work — one, two, three, four needs to be done first. To summarize: we looked at common data modalities, gave a unified scoping framework on dimensions in your data, looked at types of data, labels and learning objectives, and challenges like overfitting, underfitting and generalizing. Assignments: no reading yet; fill in your project preferences form by today; if you haven't found a team, go mingle; the project proposal presentation is next Thursday, roughly five minutes per team; and this Thursday we'll have a tutorial on ML tools and practical tips for training and debugging the ML pipeline.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== Feynman ===== -->
+  <section class="chapter" id="feynman">
+    <h2><span class="num">🧠</span><span class="title-text">费曼重讲：用大白话从头讲一遍</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3>1. 先问一句：这节课到底在教什么？</h3>
+      <p>大多数人学 AI，第一反应是"我要学什么模型"。这节课偏不——它说：<strong>慢着，先把你手里的"原料"看清楚。</strong>做菜你得先认得清是肉是菜、新不新鲜、要不要洗，才谈得上选什么锅、用什么火。数据就是 AI 的原料，模型才是锅。<strong>原料没想明白，锅再贵也炒不出好菜。</strong></p>
+
+      <h3>2. 数据是怎么"提纯"的：从原汁到精华</h3>
+      <p>想象一条提纯流水线。最左边是<strong>原始数据</strong>：麦克风录下的一整段嘈杂声音、相机拍下的一整张图——又大、又乱、又脏。往右走一步，机器从声音里抠出"说了哪些字"，从图里抠出"有哪些东西、在哪"——<strong>留下有用的、扔掉没用的，这一步就叫"抽象"</strong>。再往右，从文字里读出"这人心情好不好"，从物体里读出"具体是只什么狗"。<strong>整个 AI 干的活，就是把又脏又大的原汁，一步步提纯成你真正想要的那滴精华。</strong></p>
+
+      <h3>3. 世界上的数据长成几种样子？</h3>
+      <p>Paul 带你认了一圈"数据动物园"。每认一种，他只问两句话：<strong>"它在电脑里长啥样？""能拿它干啥？"</strong></p>
+      <ul>
+        <li><strong>图像</strong>：一个"高×宽×颜色"的数字方块。能判断有没有狗、是哪一类。</li>
+        <li><strong>语言</strong>：用"词袋"——拿本词典，出现的词打个勾(1)，没出现打 0。能判断情绪、词性。<strong>缺点：只数有哪些词、不管顺序，"不开心"和"开心"它分不清。</strong></li>
+        <li><strong>音频</strong>：把连续的声音按固定节拍切成一格格数字。还能把它画成"频谱图"，神奇的是这图能直接当照片喂给图像模型。</li>
+        <li><strong>传感/时间序列</strong>：比图像多了一根"时间轴"——机器人每一刻受了多大力、关节转到哪。股价随时间走也是这类。</li>
+        <li><strong>表格</strong>：像 Excel 一张表（年龄、性别、病史）。两个怪脾气：<strong>列的先后顺序不该影响结果</strong>；值常是一格格的桶（性别就几种），不像连续数字。</li>
+        <li><strong>图（graph）</strong>：点 + 连线。关键是<strong>不能只看一个人，要看他跟谁连着</strong>——判断一个人，得看他的朋友圈。</li>
+        <li><strong>集合/点云</strong>：一堆东西，<strong>顺序无所谓</strong>。点云就是 3D 版（一堆 xyz 点拼出一个立体物件）。</li>
+      </ul>
+      <div class="callout good"><p><strong>啊原来如此 ①：</strong>不同模态最大的分水岭，常常就是一个简单问题——"<strong>顺序重不重要？</strong>"图像/语言的空间和顺序很重要；表格的列顺序、集合的元素顺序<strong>故意</strong>不重要。模型敢不敢忽略顺序、该不该尊重顺序，全看这件事。</p></div>
+
+      <h3>4. 一把"万能尺"：模态画像</h3>
+      <p>认完动物园，Paul 给你一把能量遍所有数据的尺子，叫<strong>模态画像</strong>。拿到任何数据，依次量五个数：</p>
+      <ul>
+        <li><strong>元素</strong>：里面有哪些基本零件？（图里的物体、句里的关键词）它们是连续的还是一格格的？</li>
+        <li><strong>粒度</strong>：这些零件出现得密不密？（一张图三四个物体？一句话几十个词？）</li>
+        <li><strong>结构</strong>：零件怎么拼成整体？（图是按空间摆位，句子可以按语法树搭、也可以干脆当一串顺序喂给 Transformer）</li>
+        <li><strong>信息</strong>：拼好之后，这堆数据到底告诉你多少、能推断出啥？</li>
+        <li><strong>噪声</strong>：它脏在哪？（相机抖、打字错、口误）</li>
+      </ul>
+      <p>（外加一条：<strong>它跟你要做的事到底相不相关。</strong>）有了这把尺，你看任何新数据集都不会发懵——挨个量一遍，心里就有数了。</p>
+
+      <h3>5. 数据有了，怎么"学"？一张范式全景图</h3>
+      <p>"学"的方式可以排成一个家族：</p>
+      <ul>
+        <li><strong>监督</strong>：给数据配好答案（X 配 Y），让模型照着学。答案贵、难标。</li>
+        <li><strong>无监督</strong>：没答案，光靠数据自己找规律、降维看图、生成新样本。</li>
+        <li><strong>自监督</strong>：没人给答案，就<strong>自己出题自己答</strong>——把图遮一半让模型补、把句子盖住后几个词让它接。题目无限多，学出的"内功"特别强，再迁去做正经任务。</li>
+        <li><strong>强化</strong>：像下棋，要走好多步、还得忍住短期诱惑去换长期赢面。现在 LLM 的多轮对话也算。</li>
+        <li><strong>迁移/跨模态</strong>：先在数据多的地方练（海量自然图像），再搬去数据少的地方（稀缺医学图像）。更神的是语言上练出来的大模型，能搬去做代码、数学、蛋白质、机器人动作——<strong>一通百通</strong>。</li>
+        <li><strong>多模态/多任务</strong>：同时吃好几种输入、或同时预测好几件相关的事，互相帮衬。代价是数据更难凑齐。</li>
+        <li><strong>课程/主动/人在环</strong>：像教学生一样先易后难；让模型自己去找难题练；或在中间塞个人不断给反馈。</li>
+      </ul>
+      <div class="callout accent"><p><strong>啊原来如此 ②：</strong>选哪种学习范式，本质上<strong>不是看你想用哪个，而是看你能搞到什么样的数据</strong>。能配齐 (X, Y) 就监督；标签太贵就自监督；A 领域数据多 B 领域少就迁移。<strong>数据的形状，反过来决定了学法。</strong>这也是为什么这门课要先讲数据。</p></div>
+
+      <h3>6. 学得好不好，怎么算？别"背答案"</h3>
+      <p>最后一个灵魂问题：模型考了高分，就真的聪明吗？不一定。它可能只是<strong>把训练题的答案背死了</strong>（过拟合），换张新卷子就崩。我们真正要的是<strong>泛化</strong>——对从没见过的未来数据也做得好。办法很朴素，跟老师出考试一样：把数据<strong>分成练习册(训练)、模拟卷(验证)、正式高考(测试)</strong>，正式那套绝不能提前看，它就是"未来真实世界"的替身。<strong>而且测试条件得尽量像真实部署的样子，否则等于考的题型和高考对不上。</strong></p>
+
+      <h3>7. 一句话把整集复述出来</h3>
+      <div class="callout purple"><p><strong>你现在应该能这样讲给小白听：</strong>AI 的原料是数据，数据从又脏又大的"原汁"被一步步提纯成"精华"。世界上的数据有图像、语言、音频、传感、表格、图、集合好几种长相，但都能用同一把尺子（元素、粒度、结构、信息、噪声）量清楚——其中最关键的常常是"<strong>顺序重不重要</strong>"。量清楚之后，根据你能搞到什么样的数据，挑一种学法（监督/无监督/自监督/强化/迁移……）。最后别让模型"背答案"，要用没见过的测试集检验它能不能<strong>泛化到未来</strong>。一句话：<strong>先把数据想透，再去选模型——这就是整门课的态度。</strong></p></div>
+    </div>
+  </section>
+
+  <!-- ===== Concepts ===== -->
+  <section class="chapter" id="concepts">
+    <h2><span class="num">🗂</span><span class="title-text">核心概念卡</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="concept-grid">
+        <div class="concept"><div class="cn">模态（modality）</div><div class="cd">数据在世界里被感知或表达的某种方式，背后通常有个传感器。</div><div class="cm"><b>在本集里：</b>视觉/语言/音频/传感/表格/图/集合……每种模态有它独特的表示方式和适用任务。</div></div>
+        <div class="concept"><div class="cn">原始 vs 抽象</div><div class="cd">数据可从"贴近传感器的原始"排到"远离传感器的抽象"，抽象=留有用信息、扔无用信息。</div><div class="cm"><b>在本集里：</b>语音→词→情绪；图像→物体→类别。机器学习就是学这条提纯链。</div></div>
+        <div class="concept"><div class="cn">词袋（bag-of-words）</div><div class="cd">把文本表示成 0/1 向量：词典里某词出现就置 1，向量长度=词典大小。</div><div class="cm"><b>在本集里：</b>最简单的语言表示，但<b>不管词序</b>——"not happy"分不出来，是后面用序列模型/Transformer 的动机。</div></div>
+        <div class="concept"><div class="cn">时间序列 / 传感</div><div class="cd">带"时间维"的数据；time series 是 sensor 的推广（任何带时间轴的都算）。</div><div class="cm"><b>在本集里：</b>力-力矩传感器 T×6、机械臂本体感觉 T×2、股价。区别于图像的关键就是多了时间轴。</div></div>
+        <div class="concept"><div class="cn">顺序不变性（order invariance）</div><div class="cd">表格的列顺序、集合/点云的元素顺序<b>不该影响结果</b>。</div><div class="cm"><b>在本集里：</b>反复出现的判据——模型若对这些顺序敏感，就没充分利用数据、效果会变差。</div></div>
+        <div class="concept"><div class="cn">图（graph）：节点 + 边</div><div class="cd">节点是点、边表示相连关系；关系本身就是要建模的数据。</div><div class="cm"><b>在本集里：</b>任务有节点分类、链接预测；图还能当知识库（知识图谱做问答，或与 LLM 混合检索）。</div></div>
+        <div class="concept"><div class="cn">模态画像（modality profile）</div><div class="cd">一套统一框架，从五个维度刻画任意模态：分布(元素)/粒度/结构/信息/噪声。</div><div class="cm"><b>在本集里：</b>整集最核心的"万能尺"——拿到任何数据集都按这五维逐项问一遍。</div></div>
+        <div class="concept"><div class="cn">监督 / 无监督 / 自监督</div><div class="cd">有标签 / 没标签 / 自己造标签(X→X′)三种基本学习目标。</div><div class="cm"><b>在本集里：</b>自监督是关键——海量无标签数据上自定义目标(补图/接词)学强特征，再迁移到少量有标签任务。</div></div>
+        <div class="concept"><div class="cn">强化学习（RL）</div><div class="cd">跨多步的学习：状态→动作→新状态，目标是最大化<b>长期</b>回报，要忍短期换长期。</div><div class="cm"><b>在本集里：</b>见于游戏、机器人、LLM 多轮对话（RLHF：人类评分进奖励函数）。</div></div>
+        <div class="concept"><div class="cn">迁移 / 跨模态学习</div><div class="cd">先在一个任务/模态训，再把模型搬到另一个任务/模态继续训。</div><div class="cm"><b>在本集里：</b>处理数据量不对称（自然图像→医学图像）；语言 LLM 能跨模态迁到代码/数学/蛋白质/机器人。</div></div>
+        <div class="concept"><div class="cn">多模态 / 多任务学习</div><div class="cd">同时吃多个输入 (X1,X2→Y) / 同时预测多个相关任务 (X→Y1,Y2)。</div><div class="cm"><b>在本集里：</b>信息更多、互相帮衬，但要求把配对数据全凑齐，往往更难收集。</div></div>
+        <div class="concept"><div class="cn">课程 / 主动 / 人在环学习</div><div class="cd">先易后难 / 自己找难题 / 在回路中加人类反馈，迭代改进。</div><div class="cm"><b>在本集里：</b>都是让模型更"交互"的范式；人在环还能训个模型去模仿人怎么给反馈，实现自动化。</div></div>
+        <div class="concept"><div class="cn">过拟合 vs 欠拟合 vs 泛化</div><div class="cd">背死训练数据 / 连关系都没学到 / 对未见的未来数据也做得好（真正目标）。</div><div class="cm"><b>在本集里：</b>用 train/val/test 三分模拟"未来表现"，测试条件要贴近真实部署。</div></div>
+        <div class="concept"><div class="cn">How To Data 四步</div><div class="cd">收/标多少 → 清洗(归一化/找噪声/异常) → 可视化(散点/PCA/t-SNE) → 定评估指标。</div><div class="cm"><b>在本集里：</b>必须在选模型<b>之前</b>做完——这是"先想数据"态度的落地清单。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Takeaways ===== -->
+  <section class="chapter" id="takeaways">
+    <h2><span class="num">✅</span><span class="title-text">这集最该记住的几条</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout good"><p><strong>① 数据是 AI 最重要的原料，先想数据再选模型。</strong>整门课刻意先讲数据——模型选得再花哨，数据没想清楚也白搭。AI 的本质是把又脏又大的原始数据，一步步提纯成对任务有用的抽象。</p></div>
+      <div class="callout accent"><p><strong>② 世界上的数据有六七种长相，但有一把"万能尺"——模态画像。</strong>视觉/语言/音频/传感/表格/图/集合各不相同，但都能用五个维度量清楚：元素(分布)、粒度、结构、信息、噪声。其中最常见的分水岭是"<strong>顺序重不重要</strong>"。</p></div>
+      <div class="callout purple"><p><strong>③ 选哪种学习范式，取决于你能搞到什么样的数据。</strong>能配齐 (X,Y) 就监督，标签太贵就自监督，领域数据不对称就迁移。监督/无监督/自监督/强化/多模态/多任务/迁移/跨模态/课程/主动/人在环——是一整个家族，数据的形状决定学法。</p></div>
+      <div class="callout warn"><p><strong>④ 自监督预训练是"近乎无限免费数据"的钥匙。</strong>自己造题(X→X′)：补图、拼图、接词、去噪——只要 X 和 X′ 的关系能自动构造，就有无限训练对，学出的特征极强，再迁移到少量有标签的任务。</p></div>
+      <div class="callout info"><p><strong>⑤ 别让模型"背答案"，要的是泛化。</strong>真正目标是对未见的未来数据做得好。用 train/val/test 三分模拟未来表现，且测试条件要尽量贴近真实部署。配上 How To Data 四步（收标→清洗→可视化→定指标），全在选模型之前做完。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== References ===== -->
+  <section class="chapter" id="refs">
+    <h2><span class="num">🔗</span><span class="title-text">References</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <ol class="ref-list">
+        <li>Paul Liang — <em>Lecture 2: Data, Structure, Information</em>（MIT MAS.S60《How to AI (Almost) Anything》Spring 2025，本精读的原视频，时长约 54:14）· <a href="https://youtu.be/fLybbXyfN28" target="_blank" rel="noopener">youtu.be/fLybbXyfN28</a></li>
+        <li>MIT MAS.S60 / How to AI (Almost) Anything — 课程主页（含日历、提纲、幻灯片、Piazza 入口）· <a href="https://mit-mi.github.io/how2ai-course/spring2025/" target="_blank" rel="noopener">mit-mi.github.io/how2ai-course/spring2025</a></li>
+        <li>Lee et al. — <em>Making Sense of Vision and Touch: Self-Supervised Learning of Multimodal Representations for Contact-Rich Tasks</em>（ICRA 2019，传感模态幻灯片来源）</li>
+        <li>Johnson et al. — <em>MIMIC-IV: A Freely Accessible Electronic Health Record Dataset</em>（Scientific Data 2023，表格模态幻灯片来源）</li>
+        <li>Hamilton and Tang — <em>Tutorial on Graph Representation Learning</em>（AAAI 2019，图模态幻灯片来源）</li>
+        <li>Zaheer et al. — <em>DeepSets</em>（NeurIPS 2017）& Li et al. — <em>Point Cloud GAN</em>（arXiv 2018，集合/点云模态幻灯片来源）</li>
+      </ol>
+      <p style="font-size:13px;color:var(--text-mute)">逐字稿基于视频 YouTube 自动字幕清洗去重而成（自动字幕含识别误差——例如把 "Piazza" 识别成 "pata/Patza"，正文已据上下文修正，技术名词以正文中文笔记为准）。关键帧截图按 frame_NNN = (NNN−1)×180 秒映射到视频时间。</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
+
+<footer>
+  <p>课程精读 · 无忌 · MIT《How to AI (Almost) Anything》Lecture 2：Data, Structure, Information · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；技术理解以中文笔记与原视频为准。</p>
+</footer>
+
+<script>
+(function(){
+  // 主题切换
+  var themeBtn=document.getElementById('themeToggle');
+  var saved=localStorage.getItem('course-theme');
+  if(saved){document.body.setAttribute('data-theme',saved);themeBtn.textContent=saved==='dark'?'☀️':'🌙';}
+  themeBtn.addEventListener('click',function(){
+    var cur=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.body.setAttribute('data-theme',cur);
+    localStorage.setItem('course-theme',cur);
+    themeBtn.textContent=cur==='dark'?'☀️':'🌙';
+  });
+
+  // 进度条 + 回到顶部
+  var progressEl=document.getElementById('progress');
+  var backTopEl=document.getElementById('backTop');
+  function updateProgress(){
+    var docHeight=document.documentElement.scrollHeight-window.innerHeight;
+    var scrolled=window.scrollY;
+    var ratio=docHeight>0?scrolled/docHeight:0;
+    progressEl.style.width=(ratio*100)+'%';
+    backTopEl.classList.toggle('show',scrolled>400);
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+  backTopEl.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // 章节折叠
+  document.querySelectorAll('section.chapter > h2').forEach(function(h2){
+    h2.addEventListener('click',function(){h2.parentElement.classList.toggle('collapsed');});
+  });
+
+  // 抽屉导航
+  var nav=document.querySelector('nav.anchor-nav'),tog=document.getElementById('navToggle'),ov=document.getElementById('navOverlay');
+  function closeNav(){nav.classList.remove('open');ov.classList.remove('show');}
+  if(nav&&tog&&ov){
+    tog.addEventListener('click',function(){var o=!nav.classList.contains('open');nav.classList.toggle('open',o);ov.classList.toggle('show',o);});
+    ov.addEventListener('click',closeNav);
+    document.querySelectorAll('.anchor-list a').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=1040)closeNav();});});
+  }
+
+  // anchor 点击展开折叠章节
+  var anchorLinks=document.querySelectorAll('#anchorList a');
+  anchorLinks.forEach(function(a){
+    a.addEventListener('click',function(){
+      var target=document.getElementById(a.dataset.target);
+      if(target&&target.classList.contains('collapsed'))target.classList.remove('collapsed');
+    });
+  });
+
+  // scroll-spy 高亮
+  var sections=Array.prototype.map.call(anchorLinks,function(a){return document.getElementById(a.dataset.target);}).filter(Boolean);
+  function highlightAnchor(){
+    var offset=120,current=null;
+    for(var i=0;i<sections.length;i++){var rect=sections[i].getBoundingClientRect();if(rect.top-offset<=0)current=sections[i].id;}
+    anchorLinks.forEach(function(a){a.classList.toggle('active',a.dataset.target===current);});
+    var activeLink=document.querySelector('#anchorList a.active');
+    if(activeLink)activeLink.scrollIntoView({block:'nearest'});
+  }
+  window.addEventListener('scroll',highlightAnchor,{passive:true});
+  highlightAnchor();
+})();
+</script>
+
+<script>/* PDF-HIDE-REFS */
+(function(){
+  function hide(){document.querySelectorAll('section.chapter').forEach(function(s){var h=s.querySelector('h2');if(h&&/references|参考文献/i.test(h.textContent)){s.setAttribute('data-printhidden','1');s.style.display='none';}});}
+  function show(){document.querySelectorAll('[data-printhidden]').forEach(function(s){s.style.display='';s.removeAttribute('data-printhidden');});}
+  window.addEventListener('beforeprint',hide);
+  window.addEventListener('afterprint',show);
+})();
+</script>
+</body>
+</html>

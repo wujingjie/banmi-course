@@ -108,8 +108,8 @@
   </header>
 
   <div class="stats">
-    <div class="stat"><div class="stat-num">1</div><div class="stat-label">课程数</div></div>
-    <div class="stat"><div class="stat-num">1</div><div class="stat-label">已精读集数</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">课程数</div></div>
+    <div class="stat"><div class="stat-num">6 集</div><div class="stat-label">已精读</div></div>
     <div class="stat"><div class="stat-num">2026</div><div class="stat-label">年份</div></div>
   </div>
 
@@ -128,18 +128,121 @@
         <div class="card-header">
           <div class="card-icon">⚙️</div>
           <div class="card-title-row">
-            <div class="card-title">《Neural Networks: Zero to Hero》第 1 集 · micrograd</div>
+            <div class="card-title">EP01 · micrograd — 从零搭反向传播</div>
             <div class="card-meta">
               <span class="tag research">课程精读</span>
               <span class="tag">⏱ 2:25:52</span>
               <span class="tag done">已精读</span>
-              <span>· 22 段逐字稿 + 20 张关键帧 + 费曼重讲</span>
             </div>
           </div>
         </div>
-        <div class="card-desc"><strong>核心收获：</strong>从一个空白 notebook 出发，亲手搭出只有 ~100 行的自动微分引擎 micrograd，彻底讲透三件事——① 神经网络只是一个大数学表达式；② 反向传播 = 从输出倒着走、在每个节点套一次链式法则，一次算出所有梯度；③ 训练 = 前向算 loss → backward 求梯度 → 沿负梯度挪参数。含 Value 对象 / 计算图 / 拓扑排序 / 梯度累加 + zero_grad 经典 bug / 对照 PyTorch / Neuron-Layer-MLP，以及一段零基础也能听懂的费曼重讲。</div>
+        <div class="card-desc"><strong>核心收获：</strong>亲手搭出 ~100 行的自动微分引擎 micrograd，讲透神经网络只是一个大数学表达式、反向传播就是从输出倒着套链式法则一次算出所有梯度、训练 = 前向算 loss → backward 求梯度 → 沿负梯度挪参数。</div>
         <div class="card-footer">
-          <span>来源：Karpathy 原视频字幕清洗 + karpathy/micrograd · 关键帧嵌入</span>
+          <span>来源：Karpathy 原视频字幕清洗 + karpathy/micrograd</span>
+          <span class="card-arrow">打开 →</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="cat">
+    <div class="cat-head">
+      <div class="cat-badge">🎬</div>
+      <div class="cat-titles">
+        <div class="cat-name">How to AI Almost Anything</div>
+        <div class="cat-sub">MIT · Spring 2025 · 讲师 Paul Liang · 多模态 AI 系统设计</div>
+      </div>
+      <div class="cat-count">5 集</div>
+    </div>
+    <div class="grid">
+
+      <a class="card" href="./mitai-l1-intro.html">
+        <div class="card-header">
+          <div class="card-icon">🚀</div>
+          <div class="card-title-row">
+            <div class="card-title">Lecture 1 · Course Introduction（课程导论）</div>
+            <div class="card-meta">
+              <span class="tag research">课程精读</span>
+              <span class="tag done">已精读</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc"><strong>核心收获：</strong>用"模态 × 任务"的统一视角框住整门课——AI 不止是文本，把语言、视觉、音频、传感器等多模态信号对齐融合，才能"几乎做任何事"，先建立全局地图再逐块拆解。</div>
+        <div class="card-footer">
+          <span>MIT MAS.S60 · Spring 2025</span>
+          <span class="card-arrow">打开 →</span>
+        </div>
+      </a>
+
+      <a class="card" href="./mitai-l1-2-research.html">
+        <div class="card-header">
+          <div class="card-icon">🔬</div>
+          <div class="card-title-row">
+            <div class="card-title">Lecture 1.2 · Introduction to AI Research（AI 研究方法论）</div>
+            <div class="card-meta">
+              <span class="tag research">课程精读</span>
+              <span class="tag done">已精读</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc"><strong>核心收获：</strong>怎样把一个模糊想法变成能做的研究——从找真问题、读文献定位 gap，到提假设、设计可证伪的实验和评估，给出一套可复用的"做研究"流程而非只看结论。</div>
+        <div class="card-footer">
+          <span>MIT MAS.S60 · Spring 2025</span>
+          <span class="card-arrow">打开 →</span>
+        </div>
+      </a>
+
+      <a class="card" href="./mitai-l2-data.html">
+        <div class="card-header">
+          <div class="card-icon">📊</div>
+          <div class="card-title-row">
+            <div class="card-title">Lecture 2 · Data, Structure, Information（数据 / 结构 / 信息）</div>
+            <div class="card-meta">
+              <span class="tag research">课程精读</span>
+              <span class="tag done">已精读</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc"><strong>核心收获：</strong>数据是 AI 的原料——不同模态的数据有不同结构，要把原始信号抽象成可计算的表示并衡量其中真正携带的信息量，理解"结构"决定了模型能学到什么。</div>
+        <div class="card-footer">
+          <span>MIT MAS.S60 · Spring 2025</span>
+          <span class="card-arrow">打开 →</span>
+        </div>
+      </a>
+
+      <a class="card" href="./mitai-l2-1-tools.html">
+        <div class="card-header">
+          <div class="card-icon">🛠️</div>
+          <div class="card-title-row">
+            <div class="card-title">Lecture 2.1 · Practical AI Tools（PyTorch + HuggingFace 实操）</div>
+            <div class="card-meta">
+              <span class="tag research">课程精读</span>
+              <span class="tag done">已精读</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc"><strong>核心收获：</strong>把理论落到工具链——用 PyTorch 搭训练循环、用 HuggingFace 直接拉预训练模型和数据集，掌握从"读懂论文"到"跑起来一个 baseline"的实操路径。</div>
+        <div class="card-footer">
+          <span>MIT MAS.S60 · Spring 2025</span>
+          <span class="card-arrow">打开 →</span>
+        </div>
+      </a>
+
+      <a class="card" href="./mitai-l3-arch.html">
+        <div class="card-header">
+          <div class="card-icon">🏗️</div>
+          <div class="card-title-row">
+            <div class="card-title">Lecture 3 · Common Model Architectures（常见模型架构）</div>
+            <div class="card-meta">
+              <span class="tag research">课程精读</span>
+              <span class="tag done">已精读</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-desc"><strong>核心收获：</strong>系统梳理 MLP / CNN / RNN / Transformer 等主流架构各自的归纳偏置与适用场景，理解为什么不同模态会偏好不同结构，以及 Transformer 为何成为跨模态的通用主干。</div>
+        <div class="card-footer">
+          <span>MIT MAS.S60 · Spring 2025</span>
           <span class="card-arrow">打开 →</span>
         </div>
       </a>

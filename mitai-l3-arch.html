@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>课程精读 · How to AI Almost Anything · Lecture 3 常见模型架构 · 无忌</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f8fa;
+    --bg-elevated: #ffffff;
+    --bg-stripe: #f5f7fa;
+    --text: #1a1d23;
+    --text-soft: #4a5160;
+    --text-mute: #7c8493;
+    --border: #e3e6ec;
+    --border-strong: #cdd2da;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --accent-text: #1d4ed8;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --warn: #b45309;
+    --warn-soft: #fef3c7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --info: #0891b2;
+    --info-soft: #cffafe;
+    --code-bg: #f1f3f7;
+    --purple: #7c3aed;
+    --purple-soft: #ede9fe;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.08), 0 4px 10px rgba(15, 23, 42, 0.04);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg-soft: #161922;
+    --bg-elevated: #1c2030;
+    --bg-stripe: #1a1e2a;
+    --text: #e6e9f0;
+    --text-soft: #b6bcc9;
+    --text-mute: #8a92a3;
+    --border: #2a2f3d;
+    --border-strong: #3a4154;
+    --accent: #60a5fa;
+    --accent-soft: #1e3a8a55;
+    --accent-text: #93c5fd;
+    --good: #4ade80;
+    --good-soft: #14532d55;
+    --warn: #fbbf24;
+    --warn-soft: #78350f55;
+    --bad: #f87171;
+    --bad-soft: #7f1d1d55;
+    --info: #22d3ee;
+    --info-soft: #155e7555;
+    --code-bg: #0a0d14;
+    --purple: #a78bfa;
+    --purple-soft: #4c1d9555;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-bottom: 60px;
+    transition: background-color .25s, color .25s;
+  }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple)); z-index: 1000; transition: width .1s linear; }
+  header.topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { max-width: 980px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; color: var(--text); white-space: nowrap; }
+  .brand .tag { margin-left: 6px; font-weight: 500; font-size: 11px; color: var(--text-mute); padding: 2px 7px; border: 1px solid var(--border); border-radius: 999px; }
+  .topbar-spacer { flex: 1; }
+  .icon-btn { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text); cursor: pointer; font-size: 18px; transition: transform .15s, background-color .15s; }
+  .icon-btn:active { transform: scale(.94); }
+  main { max-width: 980px; margin: 0 auto; padding: 16px; }
+  .hero { padding: 28px 4px 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.5px; background: linear-gradient(135deg, var(--text) 0%, var(--accent-text) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--text-mute); }
+  .hero-meta span { background: var(--bg-soft); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); }
+  .hero-meta a { color: var(--accent-text); text-decoration: none; }
+  .hero-deck { margin-top: 16px; padding: 14px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 8px; color: var(--text); font-size: 15px; }
+  section.chapter { margin: 24px 0; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+  section.chapter > h2 { font-size: 20px; margin: 0; padding: 16px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); user-select: none; background: var(--bg-elevated); transition: background-color .15s; min-height: 56px; }
+  section.chapter > h2:active { background: var(--bg-soft); }
+  section.chapter > h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-text); font-size: 14px; font-weight: 700; }
+  section.chapter > h2 .title-text { flex: 1; }
+  section.chapter > h2 .caret { transition: transform .25s; color: var(--text-mute); font-size: 14px; }
+  section.chapter.collapsed > h2 .caret { transform: rotate(-90deg); }
+  section.chapter.collapsed > h2 { border-bottom-color: transparent; }
+  .chapter-body { padding: 18px 20px 22px; max-height: 100000px; overflow: hidden; transition: max-height .35s ease, padding .25s; }
+  section.chapter.collapsed .chapter-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  h3 { font-size: 17px; margin: 22px 0 10px; color: var(--text); padding-left: 10px; border-left: 3px solid var(--accent); }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text-soft); }
+  p { margin: 8px 0 12px; color: var(--text-soft); }
+  strong { color: var(--text); }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--text-soft); }
+  li { margin: 4px 0; }
+  .callout { margin: 14px 0; padding: 12px 14px; border-radius: 10px; border-left: 4px solid; font-size: 14.5px; line-height: 1.65; }
+  .callout.info { background: var(--info-soft); border-color: var(--info); }
+  .callout.good { background: var(--good-soft); border-color: var(--good); }
+  .callout.warn { background: var(--warn-soft); border-color: var(--warn); }
+  .callout.bad { background: var(--bad-soft); border-color: var(--bad); }
+  .callout.accent { background: var(--accent-soft); border-color: var(--accent); }
+  .callout.purple { background: var(--purple-soft); border-color: var(--purple); }
+  .callout p:first-child { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; }
+  .back-to-top { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; display: none; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: var(--shadow-lg); z-index: 40; border: none; }
+  .back-to-top.show { display: flex; }
+  .back-to-top:active { transform: scale(.94); }
+  footer { text-align: center; padding: 24px 16px; color: var(--text-mute); font-size: 13px; border-top: 1px solid var(--border); margin-top: 32px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--text); }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin: 12px 0; font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; }
+  pre code { background: none; padding: 0; }
+  hr.soft { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+  blockquote { margin: 12px 0; padding: 10px 16px; border-left: 4px solid var(--text-mute); background: var(--bg-soft); border-radius: 6px; color: var(--text-soft); font-size: 14.5px; }
+  .pill { display: inline-block; padding: 3px 9px; font-size: 11px; font-weight: 600; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-soft); white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+  .pill.accent { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .pill.purple { background: var(--purple-soft); color: var(--purple); border-color: var(--purple); }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+  .metric { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; }
+  .metric .v { font-size: 22px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; }
+  .metric .l { font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+  /* ---- 课程精读专用 ---- */
+  .ts { display: inline-block; font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 999px; margin-right: 6px; vertical-align: middle; }
+  .transcript { border: 1px solid var(--border); border-radius: 12px; margin: 12px 0; overflow: hidden; background: var(--bg-soft); }
+  .transcript > summary { padding: 10px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-soft); list-style: none; display: flex; align-items: center; gap: 8px; user-select: none; min-height: 44px; }
+  .transcript > summary::-webkit-details-marker { display: none; }
+  .transcript > summary::before { content: "▶"; font-size: 11px; color: var(--text-mute); transition: transform .2s; }
+  .transcript[open] > summary::before { transform: rotate(90deg); }
+  .transcript .tx-body { padding: 4px 16px 16px; font-size: 13.5px; line-height: 1.7; color: var(--text-mute); font-style: italic; border-top: 1px solid var(--border); }
+  figure.frame { margin: 16px 0; }
+  figure.frame img { width: 100%; border-radius: 8px; border: 1px solid var(--border); display: block; }
+  figure.frame figcaption { margin-top: 6px; font-size: 12.5px; color: var(--text-mute); line-height: 1.5; text-align: center; }
+  figure.frame figcaption .fno { font-family: ui-monospace, monospace; color: var(--accent-text); font-weight: 700; }
+  .concept-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0; }
+  .concept { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+  .concept .cn { font-size: 15px; font-weight: 700; color: var(--text); }
+  .concept .cn code { font-size: 13px; }
+  .concept .cd { font-size: 14px; color: var(--text-soft); margin-top: 4px; }
+  .concept .cm { font-size: 13px; color: var(--text-mute); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .concept .cm b { color: var(--accent-text); }
+  .ref-list { list-style: none; padding: 0; counter-reset: ref; }
+  .ref-list li { counter-increment: ref; padding: 8px 10px 8px 36px; position: relative; border-bottom: 1px dashed var(--border); font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+  .ref-list li::before { content: "[" counter(ref) "]"; position: absolute; left: 4px; top: 8px; font-weight: 700; color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .ref-list li a { color: var(--accent-text); text-decoration: none; word-break: break-all; }
+  .ref-list li a:hover { text-decoration: underline; }
+  @media (max-width: 480px) {
+    .hero { padding: 18px 4px 8px; }
+    .hero h1 { font-size: 22px; }
+    section.chapter > h2 { font-size: 17px; padding: 14px 14px; }
+    .chapter-body { padding: 14px 14px 18px; }
+    h3 { font-size: 16px; }
+  }
+  @media print {
+    @page { margin: 14mm 12mm; }
+    html, body { background: #fff !important; }
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0 !important; font-size: 11pt; line-height: 1.55; }
+    header.topbar, #progress, .back-to-top, nav.anchor-nav, .nav-toggle, .nav-overlay, #pdfBtn { display: none !important; }
+    main { margin: 0 !important; max-width: 100% !important; padding: 0 !important; }
+    .hero h1 { -webkit-text-fill-color: #1a1d23 !important; color: #1a1d23 !important; background: none !important; }
+    section.chapter { box-shadow: none !important; border: 1px solid #d9dde5 !important; margin: 14px 0 !important; }
+    section.chapter > h2 { cursor: default; position: static; }
+    section.chapter.collapsed .chapter-body, .chapter-body { max-height: none !important; overflow: visible !important; padding: 14px 18px 18px !important; }
+    .caret { display: none !important; }
+    .transcript { break-inside: avoid; }
+    .transcript .tx-body { max-height: none !important; }
+    .callout, .metric-grid, .concept, figure.frame { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    a { color: #1d4ed8 !important; text-decoration: none; }
+  }
+  nav.anchor-nav { position: fixed; top: 100px; left: 0; width: 220px; height: calc(100vh - 100px); overflow-y: auto; overflow-x: hidden; background: var(--bg-soft); border-right: 1px solid var(--border); z-index: 60; padding: 16px 0 40px; transition: transform .28s ease; white-space: normal; }
+  nav.anchor-nav::-webkit-scrollbar { width: 6px; }
+  nav.anchor-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .nav-title { padding: 4px 20px 12px; font-size: 13px; font-weight: 700; color: var(--text-mute); }
+  .anchor-list { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+  .anchor-list a { display: block; min-height: 38px; padding: 9px 12px; border-radius: 8px; font-size: 13px; line-height: 1.35; color: var(--text-soft); text-decoration: none; border-left: 3px solid transparent; }
+  .anchor-list a.active { color: var(--accent-text); background: var(--accent-soft); border-left-color: var(--accent); font-weight: 600; }
+  .nav-toggle { position: fixed; left: 16px; bottom: 24px; width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff; border: none; font-size: 22px; z-index: 70; box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center; display: none; }
+  .nav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; opacity: 0; pointer-events: none; transition: opacity .28s; }
+  @media (min-width: 1041px) { main { margin-left: 220px; } }
+  @media (max-width: 1040px) {
+    nav.anchor-nav { top: 0; height: 100vh; transform: translateX(-100%); box-shadow: var(--shadow-lg); width: 260px; max-width: 82vw; }
+    nav.anchor-nav.open { transform: translateX(0); }
+    .nav-overlay.show { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progress"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">课程精读 · 常见模型架构 <span class="tag">How to AI Almost Anything · L3 · 无忌</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
+    <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
+  </div>
+</header>
+
+<button class="nav-toggle" id="navToggle" aria-label="章节目录">☰</button>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="anchor-nav">
+  <div class="nav-title">📖 目录</div>
+  <div class="anchor-list" id="anchorList">
+    <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+    <a href="#s1" data-target="s1">01 这节课要干什么</a>
+    <a href="#s2" data-target="s2">02 好模型 + 领域专用↔通用谱系</a>
+    <a href="#s3" data-target="s3">03 统一视角：积木拼装</a>
+    <a href="#s4" data-target="s4">04 集合：置换不变性</a>
+    <a href="#s5" data-target="s5">05 不变性 vs 等变性</a>
+    <a href="#s6" data-target="s6">06 序列模型：RNN 与递归</a>
+    <a href="#s7" data-target="s7">07 Seq2Seq 与注意力诞生</a>
+    <a href="#s8" data-target="s8">08 注意力/Transformer 五分钟</a>
+    <a href="#s9" data-target="s9">09 CNN 与 ViT：空间数据</a>
+    <a href="#s10" data-target="s10">10 图网络：万物归一 + 总结</a>
+    <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+    <a href="#concepts" data-target="concepts">🗂 核心概念卡</a>
+    <a href="#takeaways" data-target="takeaways">✅ 该记住的几条</a>
+    <a href="#refs" data-target="refs">References</a>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>《How to AI Almost Anything》Lecture 3：常见模型架构</h1>
+    <div class="hero-meta">
+      <span>🎓 Paul Liang · MIT Media Lab</span>
+      <span>⏱ 约 56:25</span>
+      <span>🎬 <a href="https://youtu.be/V0gRkmu4mFY" target="_blank" rel="noopener">原视频 youtu.be/V0gRkmu4mFY</a></span>
+      <span>📝 无忌课程精读 · 关键帧嵌入</span>
+      <span>🇨🇳 逐字稿英文 · 笔记中文</span>
+    </div>
+    <div class="hero-deck">
+      <strong>学完你能得到什么：</strong>这节课把深度学习里你听过的一堆名字——<strong>全连接、CNN、RNN/LSTM、Transformer、图网络（GNN）</strong>——塞进<strong>同一个统一框架</strong>里讲透。看完你会拿到一把"通用钥匙"：① 任何模型说到底都是两种积木在拼——<strong>抽特征（学表示）</strong>和<strong>聚合信息</strong>；② 选哪种架构、怎么拼，由你数据的<strong>不变性（invariance）</strong>和<strong>等变性（equivariance）</strong>决定——你想让模型"对什么免疫、对什么敏感"，就决定了要不要做<strong>参数共享</strong>、用什么<strong>聚合函数</strong>；③ 架构设计对了，需要的训练样本能<strong>少几个数量级</strong>。最后你会看到一个漂亮的收束：<strong>序列、图像、集合，全都是图（graph）的特例</strong>。
+    </div>
+  </div>
+
+  <!-- ===== 速览 ===== -->
+  <section class="chapter" id="overview">
+    <h2><span class="num">⚡</span><span class="title-text">一分钟速览</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <p><strong>这集讲啥：</strong>讲师 Paul Liang 用一节课（自称"像拿消防水管喝水"）把深度学习里所有常见架构装进<strong>一个统一框架</strong>。不像传统机器学习课每周讲一个孤立的模型，他要教你<strong>怎么自己设计架构</strong>——背后的原理是什么。</p>
+      <p><strong>主线一句话：</strong>所有深度学习模型都在做两件事——<strong>① 学表示（抽特征）</strong>、<strong>② 聚合信息</strong>。不同架构只是用不同的"积木"实现这两件事；选哪块积木，由你数据的结构（不变性 / 等变性）决定。</p>
+      <div class="metric-grid">
+        <div class="metric"><div class="v">2 类</div><div class="l">积木：学表示 + 聚合信息</div></div>
+        <div class="metric"><div class="v">2 个</div><div class="l">关键概念：不变性 / 等变性</div></div>
+        <div class="metric"><div class="v">5!×</div><div class="l">架构没设计好，多花的样本量</div></div>
+        <div class="metric"><div class="v">1 张图</div><div class="l">序列/图像/集合都是它的特例</div></div>
+      </div>
+      <div class="callout accent">
+        <p><strong>记住这条主旋律：</strong>看一个新模型，别问"它叫什么"，问三件事——<strong>它的基本元素是什么？它怎么抽特征（学表示）？它怎么把特征聚合起来（聚合信息）？</strong>再问"我数据有什么不变性/等变性"，答案就告诉你要不要参数共享、用什么聚合函数。整节课就是把这套思路在 集合→序列→图像→图 上各跑一遍。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S1 ===== -->
+  <section class="chapter" id="s1">
+    <h2><span class="num">01</span><span class="title-text">这节课要干什么：不是堆模型，是给你一把通用钥匙</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">00:00</span>开场 + 今天的目标</h3>
+      <p>Paul 开场就说今天信息量大得"像拿消防水管喝水"——他要在一节课里把深度学习<strong>所有常见架构</strong>用一个统一框架讲完。然后是几句课程事务（项目提案今晚交、本周阅读两篇论文）。这两篇阅读很有意思，值得记一下：</p>
+      <ul>
+        <li><strong>The Bitter Lesson（苦涩的教训）：</strong>AI 进步的规律是——越是<strong>不靠人工先验、靠大数据大算力的大模型</strong>，最后赢得越彻底。这对"你该怎么做 AI"是个灵魂拷问。</li>
+        <li><strong>Grokking / Double Descent（顿悟 / 双下降）：</strong>反直觉的现象——模型看起来在过拟合、表现很差，<strong>继续训练久一点，突然就学会了、表现飙升</strong>。和传统机器学习课教的"过拟合就停"完全相反。</li>
+      </ul>
+      <h3><span class="ts">02:35</span>今天覆盖的四块</h3>
+      <p>课程正文讲四件事：① 给所有架构一个<strong>统一范式</strong>；② 怎么<strong>设计自己的定制架构</strong>，原则是什么；③ <strong>序列模型</strong>（时间序列等时序数据）；④ <strong>卷积模型</strong>（空间数据）以及<strong>集合 / 图</strong>模型。</p>
+      <div class="callout info"><p>这节课的价值不在"认识更多模型"，而在<strong>建立一套看模型的元视角</strong>。学完你再读任何一篇 CNN / Transformer 论文，都能一眼拆出它在用哪些积木、为什么这么拼。</p></div>
+      <details class="transcript"><summary>英文逐字稿（00:00–03:05）</summary><div class="tx-body">Okay, so this is lecture three. It's going to be like drinking out of a fire hose today because I'm going to try to cover all the common model architectures in deep learning in one unified framework in this one lecture. ... please submit your four-page project proposal by tonight. ... Your reading assignments are due tomorrow. The topic for this week is on data and learning. The first paper is on this phenomena called the bitter lesson — the phenomenon that as more and more progress is made, overwhelmingly it is the big models, the ones that don't use too much inductive biases and domain knowledge, that work the best. The second paper is called grokking or double descent — a very recent phenomena that goes against conventional wisdom: the fact that you can seem to be overfitting and not doing well, and suddenly do really well as you train your model for longer. ... So today we are going to cover four things. We're going to come up with a unified paradigm for looking at different model architectures, how you could go about designing your own custom architecture, and then common case studies for sequence models, convolutional models, and models for sets and graphs.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S2 ===== -->
+  <section class="chapter" id="s2">
+    <h2><span class="num">02</span><span class="title-text">"好模型"是什么 + 领域专用 ↔ 通用 的谱系</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">03:36</span>一条谱系：从领域专用到通用</h3>
+      <p>你设计的任何 AI 模型，都落在一条谱系上：左边是<strong>领域专用（domain-specific）</strong>——大量吸收问题结构和专家知识；右边是<strong>通用（general-purpose）</strong>——靠更多数据和算力、对具体问题的结构假设更少。</p>
+      <ul>
+        <li>设计一个高度定制的专用网络架构 → 偏<strong>领域专用</strong>。</li>
+        <li>设计一个嵌入了"你知道数据该有某种性质"的定制训练目标 → 也偏<strong>领域专用</strong>。</li>
+        <li>直接拿现成模型（off-the-shelf）来用，或做点微调/适配 → 偏<strong>通用</strong>。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_002.jpg" alt="领域专用到通用的谱系">
+        <figcaption><span class="fno">frame_002 · 约 03:00</span> · 两大建模范式是一条谱系：左端"定制神经网络 / 定制训练目标"最领域专用，右端"现成 LLM"最通用，中间是"现成模型 + 微调/适配"。本节课先讲左端（定制架构），后面几节往右走。</figcaption>
+      </figure>
+      <h3><span class="ts">04:38</span>什么叫"好模型"？设计前先想清楚</h3>
+      <p>一个点落在谱系哪里，取决于"你要的好模型是什么样"。Paul 列了几条衡量标准——<strong>这是动手设计前第一件该想的事</strong>：</p>
+      <ul>
+        <li><strong>抓对语义信息</strong>——预测/生成/预报，得抓住正确的含义。</li>
+        <li><strong>对的粒度</strong>——有的任务要精细定位，有的要高层摘要。</li>
+        <li><strong>合适的数据 / 标注量</strong>——谱系上不同位置需要的（有标 + 无标）数据量天差地别。</li>
+        <li><strong>资源约束</strong>——跑在大 GPU 上 还是 边缘小设备上。</li>
+        <li><strong>可用性 / 可解释性</strong>——能不能向用户解释决策、是否易用。</li>
+      </ul>
+      <div class="callout warn"><p><strong>哪些能妥协、哪些绝不妥协？</strong>Paul 强调：在写任何代码前，先把"这个问题的好模型该满足哪些性质、哪些是底线"想清楚。这一步决定了你整条技术路线往谱系的哪边走。</p></div>
+      <details class="transcript"><summary>英文逐字稿（03:36–06:41）</summary><div class="tx-body">You want to think of these modeling paradigms as a spectrum. Any model you design probably fits somewhere on this spectrum, from more domain-specific methods that take into account the structure of the problem and expert knowledge, to more general-purpose models that leverage more data and computation and therefore less structure about the specific domain. ... A good model has many factors: ideally it captures the right semantic information; it should capture it at the right granularity — some problems require fine-grain localization, some require a high-level summary; it should use an appropriate amount of data and labels — that's going to be a very important factor; it should respect the right resource constraints when you deploy it (large GPUs vs edge and small devices); and finally it should provide the right level of usability — interpretation quality, accessibility. This is the first thing you should think of before you even start designing your model: what is a good model, what properties are good to have, which ones would you not compromise on. The next couple of lectures will cover the spectrum: today is more domain-specific custom architectures; then multimodal; then after spring break, general-purpose architectures and how to fine-tune and adapt them.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S3 ===== -->
+  <section class="chapter" id="s3">
+    <h2><span class="num">03</span><span class="title-text">统一视角：所有模型都是两类积木拼出来的</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">06:41</span>先回忆"模态画像"，再讲统一视角</h3>
+      <p>承接两周前讲的"数据"：每份数据都有一张<strong>模态画像（modality profile）</strong>——把问题拆成几个特征维度（元素是什么、怎么表示、元素分布、结构是空间还是图、有哪些噪声、任务是什么）。理解了数据，再开始建模。</p>
+      <h3><span class="ts">08:17</span>深度学习模型永远在做两件事</h3>
+      <p>这是全课的<strong>核心论点</strong>。任何深度学习模型都在交替做两件事：</p>
+      <ul>
+        <li><strong>① 学表示（learn representations）：</strong>把高维原始数据，转成更抽象、更稠密、更低维的特征，提炼出重要信息。</li>
+        <li><strong>② 聚合表示（combine representations）：</strong>把不同部分学到的特征组合起来。比如图像里学到了"飞机"的特征、"天空"的特征、"地面房子"的特征，怎么合成对整个场景的理解。</li>
+      </ul>
+      <p>一层层下去，就是不断"抽特征 → 聚合 → 再抽更抽象的特征"。</p>
+      <h3><span class="ts">09:19</span>两类积木 = 两个目的的实现方式</h3>
+      <p>既然就两个目的，那所有深度学习模块就能归成两堆：</p>
+      <ul>
+        <li><strong>学表示的积木：</strong>全连接（本质是矩阵乘法）、ReLU（非线性激活，没有它再多层也只是个线性模型，加了它能逼近任意函数）、层归一化（Layer Norm，把数据标准化到漂亮范围）、卷积（Conv）、自注意力（Self-attention）。</li>
+        <li><strong>聚合信息的积木：</strong>拼接（Concat）、交叉注意力（Cross-attention）、逐点相加（Add）、逐点取最大（Max）。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_004.jpg" alt="统一视角的两类积木">
+        <figcaption><span class="fno">frame_004 · 约 09:00</span> · 深度学习统一视角：模型 = 可微函数 + 训练目标的组合。两类积木——上排"学表示"（全连接 / ReLU / 层归一 / 卷积 / 自注意力），下排"聚合信息"（拼接 / 交叉注意力 / 相加 / 取最大）。任何模型都是这些积木的某种拼法。</figcaption>
+      </figure>
+      <h3><span class="ts">10:54</span>拼起来 → 算 loss → 梯度下降</h3>
+      <p>把数据（小三角形代表元素：图像的块、段落里的句子、句子里的词）一层层过"抽特征"的积木，中间穿插"聚合"的积木，得到越来越语义化的特征。设计完这个<strong>前向传播</strong>后，算 <strong>loss</strong>（预测和真实标签的差距），再用<strong>梯度下降</strong>更新参数。<strong>只要每块积木大体可微，你就能任意堆叠、组合任意多块。</strong></p>
+      <div class="callout good"><p><strong>啊原来如此 ①：</strong>Transformer 也好、CNN 也好，任何深度学习论文，本质都是"这些积木的某种组合"。关键差别只是——<strong>把哪块积木放在哪个位置</strong>。模型的"创新"往往就是积木摆法的创新。</p></div>
+      <details class="transcript"><summary>英文逐字稿（06:41–12:58）</summary><div class="tx-body">To start with domain-specific methods, I want to recap what we talked about on data — the idea of a modality profile. Every data and task sets some characteristics: the elements and how they're represented, the distribution of elements, the structure (spatial or graphical), the information, types of noise you have to be robust to, and your task. ... A unified view of deep learning models is that these models always have several steps. One step is to learn representations — take high-dimensional raw data and learn more abstract, denser, lower-dimensional features that extract information. A second key property is combining representations — you might learn a representation for the plane in the image, for the sky, for the ground with houses; how do you combine them to learn the holistic scene? Always alternating between extracting features and combining features layer by layer. ... So you can view different deep learning blocks as ways of achieving those two purposes. To learn representations: fully connected networks (matrix multiplications), ReLU (nonlinear activation — if everything is linear you just learn a linear model), layer normalization, convolution, and self-attention. For information aggregation: concatenating, cross-attention, pointwise addition, pointwise max. Any modern AI model is some composition of these blocks. Once you've designed the forward pass, you compute your loss — how close your prediction is to the real label — and minimize it by taking the gradient and applying gradient descent. As long as everything is mostly differentiable, you can compose an arbitrary number of these building blocks. Any deep learning paper, whether it's a transformer or CNN, is some composition of these blocks — the key idea is just how you place them.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S4 ===== -->
+  <section class="chapter" id="s4">
+    <h2><span class="num">04</span><span class="title-text">集合与点云：第一个例子，置换不变性</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">12:58</span>例子：集合（sets）和点云（point clouds）</h3>
+      <p>Paul 拿一个他很喜欢的例子开场。<strong>集合</strong>：比如一堆人脸图，要检测哪张是异常（不符合群体特征）。<strong>点云</strong>：3D 网格，每个点是个 xyz 坐标，一堆点拼成一个 3D 形状，任务可能是把点云分类成不同家具，或生成新的 3D 模型。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_005.jpg" alt="集合与点云的例子">
+        <figcaption><span class="fno">frame_005 · 约 12:00</span> · 集合（上：一组人脸图，找异常那张）和点云（下：每点是 xyz 坐标拼成 3D 形状的桌椅飞机）。出自 DeepSets 和 PointNet 两篇论文。</figcaption>
+      </figure>
+      <h3><span class="ts">14:31</span>关键结构：模型必须对元素顺序"无所谓"</h3>
+      <p>集合数据最重要的结构是：<strong>模型的输出不该依赖元素的呈现顺序（置换不变性 permutation invariance）</strong>。无论我把五张图按 ABCDE 还是 ECDBA 给你，问"哪张异常"，答案都该一样。要满足这点，有两个关键设计：</p>
+      <ol>
+        <li><strong>参数共享：</strong>编码每个集合元素的特征提取器，用的是<strong>同一套参数</strong>（图里用同样的颜色表示）。</li>
+        <li><strong>置换不变的聚合函数：</strong>把每个元素学到的表示聚合时，用<strong>对顺序不敏感</strong>的函数——比如<strong>逐元素相加</strong>（A+B+C 不管顺序结果都一样）。</li>
+      </ol>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_006.jpg" alt="DeepSets 架构：参数共享 + 相加聚合">
+        <figcaption><span class="fno">frame_006 · 约 15:00</span> · 集合模型的标准做法（DeepSets）：每个元素过<strong>同一个</strong> φ（参数共享），再用 <strong>+（相加，置换不变）</strong>聚合，最后过 ρ 出预测 y。左右两图元素顺序不同（ABCDE vs ECDBA），但因为这两个设计，输出 y 完全相同。</figcaption>
+      </figure>
+      <h3><span class="ts">17:05</span>不这么做会怎样？要多花 5! 倍的数据</h3>
+      <p>反证一下两个设计为什么必要：</p>
+      <ul>
+        <li><strong>不做参数共享：</strong>每个元素用不同特征提取器（不同参数 θ1…θ5）。那同一个集合换个顺序，加起来的最终特征就变了，预测也变了。为了让模型学会"顺序无所谓"，你得把<strong>所有排列都喂给它</strong>——5 个元素就是 <strong>5! = 120</strong> 倍的样本量。</li>
+        <li><strong>做了参数共享但聚合函数不是置换不变的</strong>（比如用<strong>拼接 Concat</strong> 而不是相加）：拼接 AB 和 BA 输出不同，又得喂所有排列，还是 5! 倍。</li>
+      </ul>
+      <div class="callout accent"><p><strong>核心收获：</strong>把数据的结构（这里是"顺序无所谓"）<strong>焊进架构</strong>——靠参数共享 + 对的聚合函数——能让你少用<strong>几个数量级</strong>的训练样本。架构设计 = 帮模型省数据。</p></div>
+      <details class="transcript"><summary>英文逐字稿（12:58–19:09）</summary><div class="tx-body">Let me start with sets and point clouds as an example. Sets: say you have a bunch of images of actors with a certain property and you want to detect an anomaly — which person does not have the same demographic properties. Point clouds: 3D meshes, each point is an xyz coordinate, you put a bunch together to make a 3D shape; maybe your goal is to classify point clouds into furniture types or generate new 3D models. The most important structure for set or graph data is that any model should be invariant to the order of elements. Whether I present the set ABCDE or ECDBA and ask you to find the anomalous image, your model should give the same answer. So there are two key ideas: first, share parameters of the model that encodes each set element; second, aggregate using a function that is permutation invariant, like addition where you add the vectors element-wise. ... If you don't share parameters — different feature extractors θ1 to θ5 for each element — then the same set permuted gives a different output, so you'd need to give the model all permutations: five factorial more samples. Same if you do parameter sharing but use a non-permutation-invariant aggregation like concatenation (stacking AB vs BA changes the output) — again five factorial more cycles. So if you design your architecture carefully, you need much fewer samples.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S5 ===== -->
+  <section class="chapter" id="s5">
+    <h2><span class="num">05</span><span class="title-text">两个核心概念：不变性 vs 等变性</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">19:09</span>结构 = 不变性 + 等变性</h3>
+      <p>把上面的直觉一般化。当你拿到数据/任务，有两个概念极其重要，都归在"结构"这个大伞下面：</p>
+      <h3><span class="ts">19:40</span>不变性（invariance）：模型该"免疫"的变换</h3>
+      <p><strong>不变性 = 对输入做某些变换，标签/输出不该变。</strong>例子：一张写着数字"3"的图，目标是<strong>分类</strong>成"3"。那么——把图<strong>平移</strong>几个像素、<strong>旋转</strong>45°/90°、从 RGB 变成<strong>黑白</strong>——它还是"3"。这些就是模型该<strong>不变（免疫）</strong>的变换。如果模型对颜色、旋转、小位移敏感，你就得喂更多数据才能学会同一个任务。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_007.jpg" alt="不变性：图像分类例子">
+        <figcaption><span class="fno">frame_007 · 约 18:00</span> · 不变性的例子——图像分类。出自经典综述《Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges》（这节课很多形式化定义都来自它）。</figcaption>
+      </figure>
+      <h3><span class="ts">20:42</span>等变性（equivariance）：模型该"跟着动"的变换</h3>
+      <p><strong>等变性 = 对输入做某变换，输出应该跟着做同样的变换。</strong>同样那张"3"的图，但任务换成<strong>语义分割</strong>（给每个像素标"背景/数字/树/海洋"）。这时如果我把图<strong>上移两像素</strong>，输出的分割图也该<strong>上移两像素</strong>；旋转 45°，分割图也该旋转 45°。位移和旋转在这里是<strong>等变</strong>变换。但颜色（RGB vs 黑白）仍该是<strong>不变</strong>的——换色不该改变分割结果。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_008.jpg" alt="等变性：图像分割例子">
+        <figcaption><span class="fno">frame_008 · 约 21:00</span> · 等变性的例子——图像分割。输入怎么移动/旋转，输出的语义图就怎么跟着移动/旋转（右侧：原图 → 分割成天空/地面/水）。形式化：f(ρ(g)x)=ρ(g)f(x)，即"作用在输入上的变换，会以同样方式作用在输出上"。</figcaption>
+      </figure>
+      <div class="callout info"><p><strong>同一个变换，不变还是等变，取决于任务。</strong>有同学问"红块在黑块上面，翻转后不就不同了吗？"——Paul 回答：分类任务里翻转该<strong>不变</strong>，但分割任务里就该<strong>等变</strong>。<strong>先看任务，再定哪些变换该不变、哪些该等变。</strong>集合数据则要满足"置换不变"。把这些性质想清楚再设计架构，是省样本量的关键。</p></div>
+      <details class="transcript"><summary>英文逐字稿（19:09–22:13）</summary><div class="tx-body">To generalize this discussion: when you collect your data, there are two important ideas, both lumped under "structure." The first is data invariances — what transformations can you make to your data where the label or outcome should not change. If I have an image with a three and the goal is to classify it as a three, then moving the image a couple of pixels, rotating it 45 or 90 degrees, making it black and white instead of RGB — you should still get the label three. If your model is sensitive to color, rotation, or small shifts, you'll need a lot more data. So invariances are changes the model should not be sensitive to, as opposed to equivariances — changes the model should be sensitive to. Given the same image, if the goal is segmentation — a semantic map labeling background, digit, etc. — then if I shift the image up by two pixels, my semantic map should shift up by two pixels; rotate 45 degrees, the map rotates 45 degrees. Shifting and rotating are equivariant transformations. Color (RGB vs black and white) should still be invariant. ... (Question: red block on top of black block, flipped — why invariant?) It depends on the task: classification can be rotation-invariant, but segmentation should be equivariant to shifts and rotations.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S6 ===== -->
+  <section class="chapter" id="s6">
+    <h2><span class="num">06</span><span class="title-text">序列模型：时间不变、顺序等变 → RNN 与递归</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">22:44</span>第一类常见架构：时序模型</h3>
+      <p>元素是"词"，词组成更长的<strong>序列</strong>（句子、时间序列、代码、基因组数据）。任务可能是预测下一个词、或给整段序列分类。还是问那两个问题：<strong>怎么学表示？怎么聚合信息？</strong>时序数据的一个关键直觉是<strong>局部性（locality）</strong>——要预测下一个词，前一个词通常最重要，但也该兼顾更长的上文。</p>
+      <h3><span class="ts">25:20</span>序列数据的两条性质：时间不变、顺序等变</h3>
+      <p>套用上一节的框架，序列模型应该：</p>
+      <ul>
+        <li><strong>对时间本身不变：</strong>把整个序列往前/往后挪一步，结果不该有大变化。</li>
+        <li><strong>对词序等变（敏感）：</strong>"狗追猫"和"猫追狗"——把词的顺序换了，模型必须给出非常不同的反应。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_009.jpg" alt="序列分类：时间不变、词序等变">
+        <figcaption><span class="fno">frame_009 · 约 24:00</span> · 序列模型两条铁律：<strong>对时间不变，对词序等变</strong>。实现靠两点：① 跨时间步参数共享；② 沿时间聚合信息（自回归）。底部 Fox→jumps→over→the→lazy 是一条沿时间流动的链。</figcaption>
+      </figure>
+      <h3><span class="ts">25:51</span>两个设计：参数共享 + 沿时间递归聚合</h3>
+      <ul>
+        <li><strong>① 跨时间步参数共享：</strong>处理每个词的特征提取器都用<strong>同一套参数</strong>——否则序列稍微左右挪一下输出就大变（破坏时间不变性）。</li>
+        <li><strong>② 沿时间聚合信息（递归 recurrence）：</strong>先抽第一个词的特征，处理第二个词时<strong>累积上前一个词的信息</strong>，第三个词再累积前两个的……这个"沿时间累积"的过程正是<strong>顺序等变性</strong>的来源——换了词序，累积顺序就不同，结果就不同。</li>
+      </ul>
+      <h3><span class="ts">27:24</span>数学写法：U、V 共享，H 累积信息</h3>
+      <p>记号：X 是数据，第一层 <code>tanh(U·X)</code>（U 是参数，tanh 提供非线性），再过一层 <code>V·(上层输出)</code>，最后算分类 loss（负对数概率）。所有<strong>循环模型</strong>就是把<strong>同一个 U、同一个 V</strong> 在每个时间步 X₁、X₂、X₃… 上反复套用。信息累积在 <strong>H</strong> 里。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_011.jpg" alt="RNN 数学展开：U V W 共享，h 累积">
+        <figcaption><span class="fno">frame_011 · 约 30:00</span> · RNN 数学展开：<code>h⁽ᵗ⁾ = tanh(U·x⁽ᵗ⁾ + W·h⁽ᵗ⁻¹⁾)</code>，<code>z⁽ᵗ⁾=V·h⁽ᵗ⁾</code>，loss 是负对数概率之和。U/V/W 三组参数在所有时间步<strong>共享</strong>，h 沿时间把信息一路累积过去。</figcaption>
+      </figure>
+      <h3><span class="ts">29:00</span>从序列分类到序列生成（自回归解码）</h3>
+      <p>把"输入序列→预测一个标签"改成"输入一个东西→输出多个东西"，就是<strong>序列生成</strong>。给个词"fox"，让模型续写故事/生成音乐：每步用同一套参数，把<strong>上一步生成的 y₁ 当作下一步的输入</strong>去生成 y₂，再拿 y₂ 生成 y₃……这就叫<strong>自回归解码（autoregressive decoding）</strong>。</p>
+      <div class="callout good"><p><strong>RNN 没过时：</strong>Paul 特意说——别以为 RNN 是老古董。RNN → LSTM → 时序卷积网络（TCN）→ <strong>状态空间模型（state space models）</strong>，后者今天处理时间序列/连续数据时仍很流行，是 Transformer 的一个有力替代。同一条进化线，没断。</p></div>
+      <details class="transcript"><summary>英文逐字稿（22:44–30:36）</summary><div class="tx-body">Moving on to common architectures. First, temporal models. You might have an element like a word that's part of a longer sequence — words, time steps, code, genomics data — and the goal is classification of the next word or some label. A key idea for temporal data is locality: to predict the next word you look at the word before it, but also longer context. For sequential data: it should be invariant to time itself (shift the sequence one step, shouldn't make a big impact), but equivariant to order (if you change "fox jumps over" to a different word order, the model should be extremely sensitive). So almost all sequence models have two properties: parameter sharing across time steps (the same feature extractor processes every word — critical, otherwise shifting the sequence gives a very different output), and aggregating information across time — recurrence, where you extract features and accumulate what you had for the previous word. That's what makes it equivariant to word order. Mathematically: X is your data, first layer U*X followed by activation tanh, then V times the previous output, then compute the loss. All recurrent models unroll this, applying the same U and same V at every time step. H is where information accumulates. You can extend to sequence generation: give it "fox," generate, take y1 as input to generate y2, take y2 to generate y3 — autoregressive decoding. Some of you might say recurrent networks are out of fashion, but RNNs evolved to LSTMs, LSTMs to temporal convolutional networks, which inspired state space models that are still quite popular for time series as an alternative to transformers.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S7 ===== -->
+  <section class="chapter" id="s7">
+    <h2><span class="num">07</span><span class="title-text">Seq2Seq + 注意力的诞生：从对齐热图说起</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">30:36</span>序列到序列：进一个序列，出一个序列</h3>
+      <p>把"进序列→出标签"和"进一个→出序列"合起来，就是<strong>序列到序列（seq2seq）</strong>：进一个序列、出一个序列。典型应用是<strong>机器翻译</strong>（3 个英文词 → 3 个法文词）。做法一样：读入序列时跨时间步参数共享 + 沿时间累积信息，读完后预测第一个输出，再自回归地一个个生成后续。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_011.jpg" alt="Seq2Seq 架构示意">
+        <figcaption><span class="fno">（同 frame_011 时段）· 约 33:00</span> · 序列到序列：编码端 Fox→jumps→over 读入并累积，解码端自回归生成 Y₁→Y₂→Y₃。机器翻译就是典型 seq2seq，它直接催生了注意力机制。</figcaption>
+      </figure>
+      <h3><span class="ts">31:37</span>一个学生问题引出关键：词的对应不是一一对齐的</h3>
+      <p>学生问："为什么 Y₁ 对应 fox、Y₂ 对应 jumps？"——好问题。有些语言（主谓宾）翻译后语序大体保留，但很多语言不是。一篇<strong>机器翻译里程碑论文（Bahdanau 2015）</strong>画了<strong>对齐热图</strong>：输入英文序列 × 输出法文序列，告诉你哪个英文词对应哪个法文词。大部分落在<strong>对角线</strong>上（语序大致保留），但也有偏离对角线的——说明语序发生了移位。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_012.jpg" alt="Seq2Seq + 英法翻译注意力对齐热图">
+        <figcaption><span class="fno">frame_012 · 约 33:00</span> · 英→法翻译的<strong>注意力对齐热图</strong>（右下，Bahdanau et al. ICLR 2015）：亮格表示该英文词与该法文词强相关。大体沿对角线（语序保留），但有偏离——这就是"注意力"的雏形：生成每个输出词时，动态地看输入里哪些词最相关。</figcaption>
+      </figure>
+      <h3><span class="ts">32:38</span>注意力 = 动态权重</h3>
+      <p>这些就叫<strong>基于注意力（attention）的方法</strong>：生成 Y₁ 时，看输入三个词里哪些最相关——是只看 fox，还是 fox 多一点、jumps over 少一点？生成第二个词时再算一遍。于是得到一个 <strong>T×T 的注意力矩阵</strong>（输入序列长度 × 输出序列长度）。语言差别越大（英↔中、英↔日），矩阵越偏离对角线。它<strong>不一定是方阵</strong>——3 个英文词可以对 10 个中文词，矩阵就是矩形 T₁×T₂，输出多长由模型自己决定（生成到 stop / 句末标记为止）。</p>
+      <div class="callout accent"><p><strong>这是一条历史主线：</strong>机器翻译用 seq2seq → seq2seq 加上注意力机制 → 注意力机制启发了今天所有的 <strong>Transformer</strong>。冷知识：第一篇 Transformer 论文，最早就是在<strong>机器翻译</strong>任务上拿到全面 SOTA 的。</p></div>
+      <details class="transcript"><summary>英文逐字稿（30:36–35:14）</summary><div class="tx-body">Sequence-to-sequence models combine both: a sequence comes in, a sequence comes out — used in machine translation (convert three English words into three French words). Same ideas: same parameters at every time step, accumulate information; once you've read the sequence, predict the first output, then autoregressively feed the previous into the next. (Question: why does Y1 correspond to fox?) Good segue. In some languages subject-verb-object translates to subject-verb-object; in others not. A pivotal machine translation paper shows heat maps telling you, given the input English sequence and output French sequence, which English words corresponded to which French words. Most lie along a diagonal — the order is mostly preserved — but there are off-diagonal ones where word order shifted. These are attention-based methods: when generating Y1, which of the input words are most relevant? You get a T-by-T attention matrix, input sequence by output sequence. For more different languages (English-Chinese, English-Japanese) it's more off-diagonal. It could absolutely be rectangular — three input words, ten output words; the model decides how many to output, generating until a stop or end-of-sentence token. ... Sequence-to-sequence models were augmented with attention mechanisms, which inspired all these modern transformers. The first transformer paper was actually benchmarked on machine translation — that was the first state-of-the-art result.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S8 ===== -->
+  <section class="chapter" id="s8">
+    <h2><span class="num">08</span><span class="title-text">注意力 / Transformer 五分钟：拆开那个公式</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">35:14</span>注意力的直觉：给不同元素动态加权</h3>
+      <p>注意力的核心想法是：有时我想给不同元素<strong>动态的权重</strong>。要给词"lazy"算一个新特征，我就去看它前面的四个词，算<strong>注意力分数</strong>——告诉我前四个词各自该对这个新特征<strong>贡献多少</strong>。拿到这五个分数后，用它们<strong>加权求和</strong>那些词的特征。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_013.jpg" alt="注意力直觉：fox jumps 动态权重 + 公式">
+        <figcaption><span class="fno">frame_013 · 约 36:00</span> · 注意力 = 给不同元素动态加权。右边就是大家都见过的那个公式 <code>h = softmax(X·Wq·Wkᵀ·Xᵀ / √d)</code>，本质是把每个词和其它词的相关度算成一张表。</figcaption>
+      </figure>
+      <h3><span class="ts">36:46</span>用矩阵乘法拆解那个公式</h3>
+      <p>Paul 把那个"人人见过但未必真懂"的公式一层层拆开（假设 3 个词，数据 X 是 3×d）：</p>
+      <ol>
+        <li><strong>Wq：</strong>把数据 X 过一个可学习线性变换，把 one-hot 的词变成低维稠密向量。得到 3×d。</li>
+        <li><strong>Wkᵀ + 转置：</strong>再过另一个可学习参数并转置，3×d 变 d×3。</li>
+        <li><strong>外积 X·Wq·Wkᵀ·Xᵀ：</strong>得到一个 <strong>3×3 的注意力矩阵</strong>——告诉你 fox/jumps/over 这三个词两两之间的注意力分数。<strong>注意力分数永远是"序列 × 序列"。</strong></li>
+        <li><strong>除以 √d（缩放）：</strong>矩阵每个格子是两个 d 维向量的点积，d 一大数值就暴涨；除以 √d 让方差回到 1/d，把值压回合理范围。</li>
+        <li><strong>逐行 softmax：</strong>让每一行非负、求和为 1——于是能解读成"分配 50% 给这个词、25% 给那个"的<strong>概率分布</strong>。</li>
+        <li><strong>乘上真实特征 X·Wv：</strong>光有注意力分数没用，得拿它去<strong>加权真正的特征向量</strong>。3×3 的注意力 × 3×d 的值 = 3×d 的输出。</li>
+      </ol>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_014.jpg" alt="注意力公式完整拆解：注意力矩阵 + 加权求和">
+        <figcaption><span class="fno">frame_014 · 约 39:00</span> · 注意力公式完整拆解：左边 query×context 得到 3×3 <strong>注意力矩阵</strong>（如 fox 行 0.7/0.3），逐行 softmax 归一成概率，再乘上值向量 XWv 加权求和，得到每个词的<strong>新语言表示</strong>。注意 √d 缩放和"行归一到 0–1"两个细节。</figcaption>
+      </figure>
+      <p>输出这个 3×d 向量，要理解成<strong>语言的新表示</strong>——三个词各自有了新特征，每个词的新特征是"看了和其它三个词的注意力、再按注意力加权它们的值向量"得来的。然后拿去做任何预测。<strong>这就是五分钟的 Transformer。</strong></p>
+      <h3><span class="ts">40:55</span>Transformer 和 RNN 其实是一回事</h3>
+      <p>看着不一样，本质没差多少——仍然遵守序列数据的两条铁律：</p>
+      <ul>
+        <li><strong>仍是参数共享：</strong>每个词进来都过<strong>同一组</strong>可学习变换（Wq/Wk/Wv 三组权重在所有词上重复用）→ 这带来<strong>时间不变性</strong>。</li>
+        <li><strong>仍是信息聚合：</strong>只是不再<strong>串行</strong>地等 1→2→3（GPU 上慢），而是用矩阵乘法<strong>并行</strong>一次算出整个 5×5 注意力，一口气做完聚合。仍然<strong>对词序等变</strong>——置换序列，注意力矩阵就变，输出就变。</li>
+      </ul>
+      <div class="callout purple"><p><strong>关键统一：</strong>RNN 和 Transformer 的差别不在"做不做参数共享 / 信息聚合"——两个都做。差别只在<strong>聚合是串行还是并行</strong>。Transformer 把"沿时间累积"换成"一次性算全体两两注意力"，于是能在 GPU 上并行、跑得快。<strong>数学目标没变，只是算得快。</strong></p></div>
+      <details class="transcript"><summary>英文逐字稿（35:14–42:30）</summary><div class="tx-body">The idea for attention-based methods is that sometimes I want to give dynamic weights to different elements. To get a new feature for the word "lazy," I look at the other four words before it, compute attention scores telling me how much each contributes to this feature. Each of the five context words comes in; you learn five scores a1 through a5 giving relative contributions, then weight each feature by those scores — a weighted summation. ... One way to think about it through matrix multiplications: X is your data, 3 by d (three words). WQ is a linear transformation turning one-hot tokens into dense vectors. I take my data times another learnable parameter, transposed, so 3-by-d becomes d-by-3. The outer product tells me, for every one of the three words with the same three words, a 3x3 attention matrix of pairwise attention scores. Attention scores are always sequence by sequence. Normalize by square root of d, because each entry was a d-dimensional dot product — if d is big the magnitude goes up quickly; normalizing by root d means variance goes by one over d. Then a row softmax normalizes each row to be non-negative and sum to one — you can interpret them as a probability distribution: 50% here, 25% here, 25% there. Finally multiply with the real feature vectors XWv — just the attention scores aren't useful, you have to multiply with your features. 3x3 times 3xd gives an output 3xd, a new representation of language. ... Although transformers seem different from recurrent models, they're not that different. Sequential data must respect invariance to time but equivariance to word order. They still do parameter sharing across time steps — the same W matrices repeated across words, giving invariance over time. And they still do information aggregation, just not sequentially (waiting for one to get two to get three, which is slower on GPUs) but in parallel using matrix multiplications, getting the whole 5x5 attention in one go. Still equivariant to word order because permuting changes the attention matrix.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S9 ===== -->
+  <section class="chapter" id="s9">
+    <h2><span class="num">09</span><span class="title-text">空间数据：CNN 与 Vision Transformer</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">42:30</span>空间数据：朴素做法为什么不行</h3>
+      <p>图像该怎么办？最朴素：把图像<strong>拉平</strong>成一串像素，接一个全连接层到下一层。两个大问题：</p>
+      <ul>
+        <li><strong>不高效：</strong>200×200 的图就是 4 万个像素，要到 n 个特征的下一层，矩阵是 <strong>40000×n</strong>，巨大。</li>
+        <li><strong>对位移敏感：</strong>全连接会让模型对图像上下左右挪几个像素、转几度都很敏感——而图像分类该<strong>对这些空间变换不变</strong>。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_015.jpg" alt="全连接处理图像：不高效">
+        <figcaption><span class="fno">frame_015 · 约 42:00</span> · 朴素做法：把所有像素全连接到所有输出 → <strong>200×200 图就要 40000×n 参数，不高效</strong>，而且对微小位移敏感。空间数据需要的是"对空间平移不变"。</figcaption>
+      </figure>
+      <h3><span class="ts">44:34</span>CNN 的两个关键设计</h3>
+      <ul>
+        <li><strong>① 稀疏连接（局部性）：</strong>不用把所有输入像素连到所有输出。要算图像右上角的输出，只看右上角附近<strong>几个像素</strong>（由 filter 大小决定，比如 3×3）。既省算力，又尊重<strong>局部性</strong>。</li>
+        <li><strong>② 参数共享：</strong>这个 3×3 窗口扫过整张图时，每个位置<strong>用同一组权重</strong>。这带来<strong>空间不变性</strong>——像素在窗口内左右挪一点，输出不变。</li>
+      </ul>
+      <p>具体操作：固定一个 K×K 窗口（如 3×3），对每个位置把窗口内信息汇总成一个特征，再把窗口滑到下一个 3×3、再下一个……每次都用<strong>同一组权重</strong>。这就是<strong>卷积</strong>。</p>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_016.jpg" alt="CNN：k×k 卷积滤波器参数共享">
+        <figcaption><span class="fno">frame_016 · 约 45:00</span> · 卷积：一个 k×k 滤波器在图上滑动，每个位置<strong>共享同一组权重</strong>。这同时实现了①局部性（每个输出只看附近像素）和②空间不变性（窗口内小位移不改变输出）。</figcaption>
+      </figure>
+      <h3><span class="ts">47:10</span>池化 + 层层堆叠：从边缘到部件到物体</h3>
+      <p>再加<strong>池化（pooling）</strong>：在一个小区域（如 2×2）里<strong>取最大值</strong>，让模型对小位移更不敏感、强迫它看"大局"。堆起来后：卷积先学<strong>边缘</strong> → 组合边缘学<strong>形状/部件</strong> → 再组合学更复杂的<strong>物体</strong>。卷积学"组合部件"，池化学"更抽象、忽略低层细节"。<strong>积木还是那两类，只是套在窗口/区域上反复用。</strong></p>
+      <h3><span class="ts">48:11</span>Vision Transformer（ViT）：把图像切成块当"词"</h3>
+      <p>如今很多人从 CNN 转向 <strong>ViT</strong>（虽然没 NLP 里 RNN→Transformer 那么剧烈）。同样两条原则：把图像切成 K×K 的<strong>块（patch）</strong>，把这一串块<strong>当成一串"词"</strong>，对它跑 Transformer——给每个块算它和其它块（含自身）的注意力分数，加权求和得到特征。</p>
+      <ul>
+        <li><strong>仍是参数共享：</strong>同一组参数处理每个 K×K 块。</li>
+        <li><strong>仍是信息聚合：</strong>跨块用注意力聚合。块设计得当，模型就对块间小位移不敏感——和 CNN 的卷积窗口异曲同工。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_017.jpg" alt="Vision Transformer：图像切块当序列">
+        <figcaption><span class="fno">frame_017 · 约 48:00</span> · ViT：把图像切成 K×K 的块，当成一串"词"喂给 Transformer（右下：块 x₄ 对 x₁…x₄ 算注意力 a₁₅…a₄₅，再加权求和 v）。和 CNN 一样满足参数共享 + 跨块聚合，只是把"卷积窗口"换成了"自注意力区域"。出自《An image is worth 16×16 words》。</figcaption>
+      </figure>
+      <details class="transcript"><summary>英文逐字稿（42:30–50:15）</summary><div class="tx-body">For spatial data, how do I learn features for each part of the image and aggregate across areas. One naive way: flatten the image into a sequence of pixels and do a fully connected network. This is a bad idea — if my image is 200 by 200, I have 40,000 pixels, and the matrix to n features is 40,000 by n, huge. Also any model for spatial data should be invariant to spatial transformations — shift up/down/left/right, rotate a little — but a fully connected network is sensitive to subtle shifts. (Question on why spatial data is invariant — it depends on the task: classification is invariant, segmentation is equivariant.) Key ideas for CNNs: first, I don't need to connect all input pixels to all output responses — to get the top-right output I only look at a few top-right pixels, determined by a filter size like three. This saves efficiency and respects locality. Second, share parameters — the same weights applied at each location — which gives spatial invariance, because shifting pixels within the window won't change the output. Visually: fix a K-by-K window, extract a feature summarizing that 3x3 region, slide the filter, extract again, always using the same weights. Then pooling — take the maximum over a 2x2 region — makes the model more invariant to small shifts and forces it to look at the bigger picture. Convolution learns combinations of parts: edges, then shapes, then more complicated things. Nowadays people shifted from CNNs to vision transformers; the same two principles apply. ViTs cut out K-by-K patches and treat them as a sequence of image parts just like words, applying a transformer — learning features for every part by computing attention scores with the other parts. Still parameter sharing across K-by-K regions, still aggregating information across patches.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== S10 ===== -->
+  <section class="chapter" id="s10">
+    <h2><span class="num">10</span><span class="title-text">图网络：万物归一 + 全课总结</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3><span class="ts">50:15</span>图网络（GNN）：节点 + 边</h3>
+      <p>最后是<strong>图（graph）</strong>：一堆<strong>节点</strong>，节点之间有些<strong>连边</strong>。还是那两件事。</p>
+      <ul>
+        <li><strong>参数共享（跨节点）：</strong>每个节点用同一套参数——否则没法泛化到新节点/新图。</li>
+        <li><strong>沿邻居聚合信息：</strong>要学节点 A 的特征（A 是社交网络里的一个人），就去看 A 的<strong>邻居</strong>（A 的朋友 C、B、E）的特征，聚合进来；而每个邻居的特征又递归地依赖它们各自的邻居。</li>
+      </ul>
+      <p>所以 GNN 就是：把邻居的嵌入聚合起来、过一个非线性变换，学出一个节点特征；邻居再依赖它们的邻居，层层递归。<strong>跨节点参数共享 + 按连接关系聚合邻居</strong>。</p>
+      <h3><span class="ts">52:18</span>漂亮的收束：序列、图像、集合，全是图的特例</h3>
+      <p>这是全课最优雅的一刻——之前讲的所有架构，<strong>都是图网络的特例</strong>：</p>
+      <ul>
+        <li><strong>集合 = 只有节点、没有边的图。</strong>参数共享照旧，但因为没有邻居，学 A 的特征时不依赖任何别的节点（这就回到了 DeepSets）。</li>
+        <li><strong>图像（空间数据）= 节点按上下左右近邻连边的图。</strong>每个区域只和它周围的格子相连（这就是卷积的局部连接）。</li>
+        <li><strong>序列 = 排成一条链的图。</strong>这就是为什么所有序列模型都"跨元素参数共享 + 沿左右邻居聚合信息"。</li>
+      </ul>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_018.jpg" alt="图恢复出集合：集合是没有边的图">
+        <figcaption><span class="fno">frame_018 · 约 51:00</span> · 万物归一：<strong>集合 = 只有节点、没有边的图</strong>（左边五个孤立节点 ABCDE）。所以集合模型（右：参数共享 φ + 相加 + ρ）正是 GNN 在"无边"情形下的退化。同理序列是链状图、图像是近邻图。</figcaption>
+      </figure>
+      <div class="callout accent"><p><strong>这就是整节课的"大一统"：</strong>不管是 RNN、CNN、Transformer 还是 GNN，骨架永远是<strong>"跨元素参数共享 + 沿邻居聚合信息"</strong>。差别只在"谁是谁的邻居"——序列里是左右、图像里是上下左右、集合里没有邻居、图里看连边。换了拓扑，就换出了不同的架构。</p></div>
+      <h3><span class="ts">53:21</span>总结：怎么建模（How to Model）</h3>
+      <p>Paul 把上周的"怎么处理数据"和这周的"怎么建模"串成一份清单：</p>
+      <ol>
+        <li>决定<strong>收集多少数据、标多少</strong>（成本和时间，超关键）。</li>
+        <li><strong>清洗数据</strong>：标准化、找噪声、异常/离群点检测。</li>
+        <li><strong>可视化数据</strong>：画图、降维（PCA、t-SNE）、聚类分析，理解数据和标签的关系。</li>
+        <li>定<strong>评估指标</strong>（代理指标 + 真实指标，定量 + 定性）。</li>
+        <li>选<strong>建模范式</strong>：领域专用 vs 通用。</li>
+        <li>搞清<strong>基本元素及其表示</strong>——把复杂数据拆成元素（序列/空间/集合/图）。</li>
+        <li>搞清<strong>数据的不变性和等变性</strong>（+ 模态画像其它部分，如该对什么噪声鲁棒）。</li>
+      </ol>
+      <figure class="frame">
+        <img src="./assets/mitai-l3-arch/frame_019.jpg" alt="总结：How To Model 七步清单">
+        <figcaption><span class="fno">frame_019 · 约 54:00</span> · 全课总结"How To Model"七步：从决定数据量/清洗/可视化/评估指标，到选范式、定元素、最关键的——<strong>搞清不变性与等变性</strong>。底部红三角=集合，蓝节点树=图，呼应"万物归图"。</figcaption>
+      </figure>
+      <div class="callout warn"><p><strong>最重要的一条（Paul 反复强调）：</strong>第 7 步——搞清不变性与等变性。<strong>"不小心，模型需要的训练样本量会爆炸。"</strong>不变性 = 模型该免疫的，等变性 = 模型该跟着变的。然后整个流程是<strong>迭代</strong>的：数据收集 → 模型设计 → 训练 → 调参 → 评估，反复转圈直到满意。</p></div>
+      <details class="transcript"><summary>英文逐字稿（50:15–55:56）</summary><div class="tx-body">Finally, graphs — data where you have nodes and connections between certain nodes. The same idea: share parameters for each node (otherwise you can't generalize to new nodes or graphs), and information aggregation looking at the features of your neighbors. To learn a feature for node A — a person in your social network — you look at A's neighbors C, B, E (A's friends), and those neighbors depend on their neighbors recursively. You share parameters across nodes — all nodes go through the same function — and aggregate based on connectivity. Graphs recover sets: sets are essentially graphs with only nodes and no edges, so when you learn a feature for A it doesn't depend on anything else. Graphs recover spatial data: an image is parts connected up/down/left/right within a region. And graphs generalize sequences — sequences are just graphs in a chain. That's why all these models have parameter sharing across elements (the same model processes A, B, C, D) and information aggregation across neighbors — for sequences left and right, for spatial up/down/left/right. To summarize how to model: decide how much data to collect and label; clean data (normalize, remove outliers); visualize (PCA, t-SNE, clustering); decide on evaluation metric; choose a modeling paradigm, domain-specific vs general-purpose; figure out base elements and their representation; figure out data invariances and equivariances — super important, if you're not careful you can blow up how many samples your model needs. You usually iterate between data collection, model design, training, hyperparameter tuning, evaluation until satisfied.</div></details>
+    </div>
+  </section>
+
+  <!-- ===== Feynman ===== -->
+  <section class="chapter" id="feynman">
+    <h2><span class="num">🧠</span><span class="title-text">费曼重讲：用大白话从头讲一遍</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <h3>1. 别被一堆模型名字吓到——它们都是同一套乐高</h3>
+      <p>你大概听过 CNN、RNN、LSTM、Transformer、GNN 这一串名字，感觉每个都得单独学。这节课的全部价值就一句话：<strong>它们不是五种东西，是同一套乐高的五种拼法。</strong></p>
+      <p>这套乐高只有<strong>两种积木</strong>：<strong>① 抽特征</strong>（把一坨原始数据嚼成有意义的小特征）；<strong>② 把特征拼起来</strong>（把各处嚼出来的小特征合成一个更全面的理解）。就这么两块，反复交替地堆，就成了所有深度学习模型。看到一个新模型别慌，先把它拆成"它在哪抽特征、在哪拼特征"，立刻就不神秘了。</p>
+
+      <h3>2. 那到底该怎么拼？——看你的数据"在乎什么、不在乎什么"</h3>
+      <p>怎么决定积木的摆法？答案藏在你的数据里，要问两个问题：</p>
+      <ul>
+        <li><strong>有什么是"我不在乎、模型也别在乎"的？（不变性）</strong>比如认一张图是不是"猫"，你把猫的照片左移两格、转个角度、调成黑白——它还是猫。模型就该对这些变化<strong>免疫</strong>。</li>
+        <li><strong>有什么是"我一在乎、模型就得跟着变"的？（等变性）</strong>比如你要把图里"猫的轮廓"框出来，你把整张图右移两格，那个框也得<strong>跟着右移两格</strong>。</li>
+      </ul>
+      <p>这两个问题的答案，直接决定积木怎么摆。打个比方：你雇一个质检员，要先告诉他"零件转个方向不算次品（不变），但有划痕要标出来、划痕在哪你就标哪（等变）"。说错了，他就得看海量样本才能猜出你的标准——白白浪费力气。</p>
+
+      <h3>3. 两个万能小技巧：参数共享 + 选对聚合方式</h3>
+      <p>怎么把"不变性"焊进模型？有两个反复出现的小技巧：</p>
+      <p><strong>技巧一：参数共享。</strong>处理每个元素（每个词、每个图像块、每个节点）都用<strong>同一套</strong>"嚼特征的嘴"。好处是：东西挪了位置，因为用的还是同一张嘴，嚼出来的味道不变 → 模型对位置就免疫了。要是每个位置换一张嘴，那同一个东西挪个位你就得重新教一遍，数据量直接爆炸。</p>
+      <p><strong>技巧二：选对"拼特征"的方式。</strong>如果顺序无所谓（比如一筐水果你不在乎摆放顺序），就用<strong>相加</strong>这种"换顺序结果不变"的方式拼；要是用"拼接"（在乎先后），那 ABC 和 CBA 就成了两回事，又得喂模型所有排列。Paul 算过一笔账：5 个元素摆错方式，得多花 <strong>5! = 120 倍</strong>的训练数据。<strong>架构设计对了，是真能帮你省几个数量级的数据。</strong></p>
+      <div class="callout good"><p><strong>啊原来如此：</strong>所谓"设计架构"，本质就是<strong>把你对数据的常识（什么该变、什么不该变）提前告诉模型</strong>，省得它拿海量数据自己瞎猜。这就是为什么 CNN 处理图像比全连接省得多——它一上来就假设了"局部 + 位置无关"这两个图像常识。</p></div>
+
+      <h3>4. 同一套乐高拼出四个经典架构</h3>
+      <p>把这套思路在四种数据上各跑一遍，就得到四个"经典款"：</p>
+      <ul>
+        <li><strong>序列（句子/时间序列）→ RNN / Transformer：</strong>每个词用同一张嘴嚼（参数共享）；信息沿时间一路累积。RNN 是<strong>排队一个个传</strong>，Transformer 是<strong>一次性算出所有词两两的关联</strong>（注意力），所以能在 GPU 上并行、更快。<strong>两者数学目的一样，只是一个串行一个并行。</strong></li>
+        <li><strong>图像 → CNN / ViT：</strong>不把每个像素都连到一起（太贵又对位移敏感），而是拿个小窗口（3×3）在图上滑，每个位置用同一组权重（参数共享 + 局部）。CNN 先学边、再学形状、再学物体；ViT 则把图切成小块当"词"，跑一遍 Transformer。</li>
+        <li><strong>集合（一筐无序的东西）→ DeepSets：</strong>每个元素同一张嘴嚼，再用<strong>相加</strong>这种"不在乎顺序"的方式拼起来。</li>
+        <li><strong>图（社交网络/分子）→ GNN：</strong>每个节点同一张嘴嚼，聚合时只看<strong>自己的邻居</strong>，邻居再看邻居，层层递归。</li>
+      </ul>
+
+      <h3>5. 最妙的收尾：其实只有"图"一种东西</h3>
+      <p>Paul 最后抖了个大包袱：上面四个看着不同，其实<strong>全是"图"的特例</strong>，区别只在"谁算谁的邻居"。</p>
+      <ul>
+        <li><strong>序列</strong>就是排成<strong>一条链</strong>的图（邻居=左右）。</li>
+        <li><strong>图像</strong>就是格子按<strong>上下左右连</strong>的图（邻居=四周）。</li>
+        <li><strong>集合</strong>就是<strong>没有任何边</strong>的图（没有邻居）。</li>
+      </ul>
+      <p>所以你脑子里只要装一句话就够了：<strong>任何深度学习模型 = 每个元素用同一张嘴嚼特征（参数共享）+ 沿着"邻居关系"把特征拼起来（信息聚合）。</strong>换一种"邻居关系"，就换出一种架构。CNN、RNN、Transformer、GNN，全是这一句话在不同拓扑上的样子。</p>
+      <div class="callout accent"><p><strong>一句话复述（你现在应该能讲出来）：</strong>所有模型都在做"抽特征 + 拼特征"两件事；怎么拼，看你数据该对什么免疫（不变）、该对什么敏感（等变）；把这些常识用"参数共享 + 选对聚合函数"焊进模型，能省几个数量级的数据；而序列、图像、集合说到底都是"图"的特例，区别只在谁是谁的邻居。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== Concepts ===== -->
+  <section class="chapter" id="concepts">
+    <h2><span class="num">🗂</span><span class="title-text">核心概念卡</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="concept-grid">
+        <div class="concept"><div class="cn">学表示（learn representations）</div><div class="cd">把高维原始数据，转成更抽象、更稠密、更低维的特征，提炼出有用信息。</div><div class="cm"><b>在本课里：</b>深度学习两大目的之一。全连接 / ReLU / 层归一 / 卷积 / 自注意力都是干这个的积木。</div></div>
+        <div class="concept"><div class="cn">聚合信息（combine / aggregate）</div><div class="cd">把各部分学到的特征组合成更全面的理解（如图像各部件 → 整场景）。</div><div class="cm"><b>在本课里：</b>另一大目的。拼接 / 交叉注意力 / 相加 / 取最大都是聚合积木。聚合方式的选择决定了不变性。</div></div>
+        <div class="concept"><div class="cn">不变性（invariance）</div><div class="cd">对输入做某变换，输出<b>不该变</b>——模型该"免疫"的东西。</div><div class="cm"><b>在本课里：</b>图像分类对平移/旋转/换色不变；集合对元素顺序不变（置换不变）。</div></div>
+        <div class="concept"><div class="cn">等变性（equivariance）</div><div class="cd">对输入做某变换，输出该<b>跟着做同样的变换</b>——模型该敏感、且同步响应的东西。</div><div class="cm"><b>在本课里：</b>图像分割对平移/旋转等变（图移两格，分割图也移两格）；序列对词序等变。</div></div>
+        <div class="concept"><div class="cn">参数共享（parameter sharing）</div><div class="cd">处理每个元素都用同一套参数（同一张"嚼特征的嘴"）。</div><div class="cm"><b>在本课里：</b>实现不变性的万能技巧——序列跨时间步、CNN 跨卷积窗口、GNN 跨节点全靠它，省几个数量级样本。</div></div>
+        <div class="concept"><div class="cn">置换不变聚合</div><div class="cd">聚合时用对顺序不敏感的函数（如逐元素相加、取最大）。</div><div class="cm"><b>在本课里：</b>集合模型（DeepSets）的关键。换成"拼接"就会对顺序敏感，逼你多喂 5! 倍数据。</div></div>
+        <div class="concept"><div class="cn">递归 / 自回归（recurrence / autoregressive）</div><div class="cd">沿时间一步步累积信息；生成时把上一步的输出当下一步的输入。</div><div class="cm"><b>在本课里：</b>RNN/LSTM 的核心；seq2seq 解码用自回归（y₁→y₂→y₃）。是序列"顺序等变"的来源。</div></div>
+        <div class="concept"><div class="cn">注意力 / Transformer</div><div class="cd">给不同元素动态加权：算出"序列×序列"的注意力矩阵，softmax 成概率，再加权求和各元素的值向量。</div><div class="cm"><b>在本课里：</b><code>softmax(XWqWkᵀXᵀ/√d)·XWv</code>。和 RNN 本质一样（参数共享+聚合），只是用矩阵乘法<b>并行</b>聚合，更快。</div></div>
+        <div class="concept"><div class="cn">卷积 + 池化（CNN）</div><div class="cd">小窗口（K×K）滑过图像、每处共享权重抽特征（卷积）；区域内取最大（池化）增强位移不变、抓大局。</div><div class="cm"><b>在本课里：</b>空间数据的标准做法。先学边缘→形状→物体。实现局部性 + 空间不变性。</div></div>
+        <div class="concept"><div class="cn">Vision Transformer（ViT）</div><div class="cd">把图像切成 K×K 块，当成一串"词"跑 Transformer，块间用注意力聚合。</div><div class="cm"><b>在本课里：</b>和 CNN 同样满足参数共享 + 跨块聚合，把"卷积窗口"换成"自注意力区域"。</div></div>
+        <div class="concept"><div class="cn">图网络（GNN）</div><div class="cd">每个节点共享参数抽特征，聚合时只看自己的邻居，邻居再看邻居，层层递归。</div><div class="cm"><b>在本课里：</b>最一般的架构——序列(链)、图像(近邻图)、集合(无边图)都是它的特例。</div></div>
+        <div class="concept"><div class="cn">领域专用 ↔ 通用 谱系</div><div class="cd">从"重度吸收问题结构的定制模型"到"靠大数据大算力的现成通用模型"的连续光谱。</div><div class="cm"><b>在本课里：</b>本课讲谱系左端（定制架构）；后续课往右走（多模态、微调、适配通用模型）。</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Takeaways ===== -->
+  <section class="chapter" id="takeaways">
+    <h2><span class="num">✅</span><span class="title-text">这集最该记住的几条</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <div class="callout good"><p><strong>① 所有深度学习模型都在做两件事：学表示（抽特征）+ 聚合信息。</strong>看任何新模型，先拆出"它在哪抽特征、用什么方式聚合"。所有架构都是这两类积木的不同拼法。</p></div>
+      <div class="callout accent"><p><strong>② 选哪种架构，由数据的不变性和等变性决定。</strong>先问"模型该对什么免疫（不变）、该对什么同步响应（等变）"，答案就告诉你要不要参数共享、用什么聚合函数。这是设计前第一件该想的事。</p></div>
+      <div class="callout purple"><p><strong>③ 参数共享 + 对的聚合函数 = 把数据常识焊进模型 = 省几个数量级的数据。</strong>架构没设计好（不共享参数、或用了对顺序敏感的聚合），可能要多花 5! 倍样本。架构设计的本质是"提前告诉模型你的常识"。</p></div>
+      <div class="callout info"><p><strong>④ RNN 和 Transformer 本质一样，只是串行 vs 并行。</strong>两者都做参数共享 + 信息聚合；Transformer 把"沿时间累积"换成"一次算全体两两注意力"，于是能在 GPU 上并行。数学目标没变，只是算得快。</p></div>
+      <div class="callout warn"><p><strong>⑤ 序列、图像、集合，全是"图"的特例，区别只在"谁是谁的邻居"。</strong>序列=链、图像=近邻图、集合=无边图。脑子里装一句话：任何模型 = 每个元素共享参数抽特征 + 沿邻居关系聚合。换拓扑就换架构。</p></div>
+    </div>
+  </section>
+
+  <!-- ===== References ===== -->
+  <section class="chapter" id="refs">
+    <h2><span class="num">🔗</span><span class="title-text">References</span><span class="caret">▼</span></h2>
+    <div class="chapter-body">
+      <ol class="ref-list">
+        <li>Paul Liang — <em>How to AI (Almost) Anything, Lecture 3: Common Model Architectures</em>（MIT Media Lab, Spring 2025，本精读的原视频，时长约 56:25）· <a href="https://youtu.be/V0gRkmu4mFY" target="_blank" rel="noopener">youtu.be/V0gRkmu4mFY</a></li>
+        <li>Bronstein, Bruna, Cohen, Veličković — <em>Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges</em>（arXiv 2021，课上推荐的不变性/等变性形式化最佳参考）· <a href="https://arxiv.org/abs/2104.13478" target="_blank" rel="noopener">arxiv.org/abs/2104.13478</a></li>
+        <li>Zaheer et al. — <em>Deep Sets</em>（NeurIPS 2017，集合模型 = 参数共享 + 置换不变聚合）· <a href="https://arxiv.org/abs/1703.06114" target="_blank" rel="noopener">arxiv.org/abs/1703.06114</a></li>
+        <li>Qi et al. — <em>PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation</em>（CVPR 2017，点云）· <a href="https://arxiv.org/abs/1612.00593" target="_blank" rel="noopener">arxiv.org/abs/1612.00593</a></li>
+        <li>Bahdanau, Cho, Bengio — <em>Neural Machine Translation by Jointly Learning to Align and Translate</em>（ICLR 2015，注意力机制 + 对齐热图的开山之作）· <a href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">arxiv.org/abs/1409.0473</a></li>
+        <li>Vaswani et al. — <em>Attention Is All You Need</em>（NeurIPS 2017，Transformer，最早在机器翻译上拿 SOTA）· <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">arxiv.org/abs/1706.03762</a></li>
+        <li>Dosovitskiy et al. — <em>An Image Is Worth 16×16 Words: Transformers for Image Recognition at Scale</em>（ICLR 2021，Vision Transformer）· <a href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noopener">arxiv.org/abs/2010.11929</a></li>
+        <li>Lee et al. — <em>Set Transformer</em>（ICML 2019，集合的注意力式建模）· <a href="https://arxiv.org/abs/1810.00825" target="_blank" rel="noopener">arxiv.org/abs/1810.00825</a></li>
+      </ol>
+      <p style="font-size:13px;color:var(--text-mute)">逐字稿基于视频 YouTube 自动字幕清洗去重而成（自动字幕含识别误差，已做断句与可读性修整，技术名词以正文中文笔记为准）。关键帧截图按 frame_NNN =（NNN−1）×180 秒映射到视频时间。论文链接为编者按课上提及的题名补充，便于延伸阅读。</p>
+    </div>
+  </section>
+
+</main>
+
+<button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
+
+<footer>
+  <p>课程精读 · 无忌 · 《How to AI Almost Anything》Lecture 3 常见模型架构 · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；技术理解以中文笔记与原视频为准。</p>
+</footer>
+
+<script>
+(function(){
+  // 主题切换
+  var themeBtn=document.getElementById('themeToggle');
+  var saved=localStorage.getItem('course-theme');
+  if(saved){document.body.setAttribute('data-theme',saved);themeBtn.textContent=saved==='dark'?'☀️':'🌙';}
+  themeBtn.addEventListener('click',function(){
+    var cur=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.body.setAttribute('data-theme',cur);
+    localStorage.setItem('course-theme',cur);
+    themeBtn.textContent=cur==='dark'?'☀️':'🌙';
+  });
+
+  // 进度条 + 回到顶部
+  var progressEl=document.getElementById('progress');
+  var backTopEl=document.getElementById('backTop');
+  function updateProgress(){
+    var docHeight=document.documentElement.scrollHeight-window.innerHeight;
+    var scrolled=window.scrollY;
+    var ratio=docHeight>0?scrolled/docHeight:0;
+    progressEl.style.width=(ratio*100)+'%';
+    backTopEl.classList.toggle('show',scrolled>400);
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+  updateProgress();
+  backTopEl.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // 章节折叠
+  document.querySelectorAll('section.chapter > h2').forEach(function(h2){
+    h2.addEventListener('click',function(){h2.parentElement.classList.toggle('collapsed');});
+  });
+
+  // 抽屉导航
+  var nav=document.querySelector('nav.anchor-nav'),tog=document.getElementById('navToggle'),ov=document.getElementById('navOverlay');
+  function closeNav(){nav.classList.remove('open');ov.classList.remove('show');}
+  if(nav&&tog&&ov){
+    tog.addEventListener('click',function(){var o=!nav.classList.contains('open');nav.classList.toggle('open',o);ov.classList.toggle('show',o);});
+    ov.addEventListener('click',closeNav);
+    document.querySelectorAll('.anchor-list a').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=1040)closeNav();});});
+  }
+
+  // anchor 点击展开折叠章节
+  var anchorLinks=document.querySelectorAll('#anchorList a');
+  anchorLinks.forEach(function(a){
+    a.addEventListener('click',function(){
+      var target=document.getElementById(a.dataset.target);
+      if(target&&target.classList.contains('collapsed'))target.classList.remove('collapsed');
+    });
+  });
+
+  // scroll-spy 高亮
+  var sections=Array.prototype.map.call(anchorLinks,function(a){return document.getElementById(a.dataset.target);}).filter(Boolean);
+  function highlightAnchor(){
+    var offset=120,current=null;
+    for(var i=0;i<sections.length;i++){var rect=sections[i].getBoundingClientRect();if(rect.top-offset<=0)current=sections[i].id;}
+    anchorLinks.forEach(function(a){a.classList.toggle('active',a.dataset.target===current);});
+    var activeLink=document.querySelector('#anchorList a.active');
+    if(activeLink)activeLink.scrollIntoView({block:'nearest'});
+  }
+  window.addEventListener('scroll',highlightAnchor,{passive:true});
+  highlightAnchor();
+})();
+</script>
+
+<script>/* PDF-HIDE-REFS */
+(function(){
+  function hide(){document.querySelectorAll('section.chapter').forEach(function(s){var h=s.querySelector('h2');if(h&&/references|参考文献/i.test(h.textContent)){s.setAttribute('data-printhidden','1');s.style.display='none';}});}
+  function show(){document.querySelectorAll('[data-printhidden]').forEach(function(s){s.style.display='';s.removeAttribute('data-printhidden');});}
+  window.addEventListener('beforeprint',hide);
+  window.addEventListener('afterprint',show);
+})();
+</script>
+</body>
+</html>
