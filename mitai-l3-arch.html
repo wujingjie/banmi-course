@@ -197,6 +197,16 @@
     .nav-overlay.show { opacity: 1; pointer-events: auto; }
     .nav-toggle { display: flex; }
   }
+.back-fab{
+  position:fixed; left:20px; bottom:24px; z-index:999;
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--card); color:var(--accent);
+  border:1px solid var(--accent); border-radius:24px;
+  padding:10px 18px; font-size:14px; text-decoration:none; font-weight:500;
+  box-shadow:0 4px 16px rgba(0,0,0,.4); transition:.2s;
+}
+.back-fab:hover{background:var(--accent); color:#0f1117; transform:translateY(-2px)}
+@media(max-width:600px){.back-fab{left:14px; bottom:16px; padding:9px 15px; font-size:13px}}
 </style>
 </head>
 <body data-theme="light">
@@ -750,5 +760,6 @@
   window.addEventListener('afterprint',show);
 })();
 </script>
+<a href="index.html" class="back-fab" title="返回课程目录">← 返回目录</a>
 </body>
 </html>
