@@ -217,7 +217,7 @@
 <header class="topbar">
   <div class="topbar-inner">
     <a class="icon-btn" href="./index.html" title="返回课程目录" aria-label="返回课程目录" style="text-decoration:none">←</a>
-    <div class="brand">课程精读 · Practical AI Tools <span class="tag">How to AI · L2.1 · 无忌</span></div>
+    <div class="brand">课程精读 · $10,000 网站 <span class="tag">Claude Code · 无忌</span></div>
     <div class="topbar-spacer"></div>
     <button class="icon-btn" id="pdfBtn" onclick="window.print()" aria-label="下载 PDF" title="下载 PDF（打印 → 存储为 PDF，已优化排版）">⬇</button>
     <button class="icon-btn" id="themeToggle" aria-label="切换主题">🌙</button>
@@ -228,21 +228,25 @@
 <div class="nav-overlay" id="navOverlay"></div>
 <nav class="anchor-nav">
 <div class="nav-title">📖 目录</div>
-<div class="anchor-list">
-  <a href="#overview">一分钟速览</a>
-  <a href="#prereq">🧰 前置条件</a>
-  <a href="#preview">成品长啥样</a>
-  <a href="#step1">① 安装 Claude Code</a>
-  <a href="#step2">② 装两个设计 skill</a>
-  <a href="#step3">③ 写对 prompt</a>
-  <a href="#step4">④ 让它自审改进</a>
-  <a href="#step5">⑤ 加动效</a>
-  <a href="#step6">⑥ 光标物理交互</a>
-  <a href="#step7">⑦ 上线到域名</a>
-  <a href="#feynman">🧠 费曼重讲</a>
-  <a href="#final">🎁 验收</a>
-  <a href="#takeaways">要点</a>
-  <a href="#transcript">完整逐字稿</a>
+<div class="anchor-list" id="anchorList">
+  <a href="#overview" data-target="overview">⚡ 一分钟速览</a>
+  <a href="#checklist" data-target="checklist">🎯 $10k 网站 = 8 件事</a>
+  <a href="#prereq" data-target="prereq">🧰 前置条件</a>
+  <a href="#s1" data-target="s1">① 安装 Claude Code</a>
+  <a href="#s2" data-target="s2">② 装两个设计 skill</a>
+  <a href="#s3" data-target="s3">③ 写 prompt + 反问</a>
+  <a href="#s4" data-target="s4">④ 生成 + 自评打分</a>
+  <a href="#s5" data-target="s5">⑤ 图像/视频素材</a>
+  <a href="#s6" data-target="s6">⑥ 21st.dev 组件 + 英雄区</a>
+  <a href="#s7" data-target="s7">⑦ 批量改进</a>
+  <a href="#s8" data-target="s8">⑧ 逐区加光标动效</a>
+  <a href="#s9" data-target="s9">⑨ 文案 + 换字体</a>
+  <a href="#s10" data-target="s10">⑩ 移动端专门过一遍</a>
+  <a href="#s11" data-target="s11">⑪ 上线到域名</a>
+  <a href="#feynman" data-target="feynman">🧠 费曼重讲</a>
+  <a href="#final" data-target="final">🎁 验收</a>
+  <a href="#takeaways" data-target="takeaways">✅ 要点</a>
+  <a href="#transcript" data-target="transcript">📄 完整逐字稿</a>
 </div>
 </nav>
 
@@ -250,158 +254,224 @@
 <div class="hero">
 <h1>用 Claude Code 打造价值 $10,000 的网站</h1>
 <div class="hero-meta"><span>📺 Metics Media</span><span>⏱️ 26:09</span><span>🏷️ Claude Code 系列 · 教程精读</span><span><a href="https://www.youtube.com/watch?v=VMvZuhcDdnw" target="_blank" rel="noopener">▶ 原视频</a></span></div>
-<div class="hero-deck">一条 prompt + 两个 design skill，让 Claude Code 从"能写代码"升级成"有审美的设计师"——做出带渐入动效、咖啡豆光标物理交互的高端落地页，再上线到真实域名。本页是<strong>教程型精读</strong>：每一步都给「可复制操作 + 🧠 费曼为什么 + 预期结果 + 踩坑」，照着做就能复现。</div>
+<div class="hero-deck">作者用 Claude Code 给一家<strong>西雅图餐厅</strong>做了一个看起来像自由职业者收费 $10,000 的落地页。核心套路：给 Claude Code 装两个设计 skill、写一条会"反问澄清问题"的 prompt、再对照一张「$10k 网站 8 要素清单」逐项自评打磨。本页是<strong>教程型精读</strong>：每步给「可复制操作 + 🧠费曼为什么 + 预期结果 + 踩坑」。</div>
 </div>
 <section class="chapter" id="overview">
 <h2><span class="num">◆</span><span class="title-text">一分钟速览</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<p>作者用 Claude Code 给一个虚构高端咖啡品牌 <strong>Lumina</strong> 做了一个落地页：英雄区渐入、咖啡豆在背景漂浮、鼠标移动时豆子像在液体里一样被推开、菜单卡片悬停时抬起倾斜。<strong>全程没手写设计，只用自然语言描述"想要的感觉"，Claude Code 生成全部 HTML/CSS/JS。</strong></p><div class="callout info"><strong>做完你会得到</strong><p>一个看起来像自由职业开发者收费 $10,000 的网站，上线在你自己的域名上，访客看不出是 AI 做的。整个流程 = 装工具 → 加两个设计 skill → 写一条好 prompt → 让它自审打磨 → 加动效 → 上线。</p></div><div class="callout warn"><strong>诚实提醒</strong><p>"$10,000" 是营销话术（卖的是"专业观感"，不是真有人付这价）；视频结尾的 Hostinger 是<strong>带货赞助</strong>（含 affiliate 折扣链接），托管/域名你完全可以换任意服务商，不影响前面的 Claude Code 部分。</p></div>
+<p>作者（Metics Media）演示用 <strong>Claude Code 桌面版</strong>给一家西雅图餐厅做高端落地页。不手写设计，而是：装两个设计 skill → 写一条带"请反问我"的 prompt → 用一张 8 要素清单反复自评打磨 → 配 AI 生成的图/视频 → 上线到真实域名。最终成品暗黑、沉稳、有杂志感和光标交互，访客看不出是 AI 做的。</p><div class="callout warn"><strong>诚实提醒</strong><p>"$10,000" 是营销话术（卖的是"专业观感"）。视频里出现的 <strong>Hostinger / 11 Labs</strong> 都带 affiliate 折扣链接（带货环节），托管和素材工具都可替换，不影响 Claude Code 的核心流程。</p></div>
+</div>
+</section>
+<section class="chapter" id="checklist">
+<h2><span class="num">🎯</span><span class="title-text">先定义：$10,000 网站 = 8 件事</span><span class="caret">▾</span></h2>
+<div class="chapter-body">
+<p>动手前作者先问 Claude："什么把 $10,000 的网站和 $200 的网站区分开？"得到 <strong>8 个要素</strong>，归为三组——后面每一步都在凑这 8 项：</p><ul><li><strong>品味（taste）</strong>：① Point of view 立场 / ② Typography 排版 / ③ Color 配色</li><li><strong>内容（substance）</strong>：④ Hierarchy 层级 / ⑤ Imagery 图像 / ⑥ Motion 动效</li><li><strong>体感（felt quality）</strong>：⑦ Mobile 移动端 / ⑧ 隐形质感（让站点"又快又完整"的东西）</li></ul><figure class="frame"><img src="figures/cc-10k-website/01-eight-things.jpg" alt="作者问 Claude 总结的"$10k vs $200 网站"8 要素，分成品味 / 内容 / 体感三组。" loading="lazy"><figcaption>作者问 Claude 总结的"$10k vs $200 网站"8 要素，分成品味 / 内容 / 体感三组。</figcaption></figure>
+<div class="callout info"><p>为什么先列清单？因为<strong>有了明确标准，后面才能让 Claude 对照自评打分</strong>（第 ④、⑦ 步都靠它）。这是把"好不好看"从主观变成可检查项的关键。</p></div>
 </div>
 </section>
 <section class="chapter" id="prereq">
-<h2><span class="num">◆</span><span class="title-text">🧰 前置条件 / 环境准备</span><span class="caret">▾</span></h2>
+<h2><span class="num">🧰</span><span class="title-text">前置条件 / 环境准备</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<ul><li><strong>一台电脑</strong>：Mac 直接用终端；Windows 建议用 WSL（视频描述里有教程链接）。</li><li><strong>Claude 账号</strong>：有 Pro / Max 订阅则 Claude Code 直接包含；没有可以走 API 充值。</li><li><strong>两个 design skill 文件</strong>：design review skill + aesthetic direction skill（视频描述里有下载链接，本质是两个 markdown 文件）。</li><li><strong>（上线用，可选）</strong>：任意静态托管 + 域名（视频用 Hostinger，可替换）。</li></ul>
+<ul><li><strong>Claude 账号</strong>：视频用 Pro 计划（录制时约 $20/月），足够本教程。</li><li><strong>一台电脑</strong>：Mac 直接用；Windows 按视频描述走 WSL。</li><li><strong>两个设计 skill</strong>：front-end design（Anthropic 官方）+ UI UX Pro Max（社区），链接在视频描述里，都免费。</li><li><strong>（素材，可选）</strong>：ChatGPT / 11 Labs 生成图与视频；21st.dev 抓组件。</li><li><strong>（上线，可选）</strong>：任意静态托管 + 域名（视频用 Hostinger，可换 Netlify/Cloudflare Pages 等）。</li></ul>
 </div>
 </section>
-<section class="chapter" id="preview">
-<h2><span class="num">◆</span><span class="title-text">成品长啥样</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s1">
+<h2><span class="num">01</span><span class="title-text">安装 Claude Code 并进入 code 模式</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<figure class="frame"><img src="figures/cc-10k-website/01-preview.jpg" alt="Lumina 咖啡品牌落地页——暗色背景 + 奶油色与金色点缀，英雄区渐入、咖啡豆漂浮、菜单卡片悬停抬起。" loading="lazy"><figcaption>Lumina 咖啡品牌落地页——暗色背景 + 奶油色与金色点缀，英雄区渐入、咖啡豆漂浮、菜单卡片悬停抬起。</figcaption></figure>
-<p>这就是目标形态：editorial（杂志感）的高端排版 + 克制的配色 + 有目的的动效。下面把它一步步拆开复现。</p>
-</div>
-</section>
-<section class="chapter" id="step1">
-<h2><span class="num">01</span><span class="title-text">安装 Claude Code</span><span class="caret">▾</span></h2>
-<div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>在本机全局装好 Claude Code 并登录，进入交互界面。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>装好 Claude Code 桌面版、登录、切到 code 模式，并给项目建一个独立文件夹。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code># 1. 打开 claude.com/claude-code 复制官方安装命令，在终端执行
-# 2. 安装完成后启动：
-claude
-# 3. 首次运行会要求登录，用已有 Claude 账号（Pro/Max 已包含）</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/02-install.jpg" alt="claude.com/claude-code 页面上的官方安装命令。" loading="lazy"><figcaption>claude.com/claude-code 页面上的官方安装命令。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>Claude Code 是一个跑在终端里的 AI 编程 agent——它能读写你项目里的真实文件、执行命令、看自己的运行结果。装在本机而不是网页，是因为它要直接操作你的文件系统和项目，这是它能"端到端建站并打包上线"的前提。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>终端输入 <code>claude</code> 后进入交互界面，登录成功即就绪。</p></div>
-<div class="callout warn"><strong>⚠️ 常见坑</strong><p>Windows 直接在 PowerShell 里装容易踩环境坑，按视频建议走 WSL 更稳。</p></div>
+<pre><code># 1. 打开 claude.com（用描述里的链接），选 Pro 计划注册
+# 2. 左下角下载图标 → Claude Code 区 → 下载桌面版 → 运行安装
+# 3. 打开桌面 App 登录
+# 4. 切到 code 模式：左上角切 chat→code，或按 Cmd+3 (Mac) / Ctrl+3 (Win)
+# 5. 在电脑上新建一个空文件夹，点聊天框旁的文件夹按钮选中它作为工作区</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/02-install.jpg" alt="claude.com 下载 Claude Code 桌面版。" loading="lazy"><figcaption>claude.com 下载 Claude Code 桌面版。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>Claude Code 是跑在桌面 App 里的 AI 编程助手——你用自然语言描述网站，它边写代码你边看。给它一个<strong>独立文件夹当工作区</strong>，是因为它要在里面读写真实文件，这是它能"端到端建站并打包上线"的前提。注意作者提醒：Claude 更新很频繁，你看到的界面可能跟视频不完全一样，抓概念别抠按钮位置。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>进入 code 模式、选好项目文件夹后即就绪。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>Windows 直接装容易踩环境坑，按视频走 WSL 更稳。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step2">
-<h2><span class="num">02</span><span class="title-text">装两个设计 skill（关键升级）</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s2">
+<h2><span class="num">02</span><span class="title-text">装两个设计 skill（这步是分水岭）</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>给 Claude Code 装上 design review skill 和 aesthetic direction skill，让它"有审美 + 会自我评审"。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>装上 front-end design + UI UX Pro Max 两个 skill，再切到 auto 模式。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code># 在你的项目文件夹里建目录结构：
-mkdir -p .claude/skills
-# 把两个 skill 的 markdown 文件放进 .claude/skills/
-# 验证是否加载：在 Claude Code 里输入
-/skills</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/03-skills.jpg" alt="输入 /skills 后，两个设计 skill 都显示已加载。" loading="lazy"><figcaption>输入 /skills 后，两个设计 skill 都显示已加载。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>默认的 Claude Code 很会写代码，但<strong>没有强烈的视觉审美</strong>。skill 本质是一份告诉它"该怎么表现"的 markdown：① <strong>design review skill</strong> 让它做完后给自己截图、像资深设计师一样评审间距/字体/对比度再改；② <strong>aesthetic skill</strong> 给它"品味"——一套关于"什么让界面显高级"的原则（留白要大方、配色要克制、动效要有目的）。这是整条流程从"能用"到"惊艳"的分水岭。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>输入 <code>/skills</code> 能看到两个 skill 都已 loaded；之后 Claude Code 会自动按这些原则工作。</p></div>
-<div class="callout warn"><strong>⚠️ 常见坑</strong><p>skill 文件要放对位置（项目根的 <code>.claude/skills/</code> 下）才会被自动识别；放错目录则不生效。</p></div>
+<pre><code># skill 1 · front-end design（Anthropic 官方，后台静默生效）
+在 Claude Code 里粘贴该 skill 链接 + 消息：install this skill
+# 允许编辑，选全局安装(globally)
+
+# skill 2 · UI UX Pro Max（社区，需要时用 / 主动调用）
+粘贴该 plugin 链接 + 消息：install this plugin using npm
+# “using npm”这措辞很重要，能让它走终端干净安装；允许编辑、全局安装
+
+# 最后：左下角模式选择器 → 切到 auto 模式（让它不必每步停下问权限）</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/03-skill1.jpg" alt="front-end design（Anthropic 官方）：封杀烂大街字体、推动大胆设计。" loading="lazy"><figcaption>front-end design（Anthropic 官方）：封杀烂大街字体、推动大胆设计。</figcaption></figure>
+<figure class="frame"><img src="figures/cc-10k-website/04-skill2.jpg" alt="UI UX Pro Max：57 种 UI 风格 / 95 套配色 / 56 组字体搭配。" loading="lazy"><figcaption>UI UX Pro Max：57 种 UI 风格 / 95 套配色 / 56 组字体搭配。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>默认 Claude Code 很会写代码，但<strong>设计输出只是"还行"</strong>——爱用同样的字体、配色、布局，这就是多数 AI 网站显得 generic 的原因。skill 本质是给它的"专项说明书"：<strong>front-end design</strong> 在后台运行，封杀网上最烂大街的字体、把它推向大胆的设计方向；<strong>UI UX Pro Max</strong> 带 57 种 UI 风格 / 95 套配色 / 56 组字体搭配，需要大改造时用 <code>/</code> 主动召唤。装上这俩，才从"能用"跨到"惊艳"。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>输入 <code>/</code> 能看到 UI UX Pro Max 可调用；两个 skill 都装到全局后，之后每个项目都自动带审美。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>第二个 skill 必须用 "install this plugin using npm" 这个说法，措辞不对会装不干净。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step3">
-<h2><span class="num">03</span><span class="title-text">写对那一条 prompt</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s3">
+<h2><span class="num">03</span><span class="title-text">写 prompt + 让它"反问澄清问题"</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>用一条"描述感觉而非功能"的 prompt 让 Claude Code 生成整站。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>用 /UI-UX-Pro-Max 起头写简报，结尾加"ask me clarifying questions"，回答它的问题来定方向。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code>Build a landing page for a premium coffee brand called Lumina.
-The mood is warm, sophisticated, and calm.
-Use a dark background with cream and gold accents.
-Include a hero section with the product, a section about our sourcing,
-a menu of signature drinks, and a contact section.
-Make it feel editorial, like a high-end magazine.</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/04-prompt.jpg" alt="作者实际使用的 prompt——强调 mood、配色、版块、调性。" loading="lazy"><figcaption>作者实际使用的 prompt——强调 mood、配色、版块、调性。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>很多人写"build me a coffee website"这种懒 prompt，结果当然很 generic。秘诀是<strong>具体描述"感觉"而不是功能</strong>：给出心情（warm/sophisticated/calm）、配色（dark + cream + gold）、版块结构、以及整体调性（editorial 杂志感）。你不是在告诉它代码，而是在给它<strong>方向感</strong>——剩下成百上千个小决策（字体搭配、间距比例、配色比例）由它结合 aesthetic skill 自己拿主意，且会偏向"高级"。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>Claude Code 自动创建项目结构，写出 HTML/CSS/JS，约几分钟完成；浏览器打开即见雏形，已经比多数付费模板好看。</p></div>
+<pre><code>/UI-UX-Pro-Max
+&lt;在这里写你的简报：什么生意、想要的氛围、要哪些版块……&gt;
+Ask me clarifying questions.
+
+# 不会用文字描述审美？用 references 抄近路：
+# 去 Dribbble / Awwwards / Pinterest 找 3-5 个你喜欢的站，截图丢给 Claude</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/05-clarify.jpg" alt="prompt 结尾的 "ask me clarifying questions" 让 Claude 先反问。" loading="lazy"><figcaption>prompt 结尾的 "ask me clarifying questions" 让 Claude 先反问。</figcaption></figure>
+<figure class="frame"><img src="figures/cc-10k-website/06-style-dirs.jpg" alt="Claude 给出 3 个风格方向供选择。" loading="lazy"><figcaption>Claude 给出 3 个风格方向供选择。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>最后那句 <strong>"Ask me clarifying questions" 是灵魂</strong>——它让 Claude 先停下来思考、反问，而不是闷头就建。视频里它回了 7 个问题（餐厅名、风格方向、要哪些版块、谁写文案、技术栈、动效程度等），还给出<strong>3 个风格方向</strong>让你选（曼哈顿牛排馆暗黑风 / 太平洋西北现代风 / 老派 chop house）。<strong>你在这里给的答案=最终整个网站</strong>，答得越具体，后面越不用跟它返工。描述不出审美时，截图比文字管用得多。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>Claude 反问 7 个问题 + 给 3 个风格方向；你认真回答后它才开始建。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>别写"build me a coffee website"这种懒 prompt——那必然 generic。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step4">
-<h2><span class="num">04</span><span class="title-text">让它给自己挑刺并改进</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s4">
+<h2><span class="num">04</span><span class="title-text">生成 + 对照 8 要素清单自评打分</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>用 design review skill 让 Claude Code 截图自评、自动修正薄弱处。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>让它建站，然后把 8 要素清单贴回去，让 Claude 诚实地逐项打分。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code>Review this design and improve it.</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/05-firstbuild.jpg" alt="第一版在浏览器打开的效果。" loading="lazy"><figcaption>第一版在浏览器打开的效果。</figcaption></figure>
-<figure class="frame"><img src="figures/cc-10k-website/06-review.jpg" alt="Claude Code 截图自评、列出改进项并自动修正。" loading="lazy"><figcaption>Claude Code 截图自评、列出改进项并自动修正。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>这步是 design review skill 的主场，也是最反直觉的一点：<strong>AI 评审并修正自己的作品</strong>。它会给当前站点截图，像挑剔的设计师一样列问题——英雄区间距可以更紧、CTA 按钮对比度不够、菜单区视觉层级要加强——然后自动改掉。这把"生成一次就完"变成了"生成→评审→迭代"的闭环，质量台阶就是这么上去的。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>刷新页面能看到明显差异：间距更干净、按钮更跳、整体更"有意图"。</p></div>
+<pre><code># 它会先"读简报想 3 分钟"再写 4-5 分钟代码，然后 reveal
+# 自评：把 $10k 清单贴给它
+Here is the $10k checklist. Where does this site land against each of these criteria? Be honest.</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/07-reveal.jpg" alt="第一版生成结果 reveal——已经比多数 AI demo 好。" loading="lazy"><figcaption>第一版生成结果 reveal——已经比多数 AI demo 好。</figcaption></figure>
+<figure class="frame"><img src="figures/cc-10k-website/08-checklist.jpg" alt="让 Claude 对照 8 要素清单逐项自评打分。" loading="lazy"><figcaption>让 Claude 对照 8 要素清单逐项自评打分。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>生成只是开始，<strong>自评打分才是把质量拉上去的闭环</strong>。让 Claude 对照清单逐项说"哪项强、哪项一般、哪项缺"——视频里结果是：立场/配色/层级 strong，排版 mixed（因为用了烂大街的 Inter 字体），图像/动效/移动端/隐形质感都 mixed。<strong>知道差在哪，才知道接下来修什么。</strong></p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>Claude 逐项给出 strong / mixed / missing 评价，你就有了一张"待办清单"。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step5">
-<h2><span class="num">05</span><span class="title-text">加入动效（motion design）</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s5">
+<h2><span class="num">05</span><span class="title-text">配图像 / 视频素材</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>用一条 prompt 加渐入 / 漂浮 / 悬停动效。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>用自有素材，或用 AI 生成图与视频，再丢进项目文件夹。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code>Add subtle animations — fade in the hero on load,
-make the coffee beans drift slowly across the background,
-and add a hover effect on the menu cards so they lift and tilt.</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/07-motion.jpg" alt="加入动效后：英雄区渐入、背景咖啡豆漂浮、卡片悬停抬起。" loading="lazy"><figcaption>加入动效后：英雄区渐入、背景咖啡豆漂浮、卡片悬停抬起。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>动效是"$500 的站"和"$10,000 的站"的分界线之一。注意 prompt 里每个动效都说清了<strong>触发时机 + 对象 + 行为</strong>（加载时英雄区渐入、背景咖啡豆缓慢漂移、卡片悬停抬起倾斜）。描述得越具体，它写出的动画越贴近你脑中的画面，而不是随便加几个 transition。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>刷新后：英雄区优雅渐入、咖啡豆漂浮、菜单卡片悬停时抬起——页面"活"了起来。</p></div>
+<pre><code># 让 Claude 替你写图像生成 prompt（它了解你的项目和风格）
+Write me an image generation prompt for the hero, matching our design aesthetic.
+# 把它给的 prompt 粘到 ChatGPT 图像模型 / 11 Labs 里生成
+# 需要视频：11 Labs 里用该图做首帧 → Google VO3.1 生成视频 → Topaz 放大
+# 拿到素材后丢进项目文件夹，告诉 Claude 文件在哪、怎么用</code></pre>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>图像是 Claude <strong>自己搞不定的一项</strong>，得你喂。最好是为品牌定制的拍摄/设计；没预算就用 AI 生成——现在的工具用对了看不出来。关键技巧：<strong>别自己写图像 prompt，让 Claude 写</strong>——它懂你的项目和既有审美，生成的素材第一次就对味。ChatGPT 出图快但不能出视频，要视频就用 11 Labs 这类聚合器一站式跑（出图→VO3.1 转视频→Topaz 放大）。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>素材放进项目文件夹、告诉 Claude 后，它就能把图/视频用进页面。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>11 Labs 是付费聚合工具（视频带 affiliate 折扣）——只是图省事，可换任意出图/出视频方案。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step6">
-<h2><span class="num">06</span><span class="title-text">光标物理交互（进阶）</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s6">
+<h2><span class="num">06</span><span class="title-text">用 21st.dev 组件做英雄区效果</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>让背景咖啡豆实时响应鼠标位置，像在液体里被推开。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>从 21st.dev 抓一个喜欢的组件，让 Claude 在不破坏架构的前提下用进来。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code>Make the coffee beans respond to the mouse —
-they should gently push away from the cursor as it moves,
-like they're floating in liquid.</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/08-cursor.jpg" alt="咖啡豆实时响应光标——移动鼠标时从指针处被推开。" loading="lazy"><figcaption>咖啡豆实时响应光标——移动鼠标时从指针处被推开。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>这是进阶的<strong>实时交互</strong>：Claude Code 用鼠标位置追踪 + 一点点物理（距离衰减的斥力）写出 JavaScript。值得学的是——你依然只描述了"想要的体感"（像漂在液体里被推开），把"用什么算法实现"留给它。复杂效果不需要你懂实现，只需要你能把"感觉"讲清楚。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>刷新后移动鼠标，咖啡豆会从光标处轻轻推开，效果接近"有生命感"，会让访客停下来盯着看。</p></div>
+<pre><code># 在 21st.dev 找到喜欢的滚动/图像组件 → 点 "copy prompt"
+# 回 Claude Code 粘贴该 prompt + 你生成的素材：
+Use this component to build out the hero section.</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/09-21st.jpg" alt="21st.dev 组件库——点 copy prompt 直接交给 Claude 复刻。" loading="lazy"><figcaption>21st.dev 组件库——点 copy prompt 直接交给 Claude 复刻。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>21st.dev 是一堆真实开发者做的免费组件库（动效、滚动效果、按钮……），每个能"copy prompt"直接让 Claude 复刻。值得学的是 Claude 的<strong>架构自我保护</strong>：作者选的组件基于 React，而本项目是简单静态站，Claude 会<strong>拒绝直接塞 React</strong>（那会改变整个项目结构），改用纯 HTML 重写同样效果。它不会因为你要就乱来。第一次没成功也别慌——视频里 Claude 自己<strong>打开浏览器检查实时页面</strong>，三层排查后修好了滚动效果。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>得到一个电影感的滚动英雄区；遇 bug 就告诉它"现象+你期望的结果"，它会继续深挖直到修好。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>若你的项目本就复杂（带登录/支付/数据库），Claude 反而会同意上 React——它按项目实际需要判断。</p></div>
 
 </div>
 </section>
-<section class="chapter" id="step7">
-<h2><span class="num">07</span><span class="title-text">上线到真实域名</span><span class="caret">▾</span></h2>
+<section class="chapter" id="s7">
+<h2><span class="num">07</span><span class="title-text">批量改进（按"意图"而非"细节"下令）</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>把站点打包成静态文件，上传到托管并绑定域名。</p></div>
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>把待改项打包成一批，用"我要什么感觉"来下令，而不是逐条指定怎么改。</p></div>
 <h4>📌 操作 / 命令</h4>
-<pre><code># 在 Claude Code 里让它打包：
-Bundle the site into a single folder ready for static hosting.
-# 它会把 HTML/CSS/JS/资源 打成一个可直接静态托管的文件夹
-# 然后：托管商后台 → 文件管理器 → 把文件拖进 public_html/ → 绑定域名</code></pre>
-<figure class="frame"><img src="figures/cc-10k-website/09-hostinger.jpg" alt="Hostinger 选托管套餐（视频赞助环节）。" loading="lazy"><figcaption>Hostinger 选托管套餐（视频赞助环节）。</figcaption></figure>
-<figure class="frame"><img src="figures/cc-10k-website/10-filemanager.jpg" alt="托管商文件管理器里的 public_html 目录——网站文件放这里。" loading="lazy"><figcaption>托管商文件管理器里的 public_html 目录——网站文件放这里。</figcaption></figure>
-<figure class="frame"><img src="figures/cc-10k-website/11-live.jpg" alt="绑定域名后，$10,000 观感的网站正式上线。" loading="lazy"><figcaption>绑定域名后，$10,000 观感的网站正式上线。</figcaption></figure>
-<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>静态站（纯 HTML/CSS/JS、无后端）可以直接丢进任何静态托管的 <code>public_html</code> 目录就能跑——这就是为什么让 Claude Code "bundle 成单个文件夹"：它把零散文件理成一个可直接上传的成品包，上线只剩"拖文件 + 绑域名"两个体力活。<strong>托管商不重要</strong>，视频用 Hostinger 是因为它有带货折扣，你换 Netlify/Cloudflare Pages/Vercel 等免费方案同样可行。</p></div>
-<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>上传完成、绑定域名后，访问你的域名即可看到上线的网站。</p></div>
-<div class="callout warn"><strong>⚠️ 常见坑</strong><p>视频这段是 Hostinger 赞助/带货（含 affiliate 折扣链接），别被"必须用它"误导——这步的本质只是"静态文件丢上托管"。</p></div>
+<pre><code>We need more handcrafted micro-interactions. The lower sections feel a bit generic. We don't need to make them busier, just more expensive.</code></pre>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>两个要点：① <strong>批量改、别一条条改</strong>——一次让它提一<em>批</em>修复（视频里一口气加了全站颗粒质感、版块间的黄铜细线、预订区的余烬微光、标题逐词浮现等），省 token、结果更协调；② <strong>下令讲意图不讲细节</strong>——"更精致、不要更花哨"这种"感觉"，Claude 把意图翻译成具体实现，比你写规格说明更强。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>Claude 一次返回一批改动，你一次批准，全站质感整体提升。</p></div>
+
+</div>
+</section>
+<section class="chapter" id="s8">
+<h2><span class="num">08</span><span class="title-text">逐区加光标 / 动效（最显贵的一层）</span><span class="caret">▾</span></h2>
+<div class="chapter-body">
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>滚一遍页面，挑出还显"平"的版块，每区给一个克制的光标交互或动效。</p></div>
+<h4>📌 操作 / 命令</h4>
+<pre><code># 对每个还很平的版块，给一条具体动效指令，例如：
+Make the embers move like fire. Have them react to the cursor as it moves around the page.
+Add elegant micro-movements and cursor interactions here; this section feels static. Make it subtle and refined.</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/10-cursor.jpg" alt="让余烬随光标移动、像火一样被扰动。" loading="lazy"><figcaption>让余烬随光标移动、像火一样被扰动。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>这层是"看起来贵"和"用起来贵"的分界。<strong>Claude 看不出哪里平——只有你能"感觉"到</strong>，所以这一遍要你自己开车：逐区找平淡处，每区只加一个克制的交互。视频里余烬随光标像火一样被扰动、故事区有跟随光标的烛光光晕（第一版太明显，作者让它"更微妙"，于是改成滞后跟随）。一次一区、都保持 subtle。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>每个平淡版块加完一个微交互后，页面"活"起来但不吵闹。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>动效太抢戏就让它"more subtle / refined"，宁可含蓄。</p></div>
+
+</div>
+</section>
+<section class="chapter" id="s9">
+<h2><span class="num">09</span><span class="title-text">打磨文案 + 换掉烂大街字体</span><span class="caret">▾</span></h2>
+<div class="chapter-body">
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>让文案走"克制"路线，并把 AI 标志性的 Inter 字体换掉。</p></div>
+<h4>📌 操作 / 命令</h4>
+<pre><code># 文案：克制、少形容词（如 "Six dishes, one fire" 这种）
+# 字体：看到 Inter 就换
+This uses Inter, which screams AI. Swap it for something better.  # 视频里换成了 Geist</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/11-copy.jpg" alt="克制的文案——"Six dishes, one fire"，少形容词。" loading="lazy"><figcaption>克制的文案——"Six dishes, one fire"，少形容词。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>两个一眼出戏的 AI 痕迹：① 文案爱过度解释、堆形容词——好文案是<strong>克制</strong>（"Six dishes, one fire" 这种），front-end design skill 会帮 Claude 写这种感官化的克制文字；② <strong>Inter 字体在 AI 站上烂大街</strong>，一看就"AI 做的"，换成 Geist 这类立刻不一样。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>文案变克制、字体换掉后，整体读感更像真人设计师出品。</p></div>
+
+</div>
+</section>
+<section class="chapter" id="s10">
+<h2><span class="num">10</span><span class="title-text">移动端专门过一遍</span><span class="caret">▾</span></h2>
+<div class="chapter-body">
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>让 Claude 为手机单独设计一遍，而不是只把桌面版缩小。</p></div>
+<h4>📌 操作 / 命令</h4>
+<pre><code>Do a dedicated pass on the mobile version: what should be hidden on small screens, what should be tighter, and what should resize.</code></pre>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>Claude 默认会做<strong>响应式</strong>（能在手机上显示），但"响应式 ≠ 为手机设计"。<strong>手机访问量远大于桌面</strong>，如果手机版只是桌面版压扁，用户能感觉到。所以要明确让它为小屏做取舍。视频里：导航在手机折叠、字标间距收紧、按钮换小尺寸变体。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>手机上导航收起、间距更紧、按钮更合手——而不是缩小版桌面页。</p></div>
+
+</div>
+</section>
+<section class="chapter" id="s11">
+<h2><span class="num">11</span><span class="title-text">上线到真实域名</span><span class="caret">▾</span></h2>
+<div class="chapter-body">
+<div class="callout accent"><strong>🎯 这步要干嘛</strong><p>让 Claude 打包静态文件，传到托管、绑定域名。注意压缩的是"文件夹里的文件"。</p></div>
+<h4>📌 操作 / 命令</h4>
+<pre><code># 1. 托管选型：纯静态站(无登录/支付/数据库)选 premium；
+#    带后端(react/node)选 business —— 想想第 6 步 Claude 拒不拒 React 就知道选哪档
+# 2. 套餐选 12 个月（拿第一年免费域名），搜并注册你的域名
+# 3. 关键：压缩的是【文件夹里的文件】不是【整个文件夹】！
+#    进项目文件夹 → 全选里面的 index.html + 资源(Cmd/Ctrl+A) → 压缩成 zip
+#    （直接压整个文件夹的话，站会被解到深一层目录，域名打开是空白页）
+# 4. 托管引导选 migrate existing site → upload backup files → 选域名 → 拖 zip → next → submit</code></pre>
+<figure class="frame"><img src="figures/cc-10k-website/12-deploy.jpg" alt="托管引导里选 migrate existing site，上传打包好的网站文件。" loading="lazy"><figcaption>托管引导里选 migrate existing site，上传打包好的网站文件。</figcaption></figure>
+<figure class="frame"><img src="figures/cc-10k-website/13-live.jpg" alt="绑定域名后，$10,000 观感的网站正式上线。" loading="lazy"><figcaption>绑定域名后，$10,000 观感的网站正式上线。</figcaption></figure>
+<div class="callout purple"><strong>🧠 费曼 · 为什么这么做</strong><p>静态站（纯 HTML/CSS/JS、无后端）可直接丢进托管的目录就能跑，所以让 Claude "打包成可静态托管的文件"。<strong>最容易翻车的是压缩：要压文件夹<em>里的</em>文件，不是文件夹本身</strong>——否则解压后多套一层目录，域名加载空白页。托管商不重要，premium 够静态站用；只有 Claude 给你建了真后端才需要 business。</p></div>
+<div class="callout good"><strong>✅ 预期结果 / 怎么验证</strong><p>上传、submit 后点你的域名，就能看到上线的网站。</p></div>
+<div class="callout warn"><strong>⚠️ 常见坑</strong><p>视频这段是 Hostinger 赞助/带货（含 affiliate 折扣）；本质只是"静态文件丢上托管"，换任意服务商都行。</p></div>
 
 </div>
 </section>
 <section class="chapter" id="feynman">
-<h2><span class="num">🧠</span><span class="title-text">费曼总纲重讲：把 Claude Code 当"会自我评审的装修队"</span><span class="caret">▾</span></h2>
+<h2><span class="num">🧠</span><span class="title-text">费曼总纲：把 Claude Code 当"会自评的精装队"</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<p>把整个流程想成<strong>装修一套样板房</strong>：</p><ul><li><strong>Claude Code = 施工队</strong>：手很巧，给图就能盖，但默认没什么审美。</li><li><strong>两个 design skill = 请来的室内设计总监</strong>：aesthetic skill 是"高级感的审美标准"，design review skill 是"验收时拿着清单挑刺并返工"。装上它俩，施工队就从"包工头"升级成"有设计总监盯着的精装团队"。</li><li><strong>你的 prompt = 给设计总监的需求简报</strong>：你不画施工图，你描述"我要温暖、沉稳、杂志感、暗色配奶油金"。简报越讲清"感觉"，成品越对味。</li><li><strong>"review and improve" = 装修验收会</strong>：设计总监自己拍照、对照标准找毛病、当场返工。这一轮闭环是质感的来源。</li><li><strong>动效 / 光标交互 = 软装与灯光</strong>：硬装好了之后加的"让空间活起来"的细节，依然只描述体感，实现交给施工队。</li><li><strong>打包上线 = 把样板房搬到真地址</strong>：静态文件就是可整体搬运的成品，拖进托管、挂上门牌（域名）就开门迎客。</li></ul><div class="callout accent"><p>一句话内核：<strong>你负责把"想要的感觉"讲清楚，Claude Code（带着审美 skill）负责把成百上千个实现决策做对，并自己验收返工。</strong></p></div>
+<p>整个流程像<strong>装修一套样板房</strong>：</p><ul><li><strong>Claude Code = 施工队</strong>：手巧能盖，但默认没什么审美。</li><li><strong>两个 skill = 请来的设计总监</strong>：front-end design 是"高级感标准"（封杀俗气字体），UI UX Pro Max 是"风格/配色素材库"。装上就从包工头升级成有总监盯着的精装团队。</li><li><strong>8 要素清单 = 验收标准</strong>：先把"什么叫装得好"写成可勾选项，后面才能让总监自己照单验收。</li><li><strong>带"反问"的 prompt = 需求交底会</strong>：你描述想要的氛围，让总监反问把需求钉死，再开工。</li><li><strong>自评打分 + 批量改进 = 验收返工</strong>：照清单找毛病、一批批返工，这是质感来源。</li><li><strong>逐区光标动效 = 软装灯光</strong>：硬装好后，你亲自挑平淡处点缀——这步机器替不了你的"手感"。</li><li><strong>打包上线 = 样板房搬到真地址</strong>：静态文件整体搬运、挂上门牌（域名）开门迎客。</li></ul><div class="callout accent"><p>内核：<strong>你负责把"想要的感觉"和"验收标准"讲清楚，Claude（带审美 skill）负责把上千个实现决策做对、并照标准自评返工。</strong></p></div>
 </div>
 </section>
 <section class="chapter" id="final">
-<h2><span class="num">🎁</span><span class="title-text">最终成品 / 验收清单</span><span class="caret">▾</span></h2>
+<h2><span class="num">🎁</span><span class="title-text">最终成品 / 验收</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<p>照着做完，你应该得到：</p><ul><li>✅ 一个暗色 + 奶油金、杂志感的高端落地页，含英雄区 / 溯源 / 招牌菜单 / 联系四个版块；</li><li>✅ 加载渐入、背景元素漂浮、卡片悬停抬起的动效；</li><li>✅ 背景元素随光标实时被推开的物理交互；</li><li>✅ 打包好的静态文件，已上线在你自己的域名上。</li></ul><div class="callout good"><strong>怎么确认达成</strong><p>用手机和电脑各打开一次你的域名：动效流畅、光标交互生效、各版块在小屏不塌、访客看不出是 AI 做的——就算过关。</p></div>
+<ul><li>✅ 一个暗黑沉稳、有杂志感的餐厅落地页，命中 8 要素清单全部项；</li><li>✅ 电影感滚动英雄区 + 全站颗粒/黄铜细线/逐词浮现等批量打磨；</li><li>✅ 余烬随光标扰动、烛光光晕跟随等逐区微交互；</li><li>✅ 专门设计过的移动端；换掉了 Inter；</li><li>✅ 打包上线在自己的域名上（视频里全年约 $43 托管+域名，加 Claude Pro 约 $60 做出 $10k 观感）。</li></ul><div class="callout good"><strong>怎么确认达成</strong><p>手机和电脑各开一次域名：动效流畅、光标交互生效、小屏不塌、文案克制、看不出 AI——就算过关。</p></div>
 </div>
 </section>
 <section class="chapter" id="takeaways">
-<h2><span class="num">✦</span><span class="title-text">5 条要点</span><span class="caret">▾</span></h2>
+<h2><span class="num">✅</span><span class="title-text">6 条要点</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<ol><li><strong>skill 是分水岭</strong>：让 Claude Code 出"设计"而非"代码"的关键，是 aesthetic + design review 两个 skill，不是更长的 prompt。</li><li><strong>描述感觉，不描述代码</strong>：给 mood / 配色 / 版块 / 调性，把实现决策留给它。</li><li><strong>"review and improve" 值钱</strong>：生成→自评→返工的闭环，是质感的真正来源，别省这一步。</li><li><strong>复杂效果只需讲清体感</strong>：连光标物理交互都能用一句"像漂在液体里被推开"拿下。</li><li><strong>上线是体力活，托管可替换</strong>：静态站打包后丢任意托管即可，别被赞助绑定到某家。</li></ol>
+<ol><li><strong>先立清单再开工</strong>：把"什么叫好"写成 8 要素，后面才能让 Claude 自评打分。</li><li><strong>skill 是分水岭</strong>：出"设计"而非"代码"靠 front-end design + UI UX Pro Max，不是更长的 prompt。</li><li><strong>prompt 结尾让它"反问"</strong>：先澄清再建，省掉后面大量返工。</li><li><strong>批量改 + 讲意图</strong>："更精致不要更花哨"胜过逐条指定；一批批改更协调更省 token。</li><li><strong>光标动效你亲自挑</strong>：Claude 感觉不到平淡，逐区点缀那一层得你开车。</li><li><strong>上线压"文件"别压"文件夹"</strong>；托管/素材工具都可替换，别被带货绑定。</li></ol>
 </div>
 </section>
 <section class="chapter" id="transcript">
 <h2><span class="num">📄</span><span class="title-text">完整逐字稿（英文，可折叠）</span><span class="caret">▾</span></h2>
 <div class="chapter-body">
-<div class="callout info"><p>自动字幕清洗整理。已按上下文修正明显识别误差（如 "Claude code" → Claude Code）；个别专名/口语处可能仍有偏差，存疑请对照原视频。</p></div>
+<div class="callout info"><p>自动字幕清洗整理，已按上下文修正明显识别误差（如 Claude code → Claude Code）；个别专名/口语处可能仍有偏差，存疑对照原视频。</p></div>
 <details class="transcript"><summary>英文逐字稿 · 第 1/27 段</summary><div class="tx-body">In this video, I'm going to show you how to build a $10,000 website using Claude code. These sites you're seeing were all built with Claude code, and by the end of this video, yours is going to be one of them. We'll install Claude code, level it up with two design skills, write one prompt, polish the result, and put it on a real domain. The site is going to look like the work of a freelance developer charging $10,000, and nobody who visits it is going to know an AI made it. Stick around for chapter seven especially. That's where the cursor effects and motion design take the build from professional to expensive. And by the very end, I'll show you the cheapest way to put it live on the internet at a custom domain. But first, what exactly is Claude code? Claude code is an AI coding assistant. You describe a website to it in natural language, and it writes the code for you while you watch. We're using the Claude code desktop app today because it gives you everything you need in one window with no extra developer setup.</div></details>
 <details class="transcript"><summary>英文逐字稿 · 第 2/27 段</summary><div class="tx-body">Before we build anything, I want to define what a $10,000 website actually looks like. So, I asked Claude. There are eight things that separate a $10,000 website from a $200 one. Point of view, typography, color, hierarchy, imagery, motion, mobile, and the invisible stuff that makes a site feel fast and finished. Those eight items fall into three groups: taste, substance, and felt quality. We're hitting all eight today. Here's why Claude code can hit a $10,000 bar and why most no-code website builders can't. When you use a tool like Wix or Squarespace, you start with a template, and whatever you build ends up looking like every other site that started from that template. Claude code doesn't work that way. It writes the code for your site from scratch based on what you describe. So, you can get a completely custom result without ever having to learn to code yourself. On top of that, Claude can install design skills that level up everything it makes.</div></details>
 <details class="transcript"><summary>英文逐字稿 · 第 3/27 段</summary><div class="tx-body">You can drop in pre-made components from libraries online, the kind of things that used to require a real developer, and you can keep iterating with Claude on every detail until the site actually feels expensive. We're going to do all of that today. The first step is getting Claude code set up on your computer. Go to claude.com using the link in the description below and pick the pro plan. Right now, as I'm recording this, it's only $20 per month, and that's going to cover everything we need for this video. Get yourself signed up and I'll skip past the boring stuff. Once you're logged in, in the bottom left corner of the page, click the download icon. Navigate to the Claude code section. Download the desktop app version, then open the file to run the installer. Once you get it installed, open the desktop app, then sign in. At this point, I need to mention, depending on when you watch this video, the actual software interface might look different for you than it does for me here.</div></details>
@@ -437,7 +507,7 @@ Bundle the site into a single folder ready for static hosting.
 <button class="back-to-top" id="backTop" aria-label="回到顶部">↑</button>
 
 <footer>
-  <p>课程精读 · 无忌 · MIT《How to AI Almost Anything》Lecture 2.1 Practical AI Tools · 逐字稿清洗 + 中文精读 + 关键帧嵌入 + 费曼重讲</p>
+  <p>课程精读 · 无忌 · 《Build a $10,000 Website using Claude Code》 by Metics Media · 逐字稿清洗 + 中文教程精读 + 关键帧嵌入 + 费曼重讲</p>
   <p style="font-size:12px;margin-top:6px">逐字稿来自 YouTube 自动字幕（去重清洗），可能含识别误差；技术理解以中文笔记与原视频为准。</p>
 </footer>
 
